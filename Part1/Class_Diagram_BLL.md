@@ -1,6 +1,4 @@
-<div style="transform: scale(0.10); transform-origin: top left;">
-
-```mermaid
+```mermaidi
 classDiagram
 direction TB
     class BaseModel {
