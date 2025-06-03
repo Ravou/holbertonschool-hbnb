@@ -1,3 +1,5 @@
+<div style="transform: scale(0.75); transform-origin: top left;">
+
 ```mermaid
 classDiagram
 direction TB
