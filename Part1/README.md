@@ -6,20 +6,20 @@ This repository contains the **UML diagrams** for the HBNB project, part of the 
 
 ## 📑 Table of Contents
 
-- [🧩 About This Project](#-about-this-project)
-- [📁 Project Structure](#-project-structure)
-- [🎯 Objectives](#-objectives)
-- [🛠️ Tools Used](#️-tools-used)
-- [📚 Contents](#-contents)
-- [📌 Focus Areas](#-focus-areas)
-- [✅ Status](#-status)
-- [📎 How to Use](#-how-to-use)
-- [👨‍💻 Author](#-author)
-- [📝 License](#-license)
+- [About This Project](#-about-this-project)
+- [ Project Structure](#-project-structure)
+- [ Objectives](#-objectives)
+- [ Tools Used](#️-tools-used)
+- [ Contents](#-contents)
+- [ Focus Areas](#-focus-areas)
+- [ Status](#-status)
+- [ How to Use](#-how-to-use)
+- [ Author](#-author)
+- [ License](#-license)
 
 ---
 
-## 🧩 About This Project
+##  About This Project
 
 In this task, you will bring together three types of UML diagrams into a single, well-organized document that represents the overall structure and behavior of the HBNB system:
 
@@ -31,7 +31,7 @@ The goal is to provide a complete visual overview that supports both documentati
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 This repository includes the following diagrams:
 
@@ -41,7 +41,7 @@ This repository includes the following diagrams:
 
 ---
 
-## 🎯 Objectives
+##  Objectives
 
 - Provide a clear **visual representation** of the HBNB system architecture.
 - Clarify the **object-oriented structure** and **API interactions** within the application.
@@ -50,7 +50,7 @@ This repository includes the following diagrams:
 ---
 
 
-## 🛠️ Tools & Technologies
+##  Tools & Technologies
 
 - Ubuntu 22.04 LTS
 - Python 3
@@ -62,7 +62,7 @@ This repository includes the following diagrams:
 
 ---
 
-## 📚 Contents
+##  Contents
 
 | Diagram Type      | File Name                        | Description                                          |
 |-------------------|----------------------------------|------------------------------------------------------|
@@ -74,7 +74,7 @@ This repository includes the following diagrams:
 
 ---
 
-## 📌 Focus Areas
+##  Focus Areas
 
 - **Layer separation**: presentation, business logic, data access.
 - **Entity relationships**: inheritance, composition, and association.
@@ -83,15 +83,15 @@ This repository includes the following diagrams:
 
 ---
 
-## ✅ Status
+##  Status
 
-- ✅ Diagrams created and reviewed
-- ✅ Organized and documented in Markdown
-- 📝 Ready to be included in the main AirBnB clone documentation or wiki
+-  Diagrams created and reviewed
+-  Organized and documented in Markdown
+-  Ready to be included in the main AirBnB clone documentation or wiki
 
 ---
 
-## 📎 How to Use
+##  How to Use
 
 1. Clone the repository: https://github.com/Ravou/holbertonschool-hbnb.git
 
@@ -99,11 +99,11 @@ This repository includes the following diagrams:
 
 3. Use the diagrams for documentation, development guidance, or team onboarding.
 
-##  👩🏾Author
+##  Author
 
 - Olivia Letchy - @Ravou
 
-## 📝 License
+##  License
 
 ```
 This project is licensed under the MIT License. 
