@@ -1,4 +1,4 @@
-``mermaid
+```mermaid
 sequenceDiagram
     %% Layers:
     %% Presentation: User, API
