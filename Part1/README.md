@@ -49,23 +49,28 @@ This repository includes the following diagrams:
 
 ---
 
-## 🛠️ Tools Used
 
-- [draw.io](https://draw.io) / diagrams.net
-- Lucidchart / StarUML / PlantUML *(specify which one you used)*
+## 🛠️ Tools & Technologies
+
+- Ubuntu 22.04 LTS
+- Python 3
+- GitHub
 - Markdown for documentation
+- [draw.io](https://drawio.com) for diagrams
+- [Mermaid](https://mermaid-js.github.io/) for diagram syntax in Markdown
+
 
 ---
 
 ## 📚 Contents
 
-| Diagram Type      | File Name                        | Description                                      |
-|-------------------|----------------------------------|--------------------------------------------------|
-| Package Diagram   | `package_diagram.png`            | Overview of modules and package relationships    |
-| Class Diagram     | `class_diagram_business.png`     | Core classes of the Business Logic layer         |
+| Diagram Type      | File Name                        | Description                                          |
+|-------------------|----------------------------------|------------------------------------------------------|
+| Package Diagram   | `package_diagram.png`            | Overview of modules and package relationships        |
+| Class Diagram     | `class_diagram_business.png`     | Core classes of the Business Logic layer             |
 | Sequence Diagram  | `sequence_create_place.png`      | API flow: Create Place with amenities and validation |
-| Sequence Diagram  | `sequence_get_user_reviews.png`  | API flow: Get user reviews for a Place           |
-| ...               | ...                              | ...                                              |
+| Sequence Diagram  | `sequence_get_user_reviews.png`  | API flow: Get user reviews for a Place               |
+| Sequence Diagram  | ...                              | ...                                                  |
 
 ---
 
