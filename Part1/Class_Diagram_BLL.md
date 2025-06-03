@@ -1,4 +1,4 @@
-'''mermaid
+```mermaid
 classDiagram
 direction TB
     class BaseModel {
@@ -91,4 +91,4 @@ direction TB
 	class Amenity:::Ash
 	class Place:::Ash
 	class User:::Ash
-'''mermaid
+```mermaid
