@@ -38,4 +38,4 @@ sequenceDiagram
         API -->> User: Success + user_id
     end
 
-```mermaid
+```
