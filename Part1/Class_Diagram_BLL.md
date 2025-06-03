@@ -1,4 +1,4 @@
-<div style="transform: scale(0.65); transform-origin: top left;">
+<div style="transform: scale(0.50); transform-origin: top left;">
 
 ```mermaid
 classDiagram
