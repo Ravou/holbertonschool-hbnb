@@ -4,7 +4,7 @@ sequenceDiagram
     participant API as API (Presentation)
     participant Facade
     participant Logic as Business Logic
-    participant Repo as Repository
+    participant Repo as Repository (interface)
     participant DB as Persistence
 
     User ->> API: POST /reviews with data
