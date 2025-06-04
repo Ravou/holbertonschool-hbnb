@@ -52,7 +52,7 @@ This document serves as a **comprehensive technical reference** for the HBNB sys
 
 ## Class Diagram for Business Logic Layer
 
-**Diagram:** `class_diagram_business.png`
+![Class diagram UML](./diagramme/Class.jpg)
 
 ### Description
 
