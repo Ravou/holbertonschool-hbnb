@@ -7,10 +7,10 @@ sequenceDiagram
 
     actor User
     participant API as API (Presentation Layer)
-    participant Facade as "Facade"
-    participant PlaceLogic as "Business Logic"
-    participant PlaceRepository as " Repository (Interface)"
-    participant Database as "Persistence"
+    participant Facade as Facade
+    participant PlaceLogic as Business Logic
+    participant PlaceRepository as Repository (Interface)
+    participant Database as Persistence
 
     loop For each place
         User ->> API: POST /places with place data
