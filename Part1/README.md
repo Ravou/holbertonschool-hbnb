@@ -104,9 +104,9 @@ sequenceDiagram
 
     actor User
     participant API as API (Presentation Layer)
-    participant Facade as "Facade pattern"
+    participant Facade as Facade pattern
     participant BusinessLogic as Business Logic
-    participant Repository as "Repository (Interface)"
+    participant Repository as Repository (Interface)
     participant Persistence as Persistence Layer
 
     User ->> API: POST /users with data
