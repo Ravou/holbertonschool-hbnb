@@ -103,11 +103,11 @@ sequenceDiagram
     %% Persistence: Persistence
 
     actor User
-    participant API as API (Presentation Layer)
-    participant Facade as Facade pattern
-    participant BusinessLogic as Business Logic
+    participant API as Presentation (API)
+    participant Facade as Facade 
+    participant BusinessLogic as Business Logic 
     participant Repository as Repository (Interface)
-    participant Persistence as Persistence Layer
+    participant Persistence as Persistence
 
     User ->> API: POST /users with data
     API ->> Facade: create_user(data)
@@ -147,7 +147,7 @@ sequenceDiagram
     %% Persistence: Database
 
     actor User
-    participant API as API (Presentation Layer)
+    participant API as Presentation (API)
     participant Facade as Facade
     participant PlaceLogic as Business Logic
     participant PlaceRepository as Repository (Interface)
@@ -184,7 +184,7 @@ Review Submission :
 ```mermaid
 sequenceDiagram
     actor User
-    participant API as API (Presentation)
+    participant API as Presentation (API)
     participant Facade
     participant Logic as Business Logic
     participant Repo as Repository (interface)
