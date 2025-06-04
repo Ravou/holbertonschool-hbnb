@@ -77,15 +77,17 @@ This document serves as a **comprehensive technical reference** for the HBNB sys
 
 To interpret the UML class diagrams, here’s a quick legend for the **relationship arrows**:
 
-- `1` → `*` : One-to-Many relationship (e.g., one `User` owns many `Places`)
-- `*` → `*` : Many-to-Many relationship (e.g., `Place` offers multiple `Amenities`, and vice versa)
-- `1` → `1` : One-to-One relationship
-- `0` → `1` : Optional relationship (zero or one)
-- `0` → `*` : Optional one-to-many (e.g., an entity may have zero or more related items)
-- Solid Arrow: Association (basic relationship)
-- Filled Diamond: Composition (strong ownership, e.g., if A is deleted, B is deleted too)
-- Empty Diamond: Aggregation (shared ownership)
-- Triangle: Inheritance (generalization)
+| Symbol / Notation        | Description                                                                                |
+|--------------------------|--------------------------------------------------------------------------------------------|
+| `1 → *`                  | One-to-Many relationship (e.g., one `User` owns many `Places`).                            |
+| `* → *`                  | Many-to-Many relationship (e.g., a `Place` offers multiple `Amenities`, and vice versa).   |
+| `1 → 1`                  | One-to-One relationship.                                                                   |
+| `0 → 1`                  | Optional relationship (zero or one).                                                       |
+| `0 → *`                  | Optional One-to-Many (e.g., an entity may have zero or more related items).                |
+| ➝ (Solid Arrow)          | Association (basic link between classes).                                                  |
+| ◆ (Empty Diamond)        | Aggregation (shared ownership; lifetime of contained object is independent).               |
+| ◼︎ (Filled Diamond)       | Composition (strong ownership; if the container is destroyed, so is the contained object). |
+| △ (Triangle Arrow)       | Inheritance / Generalization (one class inherits from another).                            |
 
 ## Sequence Diagram for API CAlls
 
@@ -215,7 +217,17 @@ sequenceDiagram
     end
 ```
 
+## Legend - UML Sequence Diagram 
 
+| Symbol                    | Meaning                                                                    |
+|---------------------------|----------------------------------------------------------------------------|
+| Actor                     | External entity (e.g., user) that interacts with the system.               |
+| `->`                      | Synchronous message or method call.                                        |
+| `-->`                     | Asynchronous message.                                                      |
+| `-->>` or dashed arrow    | Return message or response.                                                |
+| `alt` / `opt` / `loop`    | Control blocks: alternative, optional, or loop.                            |
+| `activate` / `deactivate` | Object's activation bar (lifeline emphasis).                               |
+| Lifeline (vertical line)  | Represents the lifespan of a participant during the interaction.           |
 ---
 
 ##  Status
