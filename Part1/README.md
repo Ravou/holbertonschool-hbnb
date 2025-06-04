@@ -93,7 +93,7 @@ Below are Mermaid.js-based sequence diagrams representing core API workflows.
 
 User Registration :
 
-``mermaid
+```mermaid
 sequenceDiagram
     %% Layers:
     %% Presentation: User, API
@@ -137,7 +137,7 @@ sequenceDiagram
 
 Place Creation :
 
-``mermaid
+```mermaid
 sequenceDiagram
     %% Layers:
     %% Presentation: User, API
@@ -179,7 +179,7 @@ sequenceDiagram
 
 Review Submission :
 
-``mermaid
+```mermaid
 sequenceDiagram
     actor User
     participant API as API (Presentation)
