@@ -248,7 +248,7 @@ sequenceDiagram
 
 ##  Author
 
-- Olivia Letchy - @Ravou
+- Olivia Letchy - https://github.com/Ravou
 
 ##  License
 
