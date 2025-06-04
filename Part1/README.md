@@ -37,7 +37,7 @@ This document serves as a **comprehensive technical reference** for the HBNB sys
 
 ## High-Level Package Diagram
 
-**Diagram:** `package_diagram.png`
+![Package Diagram UML](./diagramme/Package.png)
 
 ### Description
 
