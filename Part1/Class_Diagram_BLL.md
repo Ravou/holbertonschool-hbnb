@@ -15,7 +15,6 @@ direction TB
 	    + rating : float
 	    + add_review() : None
 	    + update(): None
-	    + delete() : None
 	    + list_by_place(place_id) : List[Review]
 		+ reserve_place(place)
     }
