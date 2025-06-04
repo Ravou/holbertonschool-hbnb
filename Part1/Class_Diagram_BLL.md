@@ -1,4 +1,4 @@
-```mermaidi
+```mermaid
 classDiagram
 direction TB
     class BaseModel {
@@ -12,8 +12,8 @@ direction TB
     }
 
     class Review {
-	    + user_id : UUID
-	    + place_id : UUID
+	    - user_id : UUID
+	    - place_id : UUID
 	    + text : str
 	    + rating : float
 	    + add_review() : None
@@ -24,7 +24,7 @@ direction TB
     }
 
     class Amenity {
-		- id : str
+		- user_id : str
 	    + name : str
 	    + description : str
 	    + __init__() None
@@ -35,13 +35,14 @@ direction TB
     }
 
     class Place {
+		- user_id: UUID
 	    + name : str
 		+ title : str
 	    + description : str
 	    + price : float
 	    - latitude : float
 	    - longitude : float
-	    - owner_id : UUID
+	    - owner: str
 	    + Amenity: List[Amenity]
 	    + address : str
 	    + __init__() None
@@ -73,10 +74,15 @@ direction TB
     BaseModel --|> Place : inheritence
     BaseModel --|> Review : inheritence
     BaseModel --|> Amenity : inheritence
-    Review --> User
-    Review --> Place
+    
+	Review "*" --> "1" Place : about
+	Review "*" --> "1" User : by
+
     Place "1" --> "*" Review : receives
-    Place "*" --> "*" Amenity : offers
+    Place "1" --> "*" Amenity : offers
+
+    Amenity "*" --> "1" Place : available_in
+	
     User "1" --> "*" Place : creates
     User "1" --> "*" Review : writes
 
@@ -91,4 +97,4 @@ direction TB
 	class Amenity:::Ash
 	class Place:::Ash
 	class User:::Ash
-```mermaid
+```
