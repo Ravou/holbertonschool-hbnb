@@ -7,13 +7,10 @@ direction TB
 	    - updated_at : DateTime
 	    #save() void
 	    +to_dict() dict
-	    +__str__() str
-	    +__init__() none
+		+delete()
     }
 
     class Review {
-	    - user_id : UUID
-	    - place_id : UUID
 	    + text : str
 	    + rating : float
 	    + add_review() : None
@@ -24,18 +21,12 @@ direction TB
     }
 
     class Amenity {
-		- user_id : str
 	    + name : str
 	    + description : str
-	    + __init__() None
-	    + create() None
-	    + update() None
-	    + delete() None
 	    + list_all() List[Amenity]
     }
 
     class Place {
-		- user_id: UUID
 	    + name : str
 		+ title : str
 	    + description : str
@@ -44,46 +35,38 @@ direction TB
 	    - longitude : float
 	    - owner: str
 	    + Amenity: List[Amenity]
-	    + address : str
-	    + __init__() None
 	    + add_place() None
-	    + update() None
-	    + delete() None
 	    + list_all() List[Place]
 		+ get_all_reservation() List
-		+ getter_address() str
-		+ setter_address() None
     }
 
     class User {
 	    + email : str
 	    - password : str
+		+ owner : str
 	    + first_name : str
 	    + last_name : str
-	    + __init__() None
 	    + register() None
-	    + update_profile() None
-	    + delete_user() None
 	    + authenticate() bool
-		+ reserve_place(place) None
 		}
 
 	<<abstract>> BaseModel
 
-    BaseModel --|> User : inheritence
-    BaseModel --|> Place : inheritence
-    BaseModel --|> Review : inheritence
-    BaseModel --|> Amenity : inheritence
+    BaseModel <|-- User : inheritence
+    BaseModel <|--  Place : inheritence
+    BaseModel <|--  Review : inheritence
+    BaseModel <|--  Amenity : inheritence
     
 	Review "*" --> "1" Place : about
 	Review "*" --> "1" User : by
 
     Place "1" --> "*" Review : receives
     Place "1" --> "*" Amenity : offers
+	
 
     Amenity "*" --> "1" Place : available_in
 	
-    User "1" --> "*" Place : creates
+    User "1" <-- "0..*" Place : réservation
     User "1" --> "*" Review : writes
 
 	style BaseModel :,stroke-width:1px,stroke-dasharray:none,stroke:#FF5978,fill:#FFDFE5,color:#8E2236
