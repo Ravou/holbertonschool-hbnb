@@ -51,10 +51,10 @@ direction TB
 
 	<<abstract>> BaseModel
 
-    BaseModel <|-- User : inheritence
-    BaseModel <|--  Place : inheritence
-    BaseModel <|--  Review : inheritence
-    BaseModel <|--  Amenity : inheritence
+    BaseModel <|-- User : inheritance
+    BaseModel <|--  Place : inheritance
+    BaseModel <|--  Review : inheritance
+    BaseModel <|--  Amenity : inheritance
     
 	Review "*" --> "1" Place : about
 	Review "*" --> "1" User : by
