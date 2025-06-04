@@ -1,6 +1,9 @@
 # HBNB UML Diagrams - Technical Documentation
 
-![HBNB](./diagramme/hbnb.png)
+<p align="center">
+  <img src="diagramme/hbnb.png" alt="HBNB logo" width="300"/>
+</p>
+
 
 This repository contains the technical documentation and UML diagrams for the **HBNB project** — part of the Holberton School AirBnB clone. It compiles all architectural and design diagrams into a cohesive reference blueprint for the project’s implementation.
 
