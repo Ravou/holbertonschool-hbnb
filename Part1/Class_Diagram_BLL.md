@@ -1,6 +1,8 @@
 ```mermaid
 classDiagram
 direction TB
+
+    %% 1. BaseModel
     class BaseModel {
 	    - id : UUID
 	    - created_at : DateTime
@@ -10,7 +12,8 @@ direction TB
 		+delete()
     }
     
-     class User {
+    %% 2. User
+    class User {
 
         + email : str
         - password : str
@@ -21,6 +24,7 @@ direction TB
         + authenticate() bool
     }
     
+    %% 3. Place
     class Place {
         + name : str
         + title : str
@@ -35,7 +39,8 @@ direction TB
         + get_all_reservation() List
         + get_by_criteria(criteria: dict) List[Place]
     }
-
+    
+    %% 4. Amenity
     class Amenity {
 	    + name : str
 	    + description : str
@@ -43,6 +48,7 @@ direction TB
 		+ add_amenity(name: str, description: str)  bool
     }
     
+    %% 5. Review
     class Review {
         + text : str
         + rating : float
