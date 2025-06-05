@@ -14,9 +14,9 @@ This repository contains the technical documentation and UML diagrams for the **
 - [Introduction](#introduction)
 - [High-Level Package Diagram](#high-level-package-diagram)
 - [Class Diagram for Business Logic Layer](#class-diagram-for-business-logic-layer)
+- [Diagram Legend](#Diagram-Legend)
 - [Sequence Diagrams for API Calls](#sequence-diagrams-for-api-calls)
-- [Explanatory Notes](#explanatory-notes)
-- [Status](#status)
+- [Legend - UML Sequence Diagram](#Legend - UML Sequence Diagram)
 - [How to Use](#how-to-use)
 - [Author](#author)
 - [License](#license)
@@ -73,7 +73,7 @@ This document serves as a **comprehensive technical reference** for the HBNB sys
   - Responsibilities
   - Relationship roles
 
-### Diagram Legend (Related to Class Diagram)
+## Diagram Legend (Related to Class Diagram)
 
 To interpret the UML class diagrams, here’s a quick legend for the **relationship arrows**:
 
@@ -273,13 +273,6 @@ sequenceDiagram
 | Lifeline (vertical line)  | Represents the lifespan of a participant during the interaction.           |
 ---
 
-##  Status
-
--  Diagrams created and reviewed
--  Organized and documented in Markdown
--  Ready to be included in the main AirBnB clone documentation or wiki
-
----
 
 ##  How to Use
 
