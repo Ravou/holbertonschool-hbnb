@@ -65,6 +65,7 @@ direction TB
 	
     User "1" <-- "0..*" Place : réservation
     User "1" --> "0..*" Review : writes
+    User "1" --> "0..*" Amenity : wishlist
 
 	style BaseModel :,stroke-width:1px,stroke-dasharray:none,stroke:#FF5978,fill:#FFDFE5,color:#8E2236
 	style Review :,stroke-width:1px,stroke-dasharray:none,stroke:#999999,fill:#EEEEEE,color:#000000
