@@ -16,7 +16,7 @@ This repository contains the technical documentation and UML diagrams for the **
 - [Class Diagram for Business Logic Layer](#class-diagram-for-business-logic-layer)
 - [Diagram Legend](#Diagram-Legend)
 - [Sequence Diagrams for API Calls](#sequence-diagrams-for-api-calls)
-- [Legend - UML Sequence Diagram](#Legend - UML Sequence Diagram)
+- [Legend - UML Sequence Diagram](#Legend-UML-Sequence-Diagram)
 - [How to Use](#how-to-use)
 - [Author](#author)
 - [License](#license)
