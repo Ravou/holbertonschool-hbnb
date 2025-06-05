@@ -1,4 +1,4 @@
-# HBNB UML Diagrams - Technical Documentation
+# HBNB UML Diagrams
 
 <p align="center">
   <img src="diagramme/hbnb.png" alt="HBNB logo" width="300"/>
