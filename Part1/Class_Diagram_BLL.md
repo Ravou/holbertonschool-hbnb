@@ -36,7 +36,7 @@ direction TB
 	    + amenities: List[Amenity]
 		+ add_place(name: str, price: float, ...)  bool
 	    + list_all() List[Place]
-		+ get_all_reservation() List[Reservation]
+		+ get_all_reservation() List
         + get_by_criteria(criteria: dict) List[Place]
     }
 
@@ -58,17 +58,13 @@ direction TB
     BaseModel <|--  Review : inheritence
     BaseModel <|--  Amenity : inheritence
     
-	Review "*" --> "1" Place : about
-	Review "*" --> "1" User : by
+	Review "0..*" --> "1" Place : about
+	Review "0..*" --> "1" User : by
 
-    Place "1" --> "*" Review : receives
-    Place "1" --> "*" Amenity : offers
-	
-
-    Amenity "*" --> "1" Place : available_in
+    Place "0..*" --> "0..*" Amenity : offers
 	
     User "1" <-- "0..*" Place : réservation
-    User "1" --> "*" Review : writes
+    User "1" --> "0..*" Review : writes
 
 	style BaseModel :,stroke-width:1px,stroke-dasharray:none,stroke:#FF5978,fill:#FFDFE5,color:#8E2236
 	style Review :,stroke-width:1px,stroke-dasharray:none,stroke:#999999,fill:#EEEEEE,color:#000000
