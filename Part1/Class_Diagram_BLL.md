@@ -13,7 +13,7 @@ direction TB
     class Review {
 	    + text : str
 	    + rating : float
-		+ add_review(text: str, rating: float) : bool
+		+ add_review(text: str, rating: float) bool
 	    + list_by_place(place_id) List[Review]
 		+ reserve_place(place)  bool
     }
@@ -22,7 +22,7 @@ direction TB
 	    + name : str
 	    + description : str
 	    + list_all() List[Amenity]
-		+ add_amenity(name: str, description: str) : bool
+		+ add_amenity(name: str, description: str)  bool
     }
 
     class Place {
@@ -34,7 +34,7 @@ direction TB
 	    - longitude : float
 	    - owner: str
 	    + amenities: List[Amenity]
-		+ add_place(name: str, price: float, ...) : bool
+		+ add_place(name: str, price: float, ...)  bool
 	    + list_all() List[Place]
 		+ get_all_reservation() List[Reservation]
     }
