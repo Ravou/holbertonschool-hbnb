@@ -9,13 +9,31 @@ direction TB
 	    +to_dict() dict
 		+delete()
     }
+    
+     class User {
 
-    class Review {
-	    + text : str
-	    + rating : float
-		+ add_review(text: str, rating: float) bool
-	    + list_by_place(place_id) List[Review]
-		+ reserve_place(place)  bool
+        + email : str
+        - password : str
+        + owner : str
+        + first_name : str
+        + last_name : str
+        + register() bool
+        + authenticate() bool
+    }
+    
+    class Place {
+        + name : str
+        + title : str
+        + description : str
+        + price : float
+        - latitude : float
+        - longitude : float
+        - owner: str
+        + amenities: List[Amenity]
+        + add_place(name: str, price: float, ...)  bool
+        + list_all() List[Place]
+        + get_all_reservation() List
+        + get_by_criteria(criteria: dict) List[Place]
     }
 
     class Amenity {
@@ -24,32 +42,14 @@ direction TB
 	    + list_all() List[Amenity]
 		+ add_amenity(name: str, description: str)  bool
     }
-
-    class Place {
-	    + name : str
-		+ title : str
-	    + description : str
-	    + price : float
-	    - latitude : float
-	    - longitude : float
-	    - owner: str
-	    + amenities: List[Amenity]
-		+ add_place(name: str, price: float, ...)  bool
-	    + list_all() List[Place]
-		+ get_all_reservation() List
-        + get_by_criteria(criteria: dict) List[Place]
+    
+    class Review {
+        + text : str
+        + rating : float
+        + add_review(text: str, rating: float) bool
+        + list_by_place(place_id) List[Review]
+        + reserve_place(place)  bool
     }
-
-    class User {
-
-	    + email : str
-	    - password : str
-		+ owner : str
-	    + first_name : str
-	    + last_name : str
-	    + register() bool
-	    + authenticate() bool
-		}
 
 	<<abstract>> BaseModel
 
