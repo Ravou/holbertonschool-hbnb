@@ -37,6 +37,7 @@ direction TB
 		+ add_place(name: str, price: float, ...)  bool
 	    + list_all() List[Place]
 		+ get_all_reservation() List[Reservation]
+        + get_by_criteria(criteria: dict) List[Place]
     }
 
     class User {
