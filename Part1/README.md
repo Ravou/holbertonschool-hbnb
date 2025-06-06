@@ -18,6 +18,7 @@ This repository contains the technical documentation and UML diagrams for the **
 - [Sequence Diagrams for API Calls](#sequence-diagrams-for-api-calls)
 - [Legend - UML Sequence Diagram](#Legend-UML-Sequence-Diagram)
 - [How to Use](#how-to-use)
+- [Tool Used](#Tool-used)
 - [Author](#author)
 - [License](#license)
 
@@ -281,6 +282,13 @@ sequenceDiagram
 2. Open the diagram files using your prefered UML viewer or any web browser.
 
 3. Use the diagrams for documentation, development guidance, or team onboarding.
+
+## Tool Used 
+
+- **Ubuntu 22.04** – Main operating system for development
+- **GitHub** – Version control and project hosting
+- **Mermaid** – Used to generate UML diagrams in Markdown
+- **draw.io / diagrams.net** – Manual creation of UML and technical diagrams
 
 ##  Author
 
