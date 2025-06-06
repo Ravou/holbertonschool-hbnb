@@ -17,6 +17,7 @@ This repository contains the technical documentation and UML diagrams for the **
 - [Diagram Legend](#Diagram-Legend)
 - [Sequence Diagrams for API Calls](#sequence-diagrams-for-api-calls)
 - [Legend - UML Sequence Diagram](#Legend-UML-Sequence-Diagram)
+- [HBNB Project - Technical Documentation](#HBNB Project-Technical-Documentation]
 - [How to Use](#how-to-use)
 - [Tool Used](#Tool-used)
 - [Author](#author)
@@ -274,6 +275,11 @@ sequenceDiagram
 | Lifeline (vertical line)  | Represents the lifespan of a participant during the interaction.           |
 ---
 
+## HBNB Project - Technical Documentation
+
+[📥 Télécharger la documentation PDF (Google Drive)](https://drive.google.com/file/d/18H9ahCYNJrBWxEHesDQ0zyp8xPatmgwC/view?usp=drive_link)
+
+---
 
 ##  How to Use
 
