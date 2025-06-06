@@ -54,7 +54,7 @@ This document serves as a **comprehensive technical reference** for the HBNB sys
 
 ## Class Diagram for Business Logic Layer
 
-<img src="diagramme/Diagram.JPG" alt="Diagramme de classes" width="600">
+![Class Diagram](diagramme/Diagram.jpg)
 
 ### Description
 
