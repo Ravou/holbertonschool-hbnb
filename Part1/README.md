@@ -17,7 +17,7 @@ This repository contains the technical documentation and UML diagrams for the **
 - [Diagram Legend](#Diagram-Legend)
 - [Sequence Diagrams for API Calls](#sequence-diagrams-for-api-calls)
 - [Legend - UML Sequence Diagram](#Legend-UML-Sequence-Diagram)
-- [HBNB Project - Technical Documentation](#HBNB-Project-Technical-Documentation]
+- [HBNB Project - Technical Documentation](#HBNB-Project-Technical-Documentation)
 - [How to Use](#how-to-use)
 - [Tool Used](#Tool-used)
 - [Author](#author)
