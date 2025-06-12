@@ -66,7 +66,6 @@ direction TB
     
     User "1" --> "0..*" Place : réservation
     User "1" --> "0..*" Review : writes
-    User "1" --> "0..*" Amenity : wishlist
 
     Place "0..*" --> "0..*" Amenity : offers
     
