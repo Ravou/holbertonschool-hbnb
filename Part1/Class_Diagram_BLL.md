@@ -23,6 +23,9 @@ direction TB
         + register() bool
         + authenticate() bool
         + add_place(name: str, price: float, ...) bool
+        + has_reserved(place)  bool
+        + add_review(text: str, rating: float) bool
+        + add_amenity(name: str, description: str)  bool
     }
     
     %% 3. Place
@@ -33,12 +36,11 @@ direction TB
         + price : float
         - latitude : float
         - longitude : float
-        - owner: str
+        + owner: str
         + amenities: List[Amenity]
         + list_all() List[Place]
         - get_all_reservation() List
         + get_by_criteria(criteria: dict) List[Place]
-        + add_review(text: str, rating: float) bool
     }
     
     %% 4. Amenity
@@ -46,7 +48,6 @@ direction TB
 	    + name : str
 	    + description : str
 	    + list_all() List[Amenity]
-		+ add_amenity(name: str, description: str)  bool
     }
     
     %% 5. Review
@@ -54,7 +55,6 @@ direction TB
         + text : str
         + rating : float
         + list_by_place(place_id) List[Review]
-        + reserve_place(place)  bool
     }
 
 	<<abstract>> BaseModel
