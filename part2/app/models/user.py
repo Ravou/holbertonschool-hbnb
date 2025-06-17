@@ -1,19 +1,20 @@
-Class User(BaseModel):
+class User(BaseModel):
     def __init__(self, first_name, last_name, email, password, is_admin)
     super().__init__()
     self.first_name = first_name
-    self.last_name = las_name
+    self.last_name = last_name
     self.email = email
     self.__password = password
     self.is_admin = is_admin
     self.reservations = []
+    self.place = []
 
     def register ():
         if not self.first_name or not self.last_name:
             print ("First name and last name must not be empty.")
             return False
 
-        if not self.is_valid_email(self.mail):
+        if not self.is_valid_email(self.email):
             print("Invalid email adress.")
             return False
         
@@ -43,7 +44,7 @@ Class User(BaseModel):
             return False
         return True
 
-    
+    @classmethod
     def login(email, password):
         user = next((u for u in users if u.email == email), None)
         if user is None:
@@ -98,7 +99,7 @@ Class User(BaseModel):
     def has_reserved(self, place):
         return any(res.place == place for res in self.reservations)
 
-    place.reserved_by.append(user)
+        place.reserved_by.append(user)
 
     def add_review(self, text, rating, place, user):
         if not user.has_reserved(place):
@@ -115,14 +116,14 @@ Class User(BaseModel):
                 "user": user
                 }
 
-        if not hasattr(place, 'review'):
+        if not hasattr(place, 'reviews'):
             place.reviews = []
         place.reviews.append(review)
 
         print("Review added successfully.")
         return True
 
-    def add_amenity(self, name, description):
+    def add_amenity(self, place, name, description):
         amenity = {
                 "name": name,
                 "description": description
