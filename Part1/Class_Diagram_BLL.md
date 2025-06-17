@@ -9,7 +9,6 @@ direction TB
 	    - updated_at : DateTime
 	    #save() void
 	    +to_dict() dict
-		+delete()
     }
     
     %% 2. User
@@ -20,6 +19,7 @@ direction TB
         + owner : str
         + first_name : str
         + last_name : str
+        + is_admin() bool
         + register() bool
         + authenticate() bool
         + add_place(name: str, price: float, ...) bool
