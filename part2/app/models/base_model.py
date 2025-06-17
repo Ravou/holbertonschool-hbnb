@@ -30,3 +30,10 @@ class BaseModel:
             if hasattr(self, key):
                 setattr(self, key, value)
         self.updated_at = datetime.now()
+
+    def __repr__(self):
+        return f"BaseModel(id='{self.id}', created_at='{self.created_at.isoformat()}', updated_at='{self.updated_at.isoformat()}')"
+
+    def __str__(self):
+        return self.__repr__()
+
