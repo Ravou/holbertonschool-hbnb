@@ -7,8 +7,8 @@ class Reservation(BaseModel):
 
     def __init__(self, user, place, date):
         super().__init__()
-        self.user = user
-        self.place = place
+        self.user_id = user_id
+        self.place_id = place_id
         self.date = date
 
         
@@ -38,4 +38,4 @@ class Reservation(BaseModel):
                 ]
 
     def __repr__(self):
-        return f"Reservation(id='{self.id}', place.id='{self.place_id}', user.id='{self.user_id}')"
+        return f"Reservation(id='{self.id}', user_id='{self.user_id}', place_id='{self.user_id}', date='{slef.date}')"

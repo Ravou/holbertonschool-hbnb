@@ -5,7 +5,7 @@ class Place(BaseModel):
 
     _places = []
 
-    def __init__(self, name: str, title: str, description: str, price: float, latitude: float, longitude: float, owner: str):
+    def __init__(self, name, title, description, price, latitude, longitude, owner):
         super().__init__()
         self.name = name
         self.title = title
@@ -13,10 +13,9 @@ class Place(BaseModel):
         self.price = price
         self.latitude = latitude
         self.longitude = longitude
-        self.owner = owner
+        self.owner_id = owner
         self.amenities = []
         self.reservations = []
-
         Place._places.append(self)
 
 

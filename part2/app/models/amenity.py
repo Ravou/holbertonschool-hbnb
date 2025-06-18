@@ -6,10 +6,9 @@ class Amenity(BaseModel):
 
     def __init__(self, place, name, description):
         super.__init__()
-        self.place = place
+        self.place_id = place_id
         self.name = name
         self.description = description
-
         Amenity._amenities.append(self)
 
         @clasmethod
@@ -17,4 +16,4 @@ class Amenity(BaseModel):
             return cls._amenities
 
         def __repr__(self):
-        return f"Amenity(name='{self.name}')"
+            return f"Amenity(id='{self.id}', place_id='{self.place_id}', name='{self.name}', description='{self.description}')"

@@ -1,5 +1,6 @@
 from models.base_model import BaseModel
 from typing import List
+import re
 
 class User(BaseModel):
     def __init__(self, first_name, last_name, email, password, is_admin):
@@ -14,16 +15,16 @@ class User(BaseModel):
     self.review = []
 
     def register ():
-        if self.first_name == "":
+        if not self.first_name:
             print("First name must not be empty.")
             return False
-        elif self.last_name == "":
+        elif not self.last_name:
             print("Last name must not be empty.")
             return False
-        elif self.is_valid_email(self.email) is False:
+        elif not self.is_valid_email(self.email):
             print("Invalid email address.")
             return False
-        elif self.is_strong_password(self.__password) is False:
+        elif not self.is_strong_password(self.__password):
             print("Password is not strong enough.")
             return False
         else:
@@ -39,30 +40,18 @@ class User(BaseModel):
     
     @staticmethod
     def is_strong_password(password: str) -> bool:
-        if len(password) < 8:
-            return False
-        elif any(c.isupper() for c in password) is False:
-            return False
-        elif any(c.isdigit() for c in password) is False:
-            return False
-        else:
-            return True
+        return (len(password) >= 8 and any(c.isupper() for c in password) andany(c.isdigit() for c in password))
 
     def authenticate(self, password: str) -> bool:
         return self.__password == password
 
     @classmethod
     def login(cls, email, password, users_list):
-        user = None
-        for u in users_list:
-            if u.email == email:
-                user = u
-                break
-
+        user = next ((u for u in users_list if u.email == email), None)
         if user is None:
             print("User not found.")
             return False
-        elif user.authenticate(password) is True:
+        elif user.authenticate(password):
             print(f"Welcome, {user.first_name}!")
             return True
         else:
@@ -71,42 +60,40 @@ class User(BaseModel):
 
     
     def add_place(self, place):
-        if isinstance(place, Place) is False:
+        if not isinstance(place, Place):
             print("Invalid place object.")
             return False
-        else:
-            self.places.append(place)
-            place.owner = self
-            print(f"Place '{place.name}' added successfully.")
-            return True
+        self.places.append(place)
+        place.owner = self
+        print(f"Place '{place.name}' added successfully.")
+        return True
 
 
     def has_reserved(self, place):
-        for res in self.reservations:
-            if res.place == place:
-                return True
-        return False
+        return any(res.place == place for res in self.reservations)
 
     def add_review(self, text, rating, place):
-        if self.has_reserved(place) is False:
+        if not self.has_reserved(place):
             print("You must reserve the place before adding a review.")
             return False
-        elif rating < 1 or rating > 5:
+        elif not 1 <= rating <= 5:
             print("Rating must be between 1 and 5.")
             return False
-        else:
-            review = Review(text=text, rating=rating, place=place, user=self)
+
+        review = Review(text=text, rating=rating, place=place, user=self)
             self.reviews.append(review)
             place.reviews.append(review)
             print("Review added successfully.")
             return True
 
     def add_amenity(self, place, name, description):
-        if isinstance(place, Place) is False:
+        if isinstance(place, Place):
             print("Invalid place object.")
             return False
-        else:
-            amenity = Amenity(name=name, description=description)
-            place.amenities.append(amenity)
-            print(f"Amenity '{name}' added successfully to place '{place.name}'.")
+        amenity = Amenity(name=name, description=description)
+        place.amenities.append(amenity)
+        print(f"Amenity '{name}' added successfully to place '{place.name}'.")
             return True
+
+        def __repr__(self):
+        return f"User(id='{self.id}', email='{self.email}')"
