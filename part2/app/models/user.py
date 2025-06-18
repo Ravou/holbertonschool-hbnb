@@ -10,11 +10,11 @@ class User(BaseModel):
     self.email = email
     self.__password = password
     self.is_admin = is_admin
-    self.reservations = []
-    self.place = []
-    self.review = []
+    self.reservations_ids = []
+    self.places_ids = []
+    self.reviews_ids = []
 
-    def register ():
+    def register(self):
         if not self.first_name:
             print("First name must not be empty.")
             return False
@@ -40,7 +40,7 @@ class User(BaseModel):
     
     @staticmethod
     def is_strong_password(password: str) -> bool:
-        return (len(password) >= 8 and any(c.isupper() for c in password) andany(c.isdigit() for c in password))
+        return (len(password) >= 8 and any(c.isupper() for c in password) and any(c.isdigit() for c in password))
 
     def authenticate(self, password: str) -> bool:
         return self.__password == password
@@ -63,11 +63,15 @@ class User(BaseModel):
         if not isinstance(place, Place):
             print("Invalid place object.")
             return False
-        self.places.append(place)
-        place.owner = self
-        print(f"Place '{place.name}' added successfully.")
-        return True
+        if place.id not in self.place_ids:
+            self.places_ids.append(place.id)
+            place.owner_id = self.id
 
+            print(f"Place '{place.name}' added successfully.")
+            return True
+        else:
+            print("Place already added.")
+            return False
 
     def has_reserved(self, place):
         return any(res.place == place for res in self.reservations)
