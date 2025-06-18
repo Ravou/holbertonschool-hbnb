@@ -7,10 +7,10 @@ class BaseModel:
         self.__created_at = created_at or datetime.now()
         self.__updated_at = updated_at or datetime.now()
 
-    def _save(self):
+    def save(self):
         self.updated_at = datetime.now()
 
-    def __to_dict(self):
+    def to_dict(self):
         return {
                 "id": self.id,
                 "created_at": self.created_at.isoformat(),
@@ -18,7 +18,7 @@ class BaseModel:
                 }
 
     @classmethod
-    def __from_dict(cls, data):
+    def from_dict(cls, data):
         return cls(
                 id=data.get("id"),
                 created_at=datetime.fromisoformat(data.get("created_at")) if "created_at" in data else None,

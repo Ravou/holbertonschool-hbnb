@@ -2,7 +2,7 @@ from models.base_model import BaseModel
 from typing import List
 
 class User(BaseModel):
-    def __init__(self, first_name, last_name, email, password, is_admin)
+    def __init__(self, first_name, last_name, email, password, is_admin):
     super().__init__()
     self.first_name = first_name
     self.last_name = last_name
@@ -14,20 +14,21 @@ class User(BaseModel):
     self.review = []
 
     def register ():
-        if not self.first_name or not self.last_name:
-            print ("First name and last name must not be empty.")
+        if self.first_name == "":
+            print("First name must not be empty.")
             return False
-
-        if not self.is_valid_email(self.email):
-            print("Invalid email adress.")
+        elif self.last_name == "":
+            print("Last name must not be empty.")
             return False
-        
-        if not self.is_strong_password(self.__password):
+        elif self.is_valid_email(self.email) is False:
+            print("Invalid email address.")
+            return False
+        elif self.is_strong_password(self.__password) is False:
             print("Password is not strong enough.")
             return False
-
-        print("User registered successfully.")
-        return True
+        else:
+            print("User registered successfully.")
+            return True
 
     
     @staticmethod
@@ -40,22 +41,28 @@ class User(BaseModel):
     def is_strong_password(password: str) -> bool:
         if len(password) < 8:
             return False
-
-        if not any(c.isupper() for c in password):
+        elif any(c.isupper() for c in password) is False:
             return False
-
-        if not any(c.isdigit() for c in password):
+        elif any(c.isdigit() for c in password) is False:
             return False
-        return True
+        else:
+            return True
+
+    def authenticate(self, password: str) -> bool:
+        return self.__password == password
 
     @classmethod
-    def login(email, password):
-        user = next((u for u in users if u.email == email), None)
+    def login(cls, email, password, users_list):
+        user = None
+        for u in users_list:
+            if u.email == email:
+                user = u
+                break
+
         if user is None:
             print("User not found.")
             return False
-
-        if user.authenticate(password):
+        elif user.authenticate(password) is True:
             print(f"Welcome, {user.first_name}!")
             return True
         else:
@@ -63,79 +70,43 @@ class User(BaseModel):
             return False
 
     
-    def add_place(self, name, title, description, price, latitude, longitude, owner, amenities):
-        if not name:
-            print("Place name is required.")
+    def add_place(self, place):
+        if isinstance(place, Place) is False:
+            print("Invalid place object.")
             return False
-
-        if not title:
-            print("Place title is required.")
-            return False
-
-        if price < 0:
-            print("Price cannot be negative.")
-            return False
-
-        if not isinstance(latitude, (int, float)) or not isinstance(longitude, (int, float)):
-            print("Latitude and longitude must be numbers.")
-            return False
-        if not isinstance(amenities, list):
-            print("Amenities must be a list.")
-            return False
-
-        place = {
-            "name": name,
-            "title": title,
-            "description": description,
-            "price": price,
-            "latitude": latitude,
-            "longitude": longitude,
-            "owner": owner,
-            "amenities": amenities
-        }
-
-        self.place.append(place)
-
-        print(f"Place '{name}' added successfully.")
-        return True
+        else:
+            self.places.append(place)
+            place.owner = self
+            print(f"Place '{place.name}' added successfully.")
+            return True
 
 
     def has_reserved(self, place):
-        return any(res.place == place for res in self.reservations)
+        for res in self.reservations:
+            if res.place == place:
+                return True
+        return False
 
-        place.reserved_by.append(user)
-
-    def add_review(self, text, rating, place, user):
-        if not user.has_reserved(place):
+    def add_review(self, text, rating, place):
+        if self.has_reserved(place) is False:
             print("You must reserve the place before adding a review.")
             return False
-        if not (1 <= rating <= 5):
+        elif rating < 1 or rating > 5:
             print("Rating must be between 1 and 5.")
             return False
-
-        review = {
-                "text": text,
-                "rating": rating,
-                "place": place,
-                "user": user
-                }
-
-        if not hasattr(place, 'reviews'):
-            place.reviews = []
-        place.reviews.append(review)
-
-        print("Review added successfully.")
-        return True
+        else:
+            review = Review(text=text, rating=rating, place=place, user=self)
+            self.reviews.append(review)
+            place.reviews.append(review)
+            print("Review added successfully.")
+            return True
 
     def add_amenity(self, place, name, description):
-        amenity = {
-                "name": name,
-                "description": description
-                }
-        if not hasattr(place, 'amenities'):
-            place.amenities = []
-
-        place.amenities.append(amenity)
-
-        print(f"Amenity '{name}' added successfully to place '{place.name}'.")
-        return True
+        if isinstance(place, Place) is False:
+            print("Invalid place object.")
+            return False
+        else:
+            amenity = Amenity(name=name, description=description)
+            place.amenities.append(amenity)
+            print(f"Amenity '{name}' added successfully to place '{place.name}'.")
+            return True
