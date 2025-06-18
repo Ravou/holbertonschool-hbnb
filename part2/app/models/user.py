@@ -10,9 +10,9 @@ class User(BaseModel):
     self.email = email
     self.__password = password
     self.is_admin = is_admin
-    self.reservations_ids = []
-    self.places_ids = []
-    self.reviews_ids = []
+    self.reservation_ids = []
+    self.place_ids = []
+    self.review_ids = []
 
     def register(self):
         if not self.first_name:
@@ -64,9 +64,8 @@ class User(BaseModel):
             print("Invalid place object.")
             return False
         if place.id not in self.place_ids:
-            self.places_ids.append(place.id)
+            self.place_ids.append(place.id)
             place.owner_id = self.id
-
             print(f"Place '{place.name}' added successfully.")
             return True
         else:
@@ -74,7 +73,7 @@ class User(BaseModel):
             return False
 
     def has_reserved(self, place):
-        return any(res.place == place for res in self.reservations)
+        return place.id in self.reservation_ids
 
     def add_review(self, text, rating, place):
         if not self.has_reserved(place):
@@ -84,20 +83,20 @@ class User(BaseModel):
             print("Rating must be between 1 and 5.")
             return False
 
-        review = Review(text=text, rating=rating, place=place, user=self)
-            self.reviews.append(review)
-            place.reviews.append(review)
-            print("Review added successfully.")
-            return True
+        review = Review(text=text, rating=rating, place_id=place.id, user_id=self.id)
+        self.reviews_ids.append(review.id)
+        place.reviews_ids.append(review.id)
+        print("Review added successfully.")
+        return True
 
     def add_amenity(self, place, name, description):
         if isinstance(place, Place):
             print("Invalid place object.")
             return False
         amenity = Amenity(name=name, description=description)
-        place.amenities.append(amenity)
+        place.amenities_ids.append(amenity.id)
         print(f"Amenity '{name}' added successfully to place '{place.name}'.")
-            return True
+        return True
 
-        def __repr__(self):
+    def __repr__(self):
         return f"User(id='{self.id}', email='{self.email}')"
