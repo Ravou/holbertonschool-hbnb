@@ -5,10 +5,10 @@ class Review(BaseModel):
     _reviews: List['Review'] = []
     
 
-    def __init__(self, user, place, text, rating):
+    def __init__(self, user_id, place_id, text, rating):
         super().__init__()
-        self.user_id = user.id if hasattr(user, 'id') else user
-        self.place_id = place.id if hasattr(place, 'id') else place
+        self.user_id = user_id
+        self.place_id = place_id
         self.text = text
         self.rating = rating
         Review._reviews.append(self)

@@ -1,4 +1,5 @@
 from app.models.base_model import BaseModel
+from app.models.amenity import Amenity
 from typing import List
 
 class Place(BaseModel):
@@ -15,6 +16,7 @@ class Place(BaseModel):
         self.owner_id = owner.id if hasattr(owner, 'id') else owner
         self.amenity_ids = []
         self.reservation_ids = []
+        self.review_ids = []
         Place._places.append(self)
 
 

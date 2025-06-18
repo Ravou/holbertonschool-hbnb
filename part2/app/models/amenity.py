@@ -15,5 +15,12 @@ class Amenity(BaseModel):
     def list_all(cls) -> List['Amenity']:
         return cls._amenities
 
+    @classmethod
+    def get_by_id(cls, id):
+        for amenity in cls._amenities:
+            if amenity.id == id:
+                return amenity
+        return None
+
     def __repr__(self):
         return f"Amenity(id='{self.id}', place_id='{self.place_id}'," f"name='{self.name}', description='{self.description}')"
