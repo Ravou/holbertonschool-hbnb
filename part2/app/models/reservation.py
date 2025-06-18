@@ -12,8 +12,8 @@ class Reservation(BaseModel):
         self.date = date
 
         
-        user.reservations_ids.append(self.id)
-        place.reservations_ids.append(self.id)
+        user.reservation_ids.append(self.id)
+        place.reservation_ids.append(self.id)
 
         Reservation._reservations.append(self)
 
@@ -38,4 +38,4 @@ class Reservation(BaseModel):
                 ]
 
     def __repr__(self):
-        return f"Reservation(id='{self.id}', user_id='{self.user_id}', place_id='{self_id}', date='{self.date}')"
+        return f"Reservation(id='{self.id}', user_id='{self.user_id}', place_id='{self.place_id}', date='{self.date}')"
