@@ -66,7 +66,7 @@ class User(BaseModel):
         if place.id not in self.place_ids:
             self.place_ids.append(place.id)
             place.owner_id = self.id
-            print(f"Place '{place.name}' added successfully.")
+            print(f"Place '{place.title}' added successfully.")
             return True
         else:
             print("Place already added.")
@@ -95,7 +95,7 @@ class User(BaseModel):
             return False
         amenity = Amenity(name=name, description=description)
         place.amenity_ids.append(amenity.id)
-        print(f"Amenity '{name}' added successfully to place '{place.name}'.")
+        print(f"Amenity '{name}' added successfully to place '{place.title}'.")
         return True
 
     def __repr__(self):
