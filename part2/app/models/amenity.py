@@ -5,15 +5,15 @@ class Amenity(BaseModel):
     _amenities: List['Amenity'] = []
 
     def __init__(self, place, name, description):
-        super.__init__()
-        self.place_id = place_id
+        super().__init__()
+        self.place_id = place.id if hasattr(place, 'id') else place
         self.name = name
         self.description = description
         Amenity._amenities.append(self)
 
-        @clasmethod
-        def list_all(cls) -> List['Amenity']:
-            return cls._amenities
+    @classmethod
+    def list_all(cls) -> List['Amenity']:
+        return cls._amenities
 
-        def __repr__(self):
-            return f"Amenity(id='{self.id}', place_id='{self.place_id}', name='{self.name}', description='{self.description}')"
+    def __repr__(self):
+        return f"Amenity(id='{self.id}', place_id='{self.place_id}'," f"name='{self.name}', description='{self.description}')"

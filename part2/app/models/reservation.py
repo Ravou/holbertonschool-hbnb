@@ -7,13 +7,13 @@ class Reservation(BaseModel):
 
     def __init__(self, user, place, date):
         super().__init__()
-        self.user_id = user_id
-        self.place_id = place_id
+        self.user_id = user.id if hasattr(user, 'id') else user
+        self.place_id = place.id if hasattr(place, 'id') else place
         self.date = date
 
         
-        user.reservations.append(self)
-        place.reservations.append(self)
+        user.reservations_ids.append(self.id)
+        place.reservations_ids.append(self.id)
 
         Reservation._reservations.append(self)
 
@@ -29,8 +29,8 @@ class Reservation(BaseModel):
     def reservations_by(cls, user_id: str) -> List['Place']:
         from models.place import Place
         reserved_place_ids = [
-                r.place.id for r in cls._reservations
-                if r.user.id == user_id
+                r.place_id for r in cls._reservations
+                if r.user_id == user_id
                 ]
         return [
                 place for place in Place._places
@@ -38,4 +38,4 @@ class Reservation(BaseModel):
                 ]
 
     def __repr__(self):
-        return f"Reservation(id='{self.id}', user_id='{self.user_id}', place_id='{self.user_id}', date='{slef.date}')"
+        return f"Reservation(id='{self.id}', user_id='{self.user_id}', place_id='{self_id}', date='{self.date}')"
