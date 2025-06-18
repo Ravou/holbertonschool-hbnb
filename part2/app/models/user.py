@@ -11,6 +11,7 @@ class User(BaseModel):
     self.is_admin = is_admin
     self.reservations = []
     self.place = []
+    self.review = []
 
     def register ():
         if not self.first_name or not self.last_name:
