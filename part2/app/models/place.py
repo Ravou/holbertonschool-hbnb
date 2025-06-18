@@ -5,9 +5,8 @@ class Place(BaseModel):
 
     _places = []
 
-    def __init__(self, name, title, description, price, latitude, longitude, owner):
+    def __init__(self, title, description, price, latitude, longitude, owner):
         super().__init__()
-        self.name = name
         self.title = title
         self.description = description
         self.price = price
@@ -32,5 +31,5 @@ class Place(BaseModel):
 
     def __repr__(self):
         amenity_names = [Amenity.get_by_id(aid).name for aid in self.amenity_ids]
-        return f"Place(id='{self.id}', name='{self.name}', amenities={amenity_names})"
+        return f"Place(id='{self.id}', title='{self.title}', amenities={amenity_names})"
 
