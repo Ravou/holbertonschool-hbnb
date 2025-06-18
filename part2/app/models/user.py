@@ -4,15 +4,15 @@ import re
 
 class User(BaseModel):
     def __init__(self, first_name, last_name, email, password, is_admin):
-    super().__init__()
-    self.first_name = first_name
-    self.last_name = last_name
-    self.email = email
-    self.__password = password
-    self.is_admin = is_admin
-    self.reservation_ids = []
-    self.place_ids = []
-    self.review_ids = []
+        super().__init__()
+        self.first_name = first_name
+        self.last_name = last_name
+        self.email = email
+        self.__password = password
+        self.is_admin = is_admin
+        self.reservation_ids = []
+        self.place_ids = []
+        self.review_ids = []
 
     def register(self):
         if not self.first_name:
@@ -84,17 +84,17 @@ class User(BaseModel):
             return False
 
         review = Review(text=text, rating=rating, place_id=place.id, user_id=self.id)
-        self.reviews_ids.append(review.id)
-        place.reviews_ids.append(review.id)
+        self.review_ids.append(review.id)
+        place.review_ids.append(review.id)
         print("Review added successfully.")
         return True
 
     def add_amenity(self, place, name, description):
-        if isinstance(place, Place):
+        if not isinstance(place, Place):
             print("Invalid place object.")
             return False
         amenity = Amenity(name=name, description=description)
-        place.amenities_ids.append(amenity.id)
+        place.amenity_ids.append(amenity.id)
         print(f"Amenity '{name}' added successfully to place '{place.name}'.")
         return True
 
