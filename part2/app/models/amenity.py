@@ -1,5 +1,5 @@
 from typing import List
-from models.base_model import BaseModel
+from app.models.base_model import BaseModel
 
 class Amenity(BaseModel):
     _amenities: List['Amenity'] = []
