@@ -23,13 +23,6 @@ class Place(BaseModel):
     @classmethod
     def list_all(cls) -> List['Place']:
         return cls._places
-        
-    @classmethod
-    def get_by_criteria(cls, user_amenities: List[str]) -> List['Place']:
-        return [
-                place for place in cls._places
-                if all(any(Amenity.get_by_id(amenity_id).name == user_amenity for amenity_id in place.amenity_ids) for user_amenity in user_amenities)
-                ]
 
     def __repr__(self):
         amenity_names = [Amenity.get_by_id(aid).name for aid in self.amenity_ids]

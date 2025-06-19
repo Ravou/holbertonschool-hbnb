@@ -52,14 +52,14 @@ class InMemoryRepository(Repository):
         return next((obj for obj in self._storage.values() if getattr(obj, attr_name) == attr_value), None)
 
 
-    class UserRepository(InMemoryRepository):
-        pass
+class UserRepository(InMemoryRepository):
+    pass
 
-    class PlaceRepository(InMemoryRepository):
-        pass
+class PlaceRepository(InMemoryRepository):
+    pass
 
-    class ReviewRepository(InMemoryRepository):
-        pass
+class ReviewRepository(InMemoryRepository):
+    pass
 
-    class ReservationRepository(InMemoryRepository):
-        pass
+class ReservationRepository(InMemoryRepository):
+    pass

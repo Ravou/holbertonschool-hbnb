@@ -14,7 +14,6 @@ class Reservation(BaseModel):
         
         user.reservation_ids.append(self.id)
         place.reservation_ids.append(self.id)
-
         Reservation._reservations.append(self)
 
     @classmethod
