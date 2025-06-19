@@ -27,7 +27,7 @@ class Reservation(BaseModel):
 
     @classmethod
     def reservations_by(cls, user_id: str) -> List['Place']:
-        from models.place import Place
+        from .place import Place
         reserved_place_ids = [
                 r.place_id for r in cls._reservations
                 if r.user_id == user_id
