@@ -22,5 +22,13 @@ class Amenity(BaseModel):
                 return amenity
         return None
 
+    class AmenityService:
+    @staticmethod
+    def get_by_id(id):
+        for amenity in Amenity.list_all():
+            if amenity.id == id:
+                return amenity
+        return None
+
     def __repr__(self):
         return f"Amenity(id='{self.id}', place_id='{self.place_id}'," f"name='{self.name}', description='{self.description}')"

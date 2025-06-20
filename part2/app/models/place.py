@@ -24,6 +24,19 @@ class Place(BaseModel):
     def list_all(cls) -> List['Place']:
         return cls._places
 
+    @classmethod
+    def get_by_criteria(cls, user_amenities: List[str]) -> List['Place']:
+        return [
+            place for place in cls._place
+            if all(
+                any(
+                    Amenity.get_by_id(amenity_id).name == user_amenity
+                    for amenity_id in place.amenity_ids
+                )
+                for user_amenity in user_amenities
+            )
+        ]
+
     def __repr__(self):
         amenity_names = [Amenity.get_by_id(aid).name for aid in self.amenity_ids]
         return f"Place(id='{self.id}', title='{self.title}', amenities={amenity_names})"
