@@ -35,9 +35,6 @@ class InMemoryRepository(Repository):
             raise ValueError(f"Object with id {obj.id} already exists.")
         self._storage[obj.id] = obj
 
-    def get_by_id(self, user_id):
-        return self.users.get(user_id)
-
     def get(self, obj_id):
         return self._storage.get(obj_id)
 
