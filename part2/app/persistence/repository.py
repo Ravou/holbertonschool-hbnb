@@ -31,7 +31,12 @@ class InMemoryRepository(Repository):
         self._storage = {}
 
     def add(self, obj):
+        if obj.id in self._storage:
+            raise ValueError(f"Object with id {obj.id} already exists.")
         self._storage[obj.id] = obj
+
+    def get_by_id(self, user_id):
+        return self.users.get(user_id)
 
     def get(self, obj_id):
         return self._storage.get(obj_id)
@@ -49,7 +54,7 @@ class InMemoryRepository(Repository):
             del self._storage[obj_id]
 
     def get_by_attribute(self, attr_name, attr_value):
-        return next((obj for obj in self._storage.values() if getattr(obj, attr_name) == attr_value), None)
+        return [obj for obj in self._storage.values() if getattr(obj, attr_name) == attr_value]
 
 
 class UserRepository(InMemoryRepository):

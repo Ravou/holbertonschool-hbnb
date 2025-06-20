@@ -2,25 +2,33 @@ from app.models.user import User
 from app.models.place import Place
 from app.models.review import Review
 from app.models.reservation import Reservation
-from app.persistence.repository import UserRepository, PlaceRepository, ReviewRepository, ReservationRepository
+from app.persistence.repository import (UserRepository, PlaceRepository, ReviewRepository, ReservationRepository)
 
 class UserService:
-    def register_user(self, first_name, last_name, email, password, is_admin):
+    def __init__(self):
+        self.user_repository = UserRepository()
+
+    def get_by_id(self, user_id):
+        return self.user_repository.get_by_id(user_id)
+
+    def register_user(self, first_name, last_name, email, password, is_admin=False):
         if not first_name:
             print("First name must not be empty.")
-            return False
-        elif not last_name:
+            return None
+        if not last_name:
             print("Last name must not be empty.")
-            return False
-        elif not User.is_valid_email(email):
+            return None
+        if not User.is_valid_email(email):
             print("Invalid email address.")
-            return False
-        elif not User.is_strong_password(password):
+            return None
+        if not User.is_strong_password(password):
             print("Password is not strong enough.")
-            return False
-        else:
-            print("User registered successfully.")
-            return True
+            return None
+
+        user = User(first_name, last_name, email, password, is_admin)
+        self.user_repository.add(user)
+        print("User registered successfully.")
+        return user
 
     @classmethod
     def login(cls, email, password, users_list):
