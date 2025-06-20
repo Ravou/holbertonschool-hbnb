@@ -15,7 +15,7 @@ class UserService:
         elif not User.is_valid_email(email):
             print("Invalid email address.")
             return False
-        elif not User.is_strong_password(self.password):
+        elif not User.is_strong_password(password):
             print("Password is not strong enough.")
             return False
         else:
