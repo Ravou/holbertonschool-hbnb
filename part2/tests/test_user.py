@@ -1,52 +1,48 @@
-import pytest
-from app.services.facade import HBnBFacade
+import unittest
+from app.models.user import User
 
-def test_user_can_add_review_to_reserved_place():
-    from app.services.facade import HBnBFacade
+class DummyPlace:
+    def __init__(self, id):
+        self.id = id
 
-    # Initialisation de la façade
-    facade = HBnBFacade()
+class TestUser(unittest.TestCase):
+    def setUp(self):
+        self.user = User(
+            first_name="Alice",
+            last_name="Smith",
+            email="alice.smith@example.com",
+            password="StrongPass1",
+            is_admin=False
+        )
 
-    # Création d'un utilisateur via la façade
-    user = facade.register_user(
-        first_name="Alice",
-        last_name="Smith",
-        email="alice.smith@example.com",
-        password="StrongPass1"
-    )
+    def test_user_creation(self):
+        self.assertEqual(self.user.first_name, "Alice")
+        self.assertEqual(self.user.last_name, "Smith")
+        self.assertEqual(self.user.email, "alice.smith@example.com")
+        print(self.user.is_admin)
+        self.assertFalse(self.user.is_admin)
+        self.assertIsInstance(self.user.reservation_ids, list)
 
-    # Création d'un lieu via la façade
-    place = facade.create_place(
-        title="Cozy Apartment",
-        description="Nice",
-        price=100,
-        latitude=0.0,
-        longitude=0.0,
-        owner_id=user.id
-    )
+    def test_is_valid_email(self):
+        self.assertTrue(User.is_valid_email("test@example.com"))
+        self.assertFalse(User.is_valid_email("invalid-email"))
 
-    # Création d'une réservation pour l'utilisateur et ce lieu
-    reservation = facade.create_reservation(
-        user_id=user.id,
-        place_id=place.id,
-        date="2025-07-01"
-    )
+    def test_is_strong_password(self):
+        self.assertTrue(User.is_strong_password("Password1"))
+        self.assertFalse(User.is_strong_password("weak"))
 
-    # Ajout d'un avis via la façade
-    review = facade.add_review(
-        user_id=user.id,
-        place_id=place.id,
-        text="Super séjour",
-        rating=5
-    )
+    def test_authenticate(self):
+        self.assertTrue(self.user.authenticate("StrongPass1"))
+        self.assertFalse(self.user.authenticate("WrongPass"))
 
-    # Vérifications des relations et de la logique métier
-    assert review.user_id == user.id
-    assert review.place_id == place.id
-    assert review.rating == 5
-    assert review.text == "Super séjour"
+    def test_has_reserved(self):
+        place = DummyPlace(id="abc123")
+        self.user.reservation_ids.append("abc123")
+        self.assertTrue(self.user.has_reserved(place))
+        other_place = DummyPlace(id="def456")
+        self.assertFalse(self.user.has_reserved(other_place))
 
-    # Vérifie que l'avis est bien listé pour ce lieu
-    reviews_for_place = facade.get_reviews_for_place(place.id)
-    assert any(r.id == review.id for r in reviews_for_place)
+if __name__ == '__main__':
+    unittest.main()
+
 

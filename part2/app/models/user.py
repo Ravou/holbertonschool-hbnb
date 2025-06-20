@@ -32,4 +32,4 @@ class User(BaseModel):
         return place.id in self.reservation_ids
 
     def __repr__(self):
-        return f"User(id='{self.id}', email='{self.email}')"
+        return f"User(id='{self.id}', email='{self.email}', is_admin={self.is_admin})"

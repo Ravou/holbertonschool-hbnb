@@ -12,22 +12,8 @@ class HBnBFacade:
         self.amenity_service = AmenityService()
         self.reservation_service = ReservationService()
 
-    from app.services.user_service import UserService
-from app.services.place_service import PlaceService
-from app.services.review_service import ReviewService
-from app.services.amenity_service import AmenityService
-from app.services.reservation_service import ReservationService
-
-class HBnBFacade:
-    def __init__(self):
-        self.user_service = UserService()
-        self.place_service = PlaceService()
-        self.review_service = ReviewService()
-        self.amenity_service = AmenityService()
-        self.reservation_service = ReservationService()
-
     # === User Operations ===
-    def register_user(self, first_name, last_name, email, password, is_admin=False):
+    def register_user(self, first_name, last_name, email, password, is_admin):
         return self.user_service.register_user(first_name, last_name, email, password, is_admin)
 
     def login_user(self, email, password):
