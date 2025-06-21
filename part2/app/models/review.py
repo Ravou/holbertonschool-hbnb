@@ -30,6 +30,17 @@ class Review(BaseModel):
 
     @classmethod
     def create_review(cls, user: Union[User, str], place: Union[Place, str], text: str, rating: int) -> 'Review':
+        from app.models.reservation import Reservation
+
+        user_id = user.id if hasattr(user, 'id') else user
+        place_id = place.id if hasattr(place, 'id') else place
+
+        # Check if the user has a reservation for this place
+        has_reservation = any(
+                r for r in Reservation._reservations if r.user_id == user_id and r.place_id == place_id
+                )
+        if not has_reservation:
+            raise ValueError("User must have a reservation for this place to leave a review")
         return cls(user, place, text, rating)
 
     @classmethod
