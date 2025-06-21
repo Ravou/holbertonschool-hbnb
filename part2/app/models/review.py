@@ -1,12 +1,19 @@
-from typing import List, Union
+from __future__ import annotations
+
+from typing import Union, TYPE_CHECKING, List
 from app.models.base_model import BaseModel
-from app.models.user import User
-from app.models.place import Place
+
+if TYPE_CHECKING:
+    from app.models.user import User
+    from app.models.place import Place
 
 class Review(BaseModel):
     _reviews: List['Review'] = []
 
-    def __init__(self, user: Union[User, str], place: Union[Place, str], text: str, rating: int):
+    def __init__(self, user: Union["User", str], place: Union["Place", str], text: str, rating: int):
+        from app.models.user import User
+        from app.models.place import Place
+
         super().__init__()
         self.user_id = user.id if isinstance(user, User) else user
         self.place_id = place.id if isinstance(place, Place) else place

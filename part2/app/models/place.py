@@ -1,8 +1,12 @@
+from __future__ import annotations
+
 from app.models.base_model import BaseModel
-from app.models.amenity import Amenity
-from app.models.review import Review
-from app.models.reservation import Reservation
-from typing import List
+from typing import List, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from app.models.review import Review
+    from app.models.reservation import Reservation
+    from app.models.user import User
 
 class Place(BaseModel):
     _places: List['Place'] = []

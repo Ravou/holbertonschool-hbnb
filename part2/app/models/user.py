@@ -1,23 +1,21 @@
-from typing import List, Optional
-from app.models.base_model import BaseModel
-from app.models.review import Review
-from app.models.place import Place
-from app.models.reservation import Reservation
+from __future__ import annotations
 from typing import List
-import re
+from app.models.base_model import BaseModel
 
 class User(BaseModel):
-    _user: List['User'] = []
+    _users: List['User'] = []
 
     def __init__(self, first_name, last_name, email, is_admin=False):
         super().__init__()
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
-        self.is_admin = is_admin
+        self._is_admin = is_admin
         self.reservations: List[Reservation] =[]
         self.places: List[Place] = []
         self.reviews: List[Review] = []
+
+        User._users.append(self)
 
     def add_place(self, place: Place):
         if place not in self.places:
@@ -34,6 +32,9 @@ class User(BaseModel):
     def add_reservation(self, reservation: Reservation):
         self.reservations.append(reservation)
         print("Reservation added to user.")
+
+    def is_admin(self):
+        return self._is_admin
 
     @classmethod
     def list_all(cls) -> List['User']:

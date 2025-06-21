@@ -1,5 +1,6 @@
-from typing import List
 from app.models.base_model import BaseModel
+from typing import List
+
 
 class Reservation(BaseModel):
 
