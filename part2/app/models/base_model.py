@@ -30,21 +30,11 @@ class BaseModel:
                 )
 
     def update(self, data):
-        def update(self, data):
     """Update the attributes of the object based on the provided dictionary"""
     for key, value in data.items():
         if key in self.allowed_update_fields and hasattr(self, key):
             setattr(self, key, value)
     self.save()
-
-    def to_dict(self):
-        d = self.__dict__.copy()
-        d["created_at"] = self.created_at.isoformat()
-        d["updated_at"] = self.updated_at.isoformat()
-        return dfor key, value in data.items():
-            if key in self.allowed_update_field and hasattr(self, key):
-                setattr(self, key, value)
-                self.updated_at = datetime.now()
 
     def __repr__(self):
         return f"BaseModel(id='{self.id}', created_at='{self.created_at.isoformat()}', updated_at='{self.updated_at.isoformat()}')"
