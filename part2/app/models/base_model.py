@@ -23,9 +23,6 @@ class BaseModel:
         created_str = data.get("created_at")
         updated_str = data.get("updated_at")
 
-        created = data.get("created_at")
-        updated = data.get("updated_at")
-
         created_at=datetime.fromisoformat(created_at) if created_at else None
         updated_at=datetime.fromisoformat(updated_at) if updated_at else None
 
@@ -36,10 +33,15 @@ class BaseModel:
                 )
 
     def update(self, data):
-        for key, value in data.items():
-            if key in self.allowed_update_fields and hasattr(self, key):
-                setattr(self, key, value)
+        def update(self, data):
+    updated = False
+    for key, value in data.items():
+        if key in self.allowed_update_fields and hasattr(self, key):
+            setattr(self, key, value)
+            updated = True
+    if updated:
         self.save()
+
 
     def __repr__(self):
         return f"BaseModel(id='{self.id}', created_at='{self.created_at.isoformat()}', updated_at='{self.updated_at.isoformat()}')"
