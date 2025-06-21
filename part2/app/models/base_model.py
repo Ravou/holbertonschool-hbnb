@@ -2,6 +2,8 @@ import uuid
 from datetime import datetime
 
 class BaseModel:
+    allowed_update_fields = []
+
     def __init__(self, id=None, created_at=None, updated_at=None):
         self.id = id or str(uuid.uuid4())
         self.created_at = created_at or datetime.now()
@@ -11,14 +13,16 @@ class BaseModel:
         self.updated_at = datetime.now()
 
     def to_dict(self):
-        return {
-                "id": self.id,
-                "created_at": self.created_at.isoformat(),
-                "updated_at": self.updated_at.isoformat()
-                }
+        d = self.__dict__.copy()
+        d["created_at"]: self.created_at.isoformat()
+        d["updated_at"]: self.updated_at.isoformat()
+        return d
 
     @classmethod
     def from_dict(cls, data):
+        created = data.get("created_at")
+        updated = data.get("updates_at")
+
         return cls(
                 id=data.get("id"),
                 created_at=datetime.fromisoformat(data.get("created_at")) if "created_at" in data else None,
@@ -26,8 +30,12 @@ class BaseModel:
                 )
 
     def update(self, data):
-        for key, value in data.items():
-            if hasattr(self, key):
+        def to_dict(self):
+    d = self.__dict__.copy()
+    d["created_at"] = self.created_at.isoformat()
+    d["updated_at"] = self.updated_at.isoformat()
+    return dfor key, value in data.items():
+            if key in self.allowed_update_field and hasattr(self, key):
                 setattr(self, key, value)
         self.updated_at = datetime.now()
 
