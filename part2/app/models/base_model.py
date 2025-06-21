@@ -20,6 +20,9 @@ class BaseModel:
 
     @classmethod
     def from_dict(cls, data):
+        created_str = data.get("created_at")
+        updated_str = data.get("updated_at")
+
         created = data.get("created_at")
         updated = data.get("updated_at")
 
@@ -29,14 +32,14 @@ class BaseModel:
         return cls(
                 id=data.get("id"),
                 created_at=created_at,
-                updates_at=updated_at
+                updated_at=updated_at
                 )
 
     def update(self, data):
         for key, value in data.items():
             if key in self.allowed_update_fields and hasattr(self, key):
                 setattr(self, key, value)
-                self.save()
+        self.save()
 
     def __repr__(self):
         return f"BaseModel(id='{self.id}', created_at='{self.created_at.isoformat()}', updated_at='{self.updated_at.isoformat()}')"
