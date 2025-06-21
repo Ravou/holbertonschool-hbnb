@@ -1,60 +1,69 @@
-from app.services.user_service import UserService
-from app.services.place_service import PlaceService
-from app.services.review_service import ReviewService
-from app.services.amenity_service import AmenityService
-from app.services.reservation_service import ReservationService
+from app.persistence.repository import InMemoryRepository
+from app.models.user import User
+from app.models.place import Place
+from app.models.review import Review
+from app.models.reservation import Reservation
+from app.models.amenity import Amenity
+from typing import Optional, List
 
 class HBnBFacade:
     def __init__(self):
-        self.user_service = UserService()
-        self.place_service = PlaceService()
-        self.review_service = ReviewService()
-        self.amenity_service = AmenityService()
-        self.reservation_service = ReservationService()
+        self.user_repo = InMemoryRepository()
+        self.place_repo = InMemoryRepository()
+        self.review_repo = InMemoryRepository()
+        self.amenity_repo = InMemoryRepository()
 
-    # === User Operations ===
-    def register_user(self, first_name, last_name, email, password, is_admin):
-        return self.user_service.register_user(first_name, last_name, email, password, is_admin)
+# --------- USER ----------
+    def create_user(self, first_name: str, last_name: str, email: str, is_admin=False) -> User:
+        user = User(first_name, last_name, email, is_admin)
+        self.users.append(user)
+        return user
 
-    def login_user(self, email, password):
-        return self.user_service.login(email, password)
+    def get_user(self, user_id: str) -> Optional[User]:
+        return next((u for u in self.users if u.id == user_id), None)
 
-    def add_place_to_user(self, user_id, place_data):
-        user = self.user_service.get_by_id(user_id)
-        place = self.place_service.create_place(**place_data)
-        return self.user_service.add_place_to_user(user, place)
+    def list_users(self) -> List[User]:
+        return self.users
 
-    # === Place Operations ===
-    def create_place(self, title, description, price, latitude, longitude, owner_id):
-        owner = self.user_service.get_by_id(owner_id)
-        return self.place_service.create_place(title, description, price, latitude, longitude, owner)
+    # --------- PLACE ----------
+    def create_place(self, title: str, description: str, price: float, latitude: float, longitude: float, owner: User) -> Place:
+        place = Place(title, description, price, latitude, longitude, owner)
+        self.places.append(place)
+        owner.add_place(place)
+        return place
 
-    def get_place(self, place_id):
-        return self.place_service.get_place_by_id(place_id)
+    def get_place(self, place_id: str) -> Optional[Place]:
+        return next((p for p in self.places if p.id == place_id), None)
 
-    def search_places(self, amenities=None):
-        return self.place_service.find_places_by_amenities(amenities or [])
+    def list_places(self) -> List[Place]:
+        return self.places
 
-    # === Review Operations ===
-    def add_review(self, user_id, place_id, text, rating):
-        user = self.user_service.get_by_id(user_id)
-        place = self.place_service.get_place_by_id(place_id)
-        return self.review_service.create_review(user, place, text, rating)
+    # --------- REVIEW ----------
+    def create_review(self, user: User, place: Place, content: str, rating: int) -> Review:
+        review = Review(user, place, content, rating)
+        self.reviews.append(review)
+        user.add_review(review)
+        place.add_review(review)
+        return review
 
-    def get_reviews_for_place(self, place_id):
-        return self.review_service.list_by_place(place_id)
+    def list_reviews(self) -> List[Review]:
+        return self.reviews
 
-    # === Reservation Operations ===
-    def create_reservation(self, user_id, place_id, date):
-        user = self.user_service.get_by_id(user_id)
-        place = self.place_service.get_place_by_id(place_id)
-        return self.reservation_service.create_reservation(user, place, date)
+    # --------- RESERVATION ----------
+    def create_reservation(self, user: User, place: Place, start_date, end_date) -> Reservation:
+        reservation = Reservation(user, place, start_date, end_date)
+        self.reservations.append(reservation)
+        user.add_reservation(reservation)
+        return reservation
 
-    def get_user_reservations(self, user_id):
-        return self.reservation_service.reservations_by_user(user_id)
+    def list_reservations(self) -> List[Reservation]:
+        return self.reservations
 
-    # === Amenity Operations ===
-    def add_amenity_to_place(self, place_id, name, description):
-        place = self.place_service.get_place_by_id(place_id)
-        return self.amenity_service.add_amenity_to_place(place, name, description)
+    # --------- AMENITY ----------
+    def create_amenity(self, name: str, description: str) -> Amenity:
+        amenity = Amenity(name, description)
+        self.amenities.append(amenity)
+        return amenity
 
+    def list_amenities(self) -> List[Amenity]:
+        return self.amenities
