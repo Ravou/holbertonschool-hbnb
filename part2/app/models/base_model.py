@@ -33,13 +33,12 @@ class BaseModel:
                 )
 
     def update(self, data):
-        def update(self, data):
-    updated = False
-    for key, value in data.items():
-        if key in self.allowed_update_fields and hasattr(self, key):
-            setattr(self, key, value)
-            updated = True
-    if updated:
+        updated = False
+        for key, value in data.items():
+            if key in self.allowed_update_fields and hasattr(self, key):
+                setattr(self, key, value)
+                updated = True
+                if updated:
         self.save()
 
 
