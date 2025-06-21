@@ -23,18 +23,20 @@ class BaseModel:
         created = data.get("created_at")
         updated = data.get("updated_at")
 
+        created_at=datetime.fromisoformat(created_at) if created_at else None
+        updated_at=datetime.fromisoformat(updated_at) if updated_at else None
+
         return cls(
                 id=data.get("id"),
-                created_at=datetime.fromisoformat(created_at) if created_at else None,
-                updated_at=datetime.fromisoformat(updated_at) if updated_at else None
+                created_at=created_at,
+                updates_at=updated_at
                 )
 
     def update(self, data):
-    """Update the attributes of the object based on the provided dictionary"""
-    for key, value in data.items():
-        if key in self.allowed_update_fields and hasattr(self, key):
-            setattr(self, key, value)
-    self.save()
+        for key, value in data.items():
+            if key in self.allowed_update_fields and hasattr(self, key):
+                setattr(self, key, value)
+                self.save()
 
     def __repr__(self):
         return f"BaseModel(id='{self.id}', created_at='{self.created_at.isoformat()}', updated_at='{self.updated_at.isoformat()}')"
