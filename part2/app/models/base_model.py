@@ -20,17 +20,17 @@ class BaseModel:
 
     @classmethod
     def from_dict(cls, data):
-        created_str = data.get("created_at")
-        updated_str = data.get("updated_at")
+        created_at_str = data.get("created_at")
+        updated_at_str = data.get("updated_at")
 
-        created_at=datetime.fromisoformat(created_at) if created_at else None
-        updated_at=datetime.fromisoformat(updated_at) if updated_at else None
+        created_at = datetime.fromisoformat(created_at_str) if created_at_str else None
+        updated_at = datetime.fromisoformat(updated_at_str) if updated_at_str else None
 
         return cls(
                 id=data.get("id"),
                 created_at=created_at,
                 updated_at=updated_at
-                )
+        )
 
     def update(self, data):
         updated = False
@@ -38,8 +38,8 @@ class BaseModel:
             if key in self.allowed_update_fields and hasattr(self, key):
                 setattr(self, key, value)
                 updated = True
-                if updated:
-        self.save()
+        if updated:
+            self.save()
 
 
     def __repr__(self):
