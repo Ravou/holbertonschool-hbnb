@@ -14,30 +14,37 @@ class BaseModel:
 
     def to_dict(self):
         d = self.__dict__.copy()
-        d["created_at"]: self.created_at.isoformat()
-        d["updated_at"]: self.updated_at.isoformat()
+        d["created_at"] = self.created_at.isoformat()
+        d["updated_at"] = self.updated_at.isoformat()
         return d
 
     @classmethod
     def from_dict(cls, data):
         created = data.get("created_at")
-        updated = data.get("updates_at")
+        updated = data.get("updated_at")
 
         return cls(
                 id=data.get("id"),
-                created_at=datetime.fromisoformat(data.get("created_at")) if "created_at" in data else None,
-                updated_at=datetime.fromisoformat(data.get("updated_at")) if "updated_at" in data else None
+                created_at=datetime.fromisoformat(created_at) if created_at else None,
+                updated_at=datetime.fromisoformat(updated_at) if updated_at else None
                 )
 
     def update(self, data):
-        def to_dict(self):
-    d = self.__dict__.copy()
-    d["created_at"] = self.created_at.isoformat()
-    d["updated_at"] = self.updated_at.isoformat()
-    return dfor key, value in data.items():
+        def update(self, data):
+    """Update the attributes of the object based on the provided dictionary"""
+    for key, value in data.items():
+        if key in self.allowed_update_fields and hasattr(self, key):
+            setattr(self, key, value)
+    self.save()
+
+    def to_dict(self):
+        d = self.__dict__.copy()
+        d["created_at"] = self.created_at.isoformat()
+        d["updated_at"] = self.updated_at.isoformat()
+        return dfor key, value in data.items():
             if key in self.allowed_update_field and hasattr(self, key):
                 setattr(self, key, value)
-        self.updated_at = datetime.now()
+                self.updated_at = datetime.now()
 
     def __repr__(self):
         return f"BaseModel(id='{self.id}', created_at='{self.created_at.isoformat()}', updated_at='{self.updated_at.isoformat()}')"
