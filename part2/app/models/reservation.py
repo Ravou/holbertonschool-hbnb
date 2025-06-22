@@ -5,6 +5,7 @@ from typing import List
 class Reservation(BaseModel):
 
     _reservations: List['Reservation'] = []
+    allowed_update_fields = ['start_date', 'end_date', 'number_of_guests']
 
     def __init__(self, user, place, date):
         super().__init__()

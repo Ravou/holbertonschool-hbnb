@@ -3,6 +3,7 @@ from typing import List
 
 class Amenity(BaseModel):
     _amenities: List['Amenity'] = []
+    allowed_update_fields = ['name', 'description']
 
     def __init__(self, name: str, description: str):
         super().__init__()

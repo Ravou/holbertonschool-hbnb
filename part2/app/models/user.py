@@ -5,6 +5,8 @@ from app.models.base_model import BaseModel
 class User(BaseModel):
     _users: List['User'] = []
 
+    allowed_update_fields = ['first_name', 'last_name', 'email']
+
     def __init__(self, first_name, last_name, email, is_admin=False):
         super().__init__()
         self.first_name = first_name

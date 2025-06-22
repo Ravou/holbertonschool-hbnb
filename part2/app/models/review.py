@@ -9,6 +9,7 @@ if TYPE_CHECKING:
 
 class Review(BaseModel):
     _reviews: List['Review'] = []
+    allowed_update_fields = ['rating', 'comment']
 
     def __init__(self, user: Union["User", str], place: Union["Place", str], text: str, rating: int):
         from app.models.user import User

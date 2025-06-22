@@ -11,6 +11,8 @@ if TYPE_CHECKING:
 class Place(BaseModel):
     _places: List['Place'] = []
 
+    allowed_update_fields = ['title', 'description', 'price_per_night', 'address']
+
     def __init__(self, title, description, price, latitude, longitude, owner):
         super().__init__()
         self.title = title
