@@ -38,31 +38,29 @@ class UserList(Resource):
                 'email': new_user.email
         }, 201
 
-    @api.expect(user_model, validate=True)
-    @api.response(200, 'User updated successfully')
-    @api.response(404, 'User not found')
+    @api.response(200, 'Users retrieved successfully')
+    @api.response(500, 'Internal server error')
     def get(self):
-    """Get list of users"""
-    try:
-        limit = request.args.get('limit', default=None, type=int)
-        if limit is not None and limit <= 0:
-            return {'error': 'Limit must be positive'}, 400
-        users = list_users()
-        if not users:
-            return [], 200  # Retourne une liste vide si aucun utilisateur
-        if limit:
-            users = users[:limit]
+        """Get list of all users"""
+        try:
+            users = facade.list_users()
+
+            if not users:
+                return [], 200  # Retourne liste vide si aucun user
+
             result = [
-                    {
-                        'id': u.id,
-                        'first_name': u.first_name,
-                        'last_name': u.last_name,
-                        'email': u.email
-                        } for u in users
-                    ]
+                {
+                    'id': u.id,
+                    'first_name': u.first_name,
+                    'last_name': u.last_name,
+                    'email': u.email
+                } for u in users
+            ]
             return result, 200
+
         except Exception as e:
             return {'error': f'Internal server error: {str(e)}'}, 500
+
 
 @api.route('/<int:user_id>')
 class UserUpdate(Resource):
