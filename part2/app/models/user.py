@@ -33,6 +33,7 @@ class User(BaseModel):
         self.reservations.append(reservation)
         print("Reservation added to user.")
 
+    @property
     def is_admin(self):
         return self._is_admin
 
