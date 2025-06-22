@@ -5,7 +5,7 @@ from app.models.base_model import BaseModel
 class User(BaseModel):
     _users: List['User'] = []
 
-    allowed_update_fields = ['first_name', 'last_name', 'email']
+    allowed_update_fields = ['first_name', 'last_name', 'email', 'is_admin']
 
     def __init__(self, first_name, last_name, email, is_admin=False):
         super().__init__()
@@ -34,6 +34,11 @@ class User(BaseModel):
     def add_reservation(self, reservation: Reservation):
         self.reservations.append(reservation)
         print("Reservation added to user.")
+
+    @classmethod
+    def get_by_email(cls, email: str) -> 'User' | None:
+        return next((user for user in cls._users if user.email == email), None)
+
 
     @property
     def is_admin(self):
