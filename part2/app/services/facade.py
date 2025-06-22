@@ -16,6 +16,8 @@ class HBnBFacade:
 
 # --------- USER ----------
     def create_user(self, first_name: str, last_name: str, email: str, is_admin=False) -> User:
+        if self.get_user_by_email(email):
+            raise ValueError("Email already registered.")
         user = User(first_name, last_name, email, is_admin)
         self.user_repo.add(user)
         return user
@@ -24,7 +26,7 @@ class HBnBFacade:
         return self.user_repo.get(user_id)
 
     def list_users(self) -> List[User]:
-        return self.user_repo.all()
+        return self.user_repo.get_all()
 
     def update_user(self, user_id, new_data):
         user = self.user_repo.get(user_id)
@@ -32,10 +34,12 @@ class HBnBFacade:
             return None
         for key, value in new_data.items():
             setattr(user, key, value)
-            return user
+        return user
 
     def get_user_by_email(self, email):
-        return User.get_by_email(email)
+        users = self.user_repo.get_by_attribute('email', email)
+        return users[0] if users else None
+
 
     # --------- PLACE ----------
     def create_place(self, title: str, description: str, price: float, latitude: float, longitude: float, owner: User) -> Place:
