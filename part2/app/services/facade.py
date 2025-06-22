@@ -17,7 +17,7 @@ class HBnBFacade:
 # --------- USER ----------
     def create_user(self, first_name: str, last_name: str, email: str, is_admin=False) -> User:
         user = User(first_name, last_name, email, is_admin)
-        self.users_repo.add(user)
+        self.user_repo.add(user)
         return user
 
     def get_user(self, user_id: str) -> Optional[User]:
@@ -37,12 +37,12 @@ class HBnBFacade:
         return self.place_repo.get(place_id)
 
     def list_places(self) -> List[Place]:
-        return self.places_repo.all()
+        return self.place_repo.all()
 
     # --------- REVIEW ----------
     def create_review(self, user: User, place: Place, content: str, rating: int) -> Review:
         review = Review.create_review(user, place, content, rating)
-        self.reviews_repo(review)
+        self.review_repo(review)
         user.add_review(review)
         place.add_review(review)
         return review
@@ -54,18 +54,18 @@ class HBnBFacade:
     # --------- RESERVATION ----------
     def create_reservation(self, user: User, place: Place, start_date, end_date) -> Reservation:
         reservation = Reservation(user, place, start_date, end_date)
-        self.reservations_repo.add(reservation)
+        self.reservation_repo.add(reservation)
         user.add_reservation(reservation)
         return reservation
 
     def list_reservations(self) -> List[Reservation]:
-        return self.reservations_repo.all()
+        return self.reservation_repo.all()
 
     # --------- AMENITY ----------
     def create_amenity(self, name: str, description: str) -> Amenity:
         amenity = Amenity(name, description)
-        self.amenities_repo.add(amenity)
+        self.amenitie_repo.add(amenity)
         return amenity
 
     def list_amenities(self) -> List[Amenity]:
-        return self.amenities_repo.all()
+        return self.amenity_repo.all()
