@@ -52,16 +52,3 @@ class InMemoryRepository(Repository):
 
     def get_by_attribute(self, attr_name, attr_value):
         return [obj for obj in self._storage.values() if getattr(obj, attr_name) == attr_value]
-
-
-class UserRepository(InMemoryRepository):
-    pass
-
-class PlaceRepository(InMemoryRepository):
-    pass
-
-class ReviewRepository(InMemoryRepository):
-    pass
-
-class ReservationRepository(InMemoryRepository):
-    pass
