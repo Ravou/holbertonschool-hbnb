@@ -42,7 +42,7 @@ class HBnBFacade:
     # --------- REVIEW ----------
     def create_review(self, user: User, place: Place, content: str, rating: int) -> Review:
         review = Review.create_review(user, place, content, rating)
-        self.review_repo(review)
+        self.review_repo.add(review)
         user.add_review(review)
         place.add_review(review)
         return review
@@ -64,7 +64,7 @@ class HBnBFacade:
     # --------- AMENITY ----------
     def create_amenity(self, name: str, description: str) -> Amenity:
         amenity = Amenity(name, description)
-        self.amenitie_repo.add(amenity)
+        self.amenity_repo.add(amenity)
         return amenity
 
     def list_amenities(self) -> List[Amenity]:
