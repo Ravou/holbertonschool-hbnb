@@ -38,34 +38,31 @@ class UserList(Resource):
                 'email': new_user.email
         }, 201
 
-    @api.response(200, 'Users retrieved successfully')
-    @api.response(404, 'No users found')
-    @api.response(500, 'Internal server error')
+    @api.expect(user_model, validate=True)
+    @api.response(200, 'User updated successfully')
+    @api.response(404, 'User not found')
     def get(self):
-        """
-        Get list of users
-        """
-        try:
-            limit = request.args.get('limit', default=None, type=int)
-            if limit is not None and limit <= 0:
-                return {'error': 'Limit must be positive'}, 400
-
-            users = facade.list_users()
-
-            if not users:
-                # No users found — return 404 or 200 with a message
-                return {'message': 'No users found'}, 404
-
-            if limit:
-                users = users[:limit]
-
-            result = [{'id': u.id, 'first_name': u.first_name, 'last_name': u.last_name, 'email': u.email} for u in users]
-
-            return {'users': result}, 200
-
+    """Get list of users"""
+    try:
+        limit = request.args.get('limit', default=None, type=int)
+        if limit is not None and limit <= 0:
+            return {'error': 'Limit must be positive'}, 400
+        users = list_users()
+        if not users:
+            return [], 200  # Retourne une liste vide si aucun utilisateur
+        if limit:
+            users = users[:limit]
+            result = [
+                    {
+                        'id': u.id,
+                        'first_name': u.first_name,
+                        'last_name': u.last_name,
+                        'email': u.email
+                        } for u in users
+                    ]
+            return result, 200
         except Exception as e:
-            # Here you would log the error (e.g. logger.error(str(e)))
-            return {'error': 'Internal server error'}, 500
+            return {'error': f'Internal server error: {str(e)}'}, 500
 
 @api.route('/<int:user_id>')
 class UserUpdate(Resource):
