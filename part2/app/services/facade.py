@@ -77,12 +77,19 @@ class HBnBFacade:
         return self.reservation_repo.all()
 
     # --------- AMENITY ----------
-    def create_amenity(self, name: str, description: str) -> Amenity:
-        amenity = Amenity(name, description)
-        self.amenity_repo.add(amenity)
+    def create_amenity(self, amenity_data):
+        amenity = Amenity(**amenity_data)
+        self.repo.add(amenity)
         return amenity
 
-    def list_amenities(self) -> List[Amenity]:
-        return self.amenity_repo.all()
+    def get_amenity(self, amenity_id):
+        return self.repo.get(amenity_id)
+
+    def get_all_amenities(self):
+        return self.repo.get_all()
+
+    def update_amenity(self, amenity_id, amenity_data):
+        self.repo.update(amenity_id, amenity_data)
+        return self.repo.get(amenity_id)
 
 facade = HBnBFacade()
