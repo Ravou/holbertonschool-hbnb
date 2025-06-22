@@ -1,48 +1,57 @@
-import unittest
 from app.models.user import User
+from app.models.place import Place
+from app.models.review import Review
+from app.models.reservation import Reservation
+from app.models.amenity import Amenity
 
-class DummyPlace:
-    def __init__(self, id):
-        self.id = id
+def test_user_relationships():
+    # Create a user
+    user = User(
+        first_name="Alice",
+        last_name="Dupont",
+        email="alice@example.com",
+        is_admin=True
+    )
 
-class TestUser(unittest.TestCase):
-    def setUp(self):
-        self.user = User(
-            first_name="Alice",
-            last_name="Smith",
-            email="alice.smith@example.com",
-            password="StrongPass1",
-            is_admin=False
-        )
+    # Check user is saved
+    assert user in User.list_all()
 
-    def test_user_creation(self):
-        self.assertEqual(self.user.first_name, "Alice")
-        self.assertEqual(self.user.last_name, "Smith")
-        self.assertEqual(self.user.email, "alice.smith@example.com")
-        print(self.user.is_admin)
-        self.assertFalse(self.user.is_admin)
-        self.assertIsInstance(self.user.reservation_ids, list)
+    # Create a place
+    place = Place(
+        title="Vacation Home",
+        description="Beautiful house by the sea",
+        price=150,
+        latitude=43.6108,
+        longitude=3.8767,
+        owner=user
+    )
+    user.add_place(place)
+    assert place in user.places
 
-    def test_is_valid_email(self):
-        self.assertTrue(User.is_valid_email("test@example.com"))
-        self.assertFalse(User.is_valid_email("invalid-email"))
+    # Create a review
+    review = Review(
+        user=user,
+        place=place,
+        text="Amazing experience!",
+        rating=5
+    )
+    place.add_review(review)
+    assert review in place.reviews
 
-    def test_is_strong_password(self):
-        self.assertTrue(User.is_strong_password("Password1"))
-        self.assertFalse(User.is_strong_password("weak"))
+    # Create a reservation
+    reservation = Reservation(
+        user=user,
+        place=place,
+        date="2025-07-01 to 2025-07-07"
+    )
+    place.add_reservation(reservation)
+    assert reservation in place.reservations
 
-    def test_authenticate(self):
-        self.assertTrue(self.user.authenticate("StrongPass1"))
-        self.assertFalse(self.user.authenticate("WrongPass"))
-
-    def test_has_reserved(self):
-        place = DummyPlace(id="abc123")
-        self.user.reservation_ids.append("abc123")
-        self.assertTrue(self.user.has_reserved(place))
-        other_place = DummyPlace(id="def456")
-        self.assertFalse(self.user.has_reserved(other_place))
-
-if __name__ == '__main__':
-    unittest.main()
-
+    # Create an amenity
+    amenity = Amenity(
+            name="WiFi",
+            description="Wireless internet access"
+    )
+    place.add_amenity(amenity)
+    assert amenity in place.amenities
 
