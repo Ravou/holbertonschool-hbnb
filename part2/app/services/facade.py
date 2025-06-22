@@ -26,6 +26,17 @@ class HBnBFacade:
     def list_users(self) -> List[User]:
         return self.user_repo.all()
 
+    def update_user(self, user_id, new_data):
+        user = self.user_repo.get(user_id)
+        if not user:
+            return None
+        for key, value in new_data.items():
+            setattr(user, key, value)
+            return user
+
+    def get_user_by_email(self, email):
+        return User.get_by_email(email)
+
     # --------- PLACE ----------
     def create_place(self, title: str, description: str, price: float, latitude: float, longitude: float, owner: User) -> Place:
         place = Place(title, description, price, latitude, longitude, owner)
@@ -69,3 +80,5 @@ class HBnBFacade:
 
     def list_amenities(self) -> List[Amenity]:
         return self.amenity_repo.all()
+
+facade = HBnBFacade()
