@@ -29,7 +29,7 @@ class HBnBFacade:
     # --------- PLACE ----------
     def create_place(self, title: str, description: str, price: float, latitude: float, longitude: float, owner: User) -> Place:
         place = Place(title, description, price, latitude, longitude, owner)
-        self.places_repo.add(place)
+        self.place_repo.add(place)
         owner.add_place(place)
         return place
 
