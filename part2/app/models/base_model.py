@@ -12,24 +12,27 @@ class BaseModel:
         self.updated_at = datetime.now()
 
     def to_dict(self):
-        d = self.__dict__.copy()
-        d["created_at"] = self.created_at.isoformat()
-        d["updated_at"] = self.updated_at.isoformat()
+        d = {}
+        for key, value in self.__dict__.items():
+            if isinstance(value, datetime):
+                d[key] = value.isoformat()
+            elif isinstance(value, BaseModel):
+                d[key + "_id"] = value.id
+            else:
+                d[key] = value
         return d
 
     @classmethod
     def from_dict(cls, data):
-        created_at_str = data.get("created_at")
-        updated_at_str = data.get("updated_at")
+        created_at = datetime.fromisoformat(data["created_at"]) if "created_at" in data else None
+        updated_at = datetime.fromisoformat(data["updated_at"]) if "updated_at" in data else None
 
-        created_at = datetime.fromisoformat(created_at_str) if created_at_str else None
-        updated_at = datetime.fromisoformat(updated_at_str) if updated_at_str else None
-
-        return cls(
+        obj = cls(
                 id=data.get("id"),
                 created_at=created_at,
                 updated_at=updated_at
         )
+        return obj
 
     def update(self, data):
         updated = False

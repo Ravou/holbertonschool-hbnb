@@ -43,6 +43,10 @@ class User(BaseModel):
     @property
     def is_admin(self):
         return self._is_admin
+    
+    @is_admin.setter
+    def is_admin(self, value: bool):
+        self._is_admin = value
 
     @classmethod
     def list_all(cls) -> List['User']:
