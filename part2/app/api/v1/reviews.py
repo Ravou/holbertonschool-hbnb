@@ -10,7 +10,7 @@ review_model = api.model('Review', {
     'text': fields.String(required=True, description='Text of the review'),
     'rating': fields.Integer(required=True, description='Rating of the place (1-5)'),
     'user_id': fields.String(required=True, description='ID of the user'),
-    'place_id': fields.String(required=True, description='ID of the place')
+    'place_id': fields.String(required=True, description='ID of the place'),
     'reservation_id': fields.String(required=True, description='ID of the reservation')
 })
 
@@ -20,25 +20,7 @@ class ReviewList(Resource):
     @api.response(201, 'Review successfully created')
     @api.response(400, 'Invalid input data')
     def post(self):
-        try:
-            review_data = request.json
-            if not review_data:
-                raise BadRequest("Missing JSON data")
-
-            # Call facade to create review (with reservation check inside)
-            review = facade.create_review(review_data)
-
-            # Return success message with HTTP 201 Created
-            return {'message': 'Review successfully created', 'review_id': review.id}, 201
-
-        except ValueError as e:
-            # Raised when required fields missing or reservation check fails
-            raise BadRequest(str(e))
-
-        except Exception as e:
-            # Catch unexpected errors
-            api.logger.error(f"Error creating review: {str(e)}")
-            return {'message': 'Internal server error'}, 500
+        
 
 @api.route('/<string:review_id>')
 class ReviewResource(Resource):
@@ -83,4 +65,3 @@ class PlaceReviewList(Resource):
             raise NotFound('Place not found')
         reviews = facade.get_reviews_by_place(place_id)
         return [review.__dict__ for review in reviews], 200
-
