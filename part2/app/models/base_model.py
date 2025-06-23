@@ -11,16 +11,25 @@ class BaseModel:
     def save(self):
         self.updated_at = datetime.now()
 
-    def to_dict(self):
-        d = {}
+    def to_dict(self, seen=None):
+        if seen is None:
+            seen = set()
+
+        if id(self) in seen:
+            return f"<Recursion detected for object {self.id}>"
+        seen.add(id(self))
+
+        result = {}
         for key, value in self.__dict__.items():
-            if isinstance(value, datetime):
-                d[key] = value.isoformat()
-            elif isinstance(value, BaseModel):
-                d[key + "_id"] = value.id
+            if isinstance(value, BaseModel):
+                result[key] = value.to_dict(seen)
+            elif isinstance(value, list):
+                result[key] = [item.to_dict(seen) if isinstance(item, BaseModel) else item for item in value]
+            elif isinstance(value, datetime):
+                result[key] = value.isoformat()
             else:
-                d[key] = value
-        return d
+                result[key] = value
+        return result
 
     @classmethod
     def from_dict(cls, data):
