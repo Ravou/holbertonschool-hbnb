@@ -5,7 +5,7 @@ from app.models.review import Review
 from app.models.reservation import Reservation
 from app.models.amenity import Amenity
 from typing import Optional, List
-
+from datetime import datetime
 class HBnBFacade:
     def __init__(self):
         self.user_repo = InMemoryRepository()
@@ -51,20 +51,73 @@ class HBnBFacade:
     def get_place(self, place_id: str) -> Optional[Place]:
         return self.place_repo.get(place_id)
 
-    def list_places(self) -> List[Place]:
-        return self.place_repo.all()
+    def get_all_places(self) -> List[Place]:
+        return self.place_repo.get_all()
+
+    def update_place(self, place_id: str, data: dict) -> Optional[Place]:
+        place = self.place_repo.get(place_id)
+        if not place:
+            return None
+        protected_fields = {
+                "id", "owner_id", "created_at", "updated_at",
+                "owner", "reviews", "reservations", "amenities"
+                }
+        filtered_data = {k: v for k, v in data.items() if k not in protected_fields}
+        self.place_repo.update(place_id, filtered_data)
+
+        return place
+
 
     # --------- REVIEW ----------
-    def create_review(self, user: User, place: Place, content: str, rating: int) -> Review:
-        review = Review.create_review(user, place, content, rating)
+    
+    def create_review(self, review_data: dict) -> Review:
+        user_id = review_data.get('user_id')
+        place_id = review_data.get('place_id')
+        text = review_data.get('text', '')
+        rating = review_data.get('rating')
+
+        if not user_id or not place_id or rating is None:
+            raise ValueError("Missing required fields: user_id, place_id, rating")
+        reservations = self.reservation_repo.get_all()
+
+        has_reservation = any(
+            r for r in reservations if r.user_id == user_id and r.place_id == place_id
+        )
+        if not has_reservation:
+            raise ValueError("User must have a reservation for this place to leave a review")
+        review = Review(user_id=user_id, place_id=place_id, text=text, rating=rating)
         self.review_repo.add(review)
-        user.add_review(review)
-        place.add_review(review)
         return review
 
-    def list_reviews(self) -> List[Review]:
-        return self.review_repo.all()
+    def get_review(self, review_id: str) -> Optional[Review]:
+        return self.review_repo.get(review_id)
 
+    def get_all_reviews(self) -> List[Review]:
+        return self.review_repo.get_all()
+
+    def get_reviews_by_place(self, place_id: str) -> List[Review]:
+        return self.review_repo.list_by_place(place_id)
+
+    def update_review(self, review_id: str, review_data: dict) -> Optional[Review]:
+        review = self.review_repo.get(review_id)
+        if not review:
+            return None
+
+        for key, value in review_data.items():
+            if key in review.allowed_update_fields and hasattr(review, key):
+                setattr(review, key, value)
+
+        review.updated_at = datetime.utcnow()
+        self.review_repo.update(review_id, review)
+        return review
+
+    def delete_review(self, review_id: str) -> bool:
+        review = self.review_repo.get(review_id)
+        if not review:
+            return False
+
+        self.review_repo.delete(review_id)
+        return True
 
     # --------- RESERVATION ----------
     def create_reservation(self, user: User, place: Place, start_date, end_date) -> Reservation:

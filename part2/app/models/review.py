@@ -6,6 +6,7 @@ from app.models.base_model import BaseModel
 if TYPE_CHECKING:
     from app.models.user import User
     from app.models.place import Place
+    from app.models.reservation import Reservation
 
 class Review(BaseModel):
     _reviews: List['Review'] = []

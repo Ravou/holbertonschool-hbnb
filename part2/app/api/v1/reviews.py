@@ -18,8 +18,26 @@ review_model = api.model('Review', {
 class ReviewList(Resource):
     @api.expect(review_model)
     @api.response(201, 'Review successfully created')
-    @api.response(400, 'Invalid input data')
+    @api.response(400, 'Invalid input data or no reservation found')
     def post(self):
+        try:
+            review_data = request.json
+            if not review_data:
+                raise BadRequest("Missing JSON data")
+
+            review = facade.create_review(review_data)
+
+            # Retourner la review créée
+            return {
+                "id": review.id,
+                "text": review.text,
+                "rating": review.rating,
+                "user_id": review.user_id,
+                "place_id": review.place_id
+            }, 201
+
+        except ValueError as e:
+            raise BadRequest(str(e))
         
 
 @api.route('/<string:review_id>')
@@ -28,7 +46,7 @@ class ReviewResource(Resource):
     @api.response(404, 'Review not found')
     def get(self, review_id):
         """Get review details by ID"""
-        review = facade.get_review(review_id)
+        review = facade.get_all_review(review_id)
         if not review:
             raise NotFound('Review not found')
         return review.__dict__, 200
