@@ -120,7 +120,14 @@ class HBnBFacade:
         return True
 
     # --------- RESERVATION ----------
-    def create_reservation(self, user: User, place: Place, start_date, end_date, number_of_guests) -> Reservation:
+    def create_reservation(self, user_id, place_id, start_date, end_date, number_of_guests):
+        user = self.get_user(user_id)
+        if not user:
+            raise ValueError("User not found")
+        place = self.get_place(place_id)
+        if not place:
+            raise ValueError("Place not found")
+
         reservation = Reservation(user, place, start_date, end_date, number_of_guests)
         self.reservation_repo.add(reservation)
         user.add_reservation(reservation)
