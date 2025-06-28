@@ -120,8 +120,8 @@ class HBnBFacade:
         return True
 
     # --------- RESERVATION ----------
-    def create_reservation(self, user: User, place: Place, start_date, end_date) -> Reservation:
-        reservation = Reservation(user, place, start_date, end_date)
+    def create_reservation(self, user: User, place: Place, start_date, end_date, number_of_guests) -> Reservation:
+        reservation = Reservation(user, place, start_date, end_date, number_of_guests)
         self.reservation_repo.add(reservation)
         user.add_reservation(reservation)
         return reservation
