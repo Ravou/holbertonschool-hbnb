@@ -24,8 +24,8 @@ class ReservationList(Resource):
             raise BadRequest("Missing JSON data")
         try:
             reservation = facade.create_reservation(
-                    user=data['user_id'],
-                    place=data['place_id'],
+                    user_id=data['user_id'],
+                    place_id=data['place_id'],
                     start_date=data['start_date'],
                     end_date=data['end_date'],
                     number_of_guests=data['number_of_guests']
