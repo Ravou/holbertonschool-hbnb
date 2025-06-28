@@ -11,7 +11,9 @@ class Reservation(BaseModel):
         super().__init__()
         self.user_id = user.id if hasattr(user, 'id') else user
         self.place_id = place.id if hasattr(place, 'id') else place
-        self.date = date
+        self.start_date = start_date
+        self.end_date = end_date
+        self.number_of_guests = number_of_guests
 
         # Add this Reservation object to the user's reservations list if not already present
         if hasattr(user, 'reservations') and self not in user.reservations:
@@ -43,5 +45,6 @@ class Reservation(BaseModel):
 
     def __repr__(self):
         return (f"Reservation(id='{self.id}', user_id='{self.user_id}', "
-                f"place_id='{self.place_id}', date='{self.date}')")
+                f"place_id='{self.place_id}', start_date='{self.start_date}'," 
+                f"end_date='{self.end_date}', guests={self.number_of_guests})") 
 
