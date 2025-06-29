@@ -78,6 +78,15 @@ class HBnBFacade:
 
         if not user_id or not place_id or rating is None:
             raise ValueError("Missing required fields: user_id, place_id, rating")
+
+        user = self.get_user(user_id)
+        if not user:
+            raise ValueError("User not found")
+
+        place = self.get_place(place_id)
+        if not place:
+            raise ValueError("Place not found")
+
         reservations = self.reservation_repo.get_all()
 
         has_reservation = any(
@@ -85,7 +94,8 @@ class HBnBFacade:
         )
         if not has_reservation:
             raise ValueError("User must have a reservation for this place to leave a review")
-        review = Review(user_id=user_id, place_id=place_id, text=text, rating=rating)
+
+        review = Review(user, place, text, rating)
         self.review_repo.add(review)
         return review
 
