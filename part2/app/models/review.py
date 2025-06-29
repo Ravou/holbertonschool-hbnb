@@ -39,12 +39,12 @@ class Review(BaseModel):
 
         # Check if the user has a reservation for this place
         has_reservation = any(
-                r for r in Reservation._reservations if r.user_id == user_id and r.place_id == place_id
+                r for r in Reservation._reservations if r.user_id == user_id and r.place_id == place_id and r.end_date < date.today()
                 )
         if not has_reservation:
             raise ValueError("User must have a reservation for this place to leave a review")
         return cls(user, place, text, rating)
-
+    
     @classmethod
     def list_by_place(cls, place_id: str) -> List['Review']:
         return [review for review in cls._reviews if review.place_id == place_id]

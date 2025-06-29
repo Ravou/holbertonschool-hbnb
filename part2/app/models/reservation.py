@@ -7,7 +7,7 @@ class Reservation(BaseModel):
     _reservations: List['Reservation'] = []
     allowed_update_fields = ['start_date', 'end_date', 'number_of_guests']
 
-    def __init__(self, user, place, date):
+    def __init__(self, user, place, start_date, end_date, number_of_guests):
         super().__init__()
         self.user_id = user.id if hasattr(user, 'id') else user
         self.place_id = place.id if hasattr(place, 'id') else place
