@@ -138,6 +138,10 @@ class HBnBFacade:
         if not place:
             raise ValueError("Place not found")
 
+    def get_reservation(self, reservation_id: str) -> Optional[Reservation]:
+        return self.reservation_repo.get(reservation_id)
+
+
         reservation = Reservation(user, place, start_date, end_date, number_of_guests)
         self.reservation_repo.add(reservation)
         user.add_reservation(reservation)
