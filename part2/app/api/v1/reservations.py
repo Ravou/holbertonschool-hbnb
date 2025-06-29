@@ -44,7 +44,7 @@ class ReservationList(Resource):
     @api.response(200, 'List of reservations retrieved successfully')
     def get(self):
         """List all reservations"""
-        reservations = facade.list_all_reservations()
+        reservations = facade.get_all_reservations()
         return [r.to_dict() for r in reservations], 200
 
 @api.route('/<string:reservation_id>')
