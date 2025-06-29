@@ -146,7 +146,7 @@ class HBnBFacade:
     def get_reservation(self, reservation_id: str) -> Optional[Reservation]:
         return self.reservation_repo.get(reservation_id)
 
-    def list_reservations(self) -> List[Reservation]:
+    def list_all_reservations(self) -> List[Reservation]:
         return self.reservation_repo.all()
 
     # --------- AMENITY ----------
