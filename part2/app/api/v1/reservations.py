@@ -56,7 +56,7 @@ class ReservationResource(Resource):
         reservation = facade.get_reservation(reservation_id)
         if not reservation:
             raise NotFound('Reservation not found')
-        return reservation.__dict__, 200
+        return reservation.to_dict(), 200
 
     @api.expect(reservation_model)
     @api.response(200, 'Reservation updated successfully')
