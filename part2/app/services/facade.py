@@ -149,6 +149,23 @@ class HBnBFacade:
     def get_all_reservations(self) -> List[Reservation]:
         return self.reservation_repo.get_all()
 
+    def update_reservation(self, reservation_id: str, data: dict) -> Optional[Reservation]:
+    reservation = self.get_reservation(reservation_id)
+    if not reservation:
+        return None
+
+    allowed_fields = ['start_date', 'end_date', 'number_of_guests']
+    for key, value in data.items():
+        if key in allowed_fields and hasattr(reservation, key):
+            setattr(reservation, key, value)
+
+    if hasattr(reservation, 'save'):
+        reservation.save()
+
+    self.reservation_repo.update(reservation)
+
+    return reservation
+
     # --------- AMENITY ----------
     def create_amenity(self, amenity_data):
         amenity = Amenity(**amenity_data)
