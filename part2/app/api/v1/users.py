@@ -47,7 +47,7 @@ class UserList(Resource):
             users = facade.list_users()
 
             if not users:
-                return [], 200  # Retourne liste vide si aucun user
+                return [], 200
 
             result = [
                 {
