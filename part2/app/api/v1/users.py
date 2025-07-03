@@ -28,7 +28,8 @@ class UserList(Resource):
         new_user = facade.create_user(
                 user_data['first_name'], 
                 user_data['last_name'], 
-                user_data['email']
+                user_data['email'],
+                user_date['password']
         )
 
         return {
