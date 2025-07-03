@@ -1,3 +1,9 @@
 Flask
-flask-restx
-pytest
+Flask-RESTX
+Flask-JWT-Extended
+Flask-SQLAlchemy
+flask-bcrypt
+SQLAlchemy
+PyJWT
+pytesty
+

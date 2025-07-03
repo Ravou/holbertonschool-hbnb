@@ -5,19 +5,28 @@ from app.models.base_model import BaseModel
 class User(BaseModel):
     _users: List['User'] = []
 
-    allowed_update_fields = ['first_name', 'last_name', 'email', 'is_admin']
+    allowed_update_fields = ['first_name', 'last_name', 'email', 'is_admin', 'password']
 
-    def __init__(self, first_name, last_name, email, is_admin=False):
+    def __init__(self, first_name, last_name, email, password, is_admin=False):
         super().__init__()
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
+        self.hash_password = password
         self._is_admin = is_admin
         self.reservations: List[Reservation] =[]
         self.places: List[Place] = []
         self.reviews: List[Review] = []
 
         User._users.append(self)
+
+    def hash_password(self, password):
+    """Hashes the password before storing it."""
+    self.password = bcrypt.generate_password_hash(password).decode('utf-8')
+
+    def verify_password(self, password):
+    """Verifies if the provided password matches the hashed password."""
+    return bcrypt.check_password_hash(self.password, password)
 
     def add_place(self, place: Place):
         if place not in self.places:
