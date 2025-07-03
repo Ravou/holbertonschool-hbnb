@@ -15,13 +15,15 @@ class HBnBFacade:
         self.reservation_repo = InMemoryRepository()
 
 # --------- USER ----------
-    def create_user(self, first_name: str, last_name: str, email: str, is_admin=False) -> User:
+    def create_user(self, first_name: str, last_name: str, email: str, password, is_admin=False) -> User:
         if self.get_user_by_email(email):
             raise ValueError("Email already registered.")
         user = User(first_name, last_name, email, is_admin)
+        user.hash_password(password)
         self.user_repo.add(user)
         return user
 
+    
     def get_user(self, user_id: str) -> Optional[User]:
         return self.user_repo.get(user_id)
 
@@ -39,6 +41,15 @@ class HBnBFacade:
     def get_user_by_email(self, email):
         users = self.user_repo.get_by_attribute('email', email)
         return users[0] if users else None
+
+    def authenticate_user(email, password):
+        user = next((u for u in User._users.users if u.email == email), None)
+        if not user:
+            return None
+        if user.verify_password(password):
+            return user
+        else:
+            return None
 
 
     # --------- PLACE ----------
