@@ -6,6 +6,7 @@ from app.api.v1.places import api as places_ns
 from app.api.v1.reviews import api as reviews_ns
 from app.api.v1.reservations import api as reservations_ns
 from app.api.v1.auth import api as auth_ns
+from app.api.v1.protected import api as protected_ns
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
 
@@ -25,5 +26,6 @@ def create_app(config_class="config.DevelopmentConfig"):
     api.add_namespace(reviews_ns, path='/api/v1/reviews')
     api.add_namespace(reservations_ns, path='/api/v1/reservations')
     api.add_namespace(auth_ns, path='/api/v1/auth')
+    api.add_namespace(protected, path='/api/v1/protected')
 
     return app
