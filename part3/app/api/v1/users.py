@@ -16,6 +16,12 @@ user_model = api.model('User', {
     'password': fields.String(required=True, description='Password of the user')
 })
 
+# Define the user pour the update
+user_update_model = api.model('UserUpdate', {
+    'first_name': fields.String(required=False),
+    'last_name': fields.String(required=False)
+})
+
 @api.route('/')
 class UserList(Resource):
     @api.expect(user_model, validate=True)
@@ -82,7 +88,7 @@ class UserResource(Resource):
 
 @api.route('/<string:user_id>')
 class UserUpdate(Resource):
-    @api.expect(user_model, validate=True)
+    @api.expect(user_update_model, validate=True)
     @api.response(200, 'User updated successfully')
     @api.response(400, 'Email or password cannot be update here')
     @api.response(403, 'Not authorized to perform this action')
