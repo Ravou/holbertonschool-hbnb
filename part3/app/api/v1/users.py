@@ -1,5 +1,10 @@
 from flask_restx import Namespace, Resource, fields
 from app.services.facade import facade
+from flask import request
+from config import Config
+import jwt
+
+SECRET_KEY = Config.SECRET_KEY
 
 api = Namespace('users', description='User operations')
 
@@ -79,11 +84,42 @@ class UserResource(Resource):
 class UserUpdate(Resource):
     @api.expect(user_model, validate=True)
     @api.response(200, 'User updated successfully')
+    @api.response(400, 'Email or password cannot be update here')
+    @api.response(403, 'Not authorized to perform this action')
+    @api.response(401, 'Invalid or missing token')
     @api.response(404, 'User not found')
     def put(self, user_id):
-        """Update a user's information"""
+        """Update a user's information (only first name and last name allowed"""
+        #1. Token verification
+        auth_header = request.headers.get("Authorization")
+        if not auth_header or not auth_header.startswith("Bearer"):
+            return {"error": "Missing or invalid token"}, 401
+
+        token = auth_header.split(" ")[1]
+        try:
+            decoded = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+            token_user_id = decoded.get("user_id")
+
+        #2. Check that the user is updating their own data
+            if token_user_id != user_id:
+                return {"error": "You are not authorized to update this user"},
+
+        except jwt.ExpiredSignatureError:
+            return {"error": "Token has expried"}, 401
+        except jwt.InvalidTokenError:
+            return {"error": "Invalid token"}, 401
+
+        #3. Update logic
         updated_data = api.payload
-        user = facade.update_user(user_id, updated_data)
+
+        # Prevent updating email or password
+        if 'email' in updated_data or 'password' in updated_data:
+            return {"error": "Email or password cannot be updated here"}, 400
+        # Only allow certain field to be updated
+        allowed_fields = ['first_name', 'last_name']
+        filtered_data = {k: v for k, v in updated_data.items() if k in allowed_fields}
+
+        user = facade.update_user(user_id, filtered_data)
         if not user:
             return {'error': 'User not found'}, 404
         return {

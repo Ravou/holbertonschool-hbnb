@@ -24,8 +24,6 @@ class ProtectedResource(Resource):
     def get(self):
         """A protected endpoint that requires a valid JWT token"""
         current_user = get_jwt_identity()
-        claims = get_jwt()
-        is_admin = claims.get('is_admin', False)
 
-        return {'message': f'Hello, user {current_user["id"]}, admin: {is_admin}'}, 200
+        return {'message': f'Hello, user {current_user}'}, 200
 
