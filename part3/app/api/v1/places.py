@@ -1,6 +1,8 @@
 from flask_restx import Namespace, Resource, fields
 from flask import request
 from app.services.facade import facade
+from flask_jwt_extended import jwt_required
+from flask_jwt_extended import get_jwt_identity
 
 api = Namespace('places', description='Place operations')
 
@@ -24,39 +26,42 @@ place_model = api.model('Place', {
     'price': fields.Float(required=True, description='Price per night'),
     'latitude': fields.Float(required=True, description='Latitude of the place'),
     'longitude': fields.Float(required=True, description='Longitude of the place'),
-    'owner_id': fields.String(required=True, description='ID of the owner'),
     'amenities': fields.List(fields.String, required=True, description="List of amenities IDs")
 })
 
 @api.route('/')
 class PlaceList(Resource):
+    @api.doc(security='Bearer Auth')
     @api.expect(place_model)
     @api.response(201, 'Place successfully created')
     @api.response(400, 'Invalid input data')
+    @jwt_required()
     def post(self):
         """Register a new place"""
         data = api.payload
+        current_user_id = get_jwt_identity()
 
-        required_fields = ['title', 'description', 'price', 'latitude', 'longitude', 'owner_id']
+        required_fields = ['title', 'description', 'price', 'latitude', 'longitude']
         for field in required_fields:
             if field not in data:
                 return {'message': f"Missing field: {field}"}, 400
-            owner = facade.get_user(data['owner_id'])
-            if owner is None:
-                return {'message': "Owner not found"}, 400
 
-            try:
-                new_place = facade.create_place(
-                        title=data['title'],
-                        description=data['description'],
-                        price=data['price'],
-                        latitude=data['latitude'],
-                        longitude=data['longitude'],
-                        owner=owner
-                        )
-                return new_place.to_dict(), 201
-            except ValueError as e:
-                return {'message': str(e)}, 400
+        owner = facade.get_user(current_user_id)
+        if owner is None:
+            return {'message': "Owner not found"}, 400
+
+        try:
+            new_place = facade.create_place(
+                    title=data['title'],
+                    description=data['description'],
+                    price=data['price'],
+                    latitude=data['latitude'],
+                    longitude=data['longitude'],
+                    owner=owner
+            )
+            return new_place.to_dict(), 201
+        except ValueError as e:
+            return {'message': str(e)}, 400
 
     @api.response(200, 'List of places retrieved successfully')
     def get(self):
@@ -91,13 +96,25 @@ class PlaceResource(Resource):
         place_data['amenities'] = [{'id': a.id, 'name': a.name} for a in place.amenities]
         return place_data, 200
 
+
+    @api.doc(security='Bearer Auth')
     @api.expect(place_model)
     @api.response(200, 'Place updated successfully')
     @api.response(404, 'Place not found')
     @api.response(400, 'Invalid input data')
+    @api.response(403, 'Unauthorizes')
+    @jwt_required()
     def put(self, place_id):
         """Update a place's information"""
         data = request.json
+        current_user_id = get_jwt_identity()
+
+        place = facade.get_place(place_id)
+        if not place:
+            return {'message': 'Place not found'}, 404
+        if place.owner.id != current_user_id:
+            return {'message': 'Unauthorized'}, 403
+
         try:
             updated = facade.update_place(place_id, data)
             if not updated:

@@ -6,7 +6,17 @@ import jwt
 
 SECRET_KEY = Config.SECRET_KEY
 
-api = Namespace('users', description='User operations')
+# Swagger Authorizations config
+authorizations = {
+    'Bearer Auth': {
+        'type': 'apiKey',
+        'in': 'header',
+        'name': 'Authorization',
+        'description': 'Add "Bearer <your token>"'
+    }
+}
+
+api = Namespace('users', description='User operations', authorizations=authorizations, security='Bearer Auth')
 
 # Define the user model for input validation and documentation
 user_model = api.model('User', {
