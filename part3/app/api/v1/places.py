@@ -103,7 +103,7 @@ class PlaceResource(Resource):
     @api.response(200, 'Place updated successfully')
     @api.response(404, 'Place not found')
     @api.response(400, 'Invalid input data')
-    @api.response(403, 'Unauthorizes')
+    @api.response(403, 'Unauthorizes action')
     @jwt_required()
     def put(self, place_id):
         """Update a place's information"""
@@ -114,7 +114,7 @@ class PlaceResource(Resource):
         if not place:
             return {'message': 'Place not found'}, 404
         if place.owner.id != current_user_id:
-            return {'message': 'Unauthorized'}, 403
+            return {'message': 'Unauthorized action'}, 403
 
         try:
             updated_place = facade.update_place(place_id, data)
