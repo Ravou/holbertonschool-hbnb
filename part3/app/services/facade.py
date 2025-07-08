@@ -54,10 +54,16 @@ class HBnBFacade:
 
 
     # --------- PLACE ----------
-    def create_place(self, title: str, description: str, price: float, latitude: float, longitude: float, owner: User) -> Place:
+    def create_place(self, title: str, description: str, price: float, latitude: float, longitude: float, owner: User, amenities: Optional[List[Amenity]] = None) -> Place:
         place = Place(title, description, price, latitude, longitude, owner)
+
+        if amenities:
+            for amenity in amenities:
+                place.add_amenity(amenity)
+
         self.place_repo.add(place)
         owner.add_place(place)
+
         return place
 
     def get_place(self, place_id: str) -> Optional[Place]:
@@ -85,6 +91,7 @@ class HBnBFacade:
     def create_review(self, review_data: dict) -> Review:
         user_id = review_data.get('user_id')
         place_id = review_data.get('place_id')
+        reservation_id = review_data.get('reservation_id')
         text = review_data.get('text', '')
         rating = review_data.get('rating')
 
@@ -107,7 +114,7 @@ class HBnBFacade:
         if not has_reservation:
             raise ValueError("User must have a reservation for this place to leave a review")
 
-        review = Review(user, place, text, rating)
+        review = Review(user, place, reservation,  text, rating)
         self.review_repo.add(review)
         return review
 
@@ -130,6 +137,7 @@ class HBnBFacade:
                 setattr(review, key, value)
 
         review.updated_at = datetime.utcnow()
+
         self.review_repo.update(review_id, review)
         return review
 
@@ -137,6 +145,9 @@ class HBnBFacade:
         review = self.review_repo.get(review_id)
         if not review:
             return False
+
+        if review.user_id != current_user_id:
+            raise PermissionError('You can delete someone else review.')
 
         self.review_repo.delete(review_id)
         return True
@@ -174,7 +185,7 @@ class HBnBFacade:
         if hasattr(reservation, 'save'):
             reservation.save()
         
-        self.reservation_repo.update(reservation)
+        self.reservation_repo.update(reservation_id, data)
         return reservation
 
     # --------- AMENITY ----------
