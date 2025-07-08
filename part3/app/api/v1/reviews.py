@@ -1,6 +1,8 @@
 from flask_restx import Namespace, Resource, fields
 from flask import request
-from werkzeug.exceptions import BadRequest, NotFound
+from flask_jwt_extended import jwt_required
+from flask_jwt_extended import get_jwt_identity
+from werkzeug.exceptions import BadRequest, NotFound, Forbidden
 from app.services.facade import facade
 
 api = Namespace('reviews', description='Review operations')
@@ -16,28 +18,31 @@ review_model = api.model('Review', {
 
 @api.route('/')
 class ReviewList(Resource):
+    @api.doc(security= 'Bearer Auth')
     @api.expect(review_model)
     @api.response(201, 'Review successfully created')
     @api.response(400, 'Invalid input data or no reservation found')
+    @jwt_required()
     def post(self):
+        review_data = request.json
+        if not review_data:
+            raise BadRequest("Missing JSON data")
+
         try:
-            review_data = request.json
-            if not review_data:
-                raise BadRequest("Missing JSON data")
-
             review = facade.create_review(review_data)
+        except ValueError as e:
+            raise BadRequest(str(e))
 
-            # Retourner la review créée
             return {
                 "id": review.id,
                 "text": review.text,
                 "rating": review.rating,
                 "user_id": review.user_id,
                 "place_id": review.place_id
+                "reservation_id": review.reservation_id
+                "created_at": review.created_at.isoformat() if hasattr(review, 'created_at') else None,
+                "updated_at": review.updated_at.isoformat() if hasattr(review, 'updated_at') else None,
             }, 201
-
-        except ValueError as e:
-            raise BadRequest(str(e))
         
 
 @api.route('/<string:review_id>')
@@ -51,25 +56,57 @@ class ReviewResource(Resource):
             raise NotFound('Review not found')
         return review.__dict__, 200
 
-    @api.expect(review_model)
+    @api.doc(security= 'Bearer Auth')
+    @api.expect(review_model, validate=True)
     @api.response(200, 'Review updated successfully')
     @api.response(404, 'Review not found')
-    @api.response(400, 'Invalid input data')
+    @api.response(403, 'Unauthorized')
+    @jwt_required()
     def put(self, review_id):
         """Update a review's information"""
-        review_data = request.json
-        review = facade.update_review(review_id, review_data)
-        if not review:
-            raise NotFound('Review not found')
-        return {'message': 'Review updated successfully'}, 200
+        data = request.json
+        if not data: 
+            return {'message': 'No data provided'}, 400
+        current_user_id = get_jwt_identity()
 
+        review = facade.get_review(review_id)
+        if not review:
+            return {'message': 'Review not found'}, 404
+
+        if review.user_id != current_user_id:
+            return {'message': 'Unauthorized access'}, 403
+
+        try:
+            updated_review = facade.update_review(review_id, data)
+            if not updated_review:
+                return {'message': 'Review not found'}, 404
+
+            return {'message': 'Review updated successfully'}, 200
+        
+        except ValueError as e:
+            return {'message': str(e)}, 400
+
+    @api.doc(security= 'Bearer Auth')
     @api.response(200, 'Review deleted successfully')
     @api.response(404, 'Review not found')
+    @api.response(403, 'Unauthorized access')
+    @jwt_required()
     def delete(self, review_id):
         """Delete a review"""
+
+        current_user_id = get_jwt_identity()
+
+        review = facade.get_review(review_id)
+        if not review:
+            raise NotFound('Review not found')
+
+        if review.user_id != current_user_id:
+            return {'message': 'Unauthorized access'}, 403
+
         deleted = facade.delete_review(review_id)
         if not deleted:
             raise NotFound('Review not found')
+        
         return {'message': 'Review deleted successfully'}, 200
 
 @api.route('/places/<string:place_id>/reviews')
