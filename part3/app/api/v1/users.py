@@ -101,7 +101,7 @@ class UserUpdate(Resource):
     @api.expect(user_update_model, validate=True)
     @api.response(200, 'User updated successfully')
     @api.response(400, 'Email or password cannot be update here')
-    @api.response(403, 'Not authorized to perform this action')
+    @api.response(403, 'Unauthorized access')
     @api.response(401, 'Invalid or missing token')
     @api.response(404, 'User not found')
     def put(self, user_id):
@@ -114,19 +114,16 @@ class UserUpdate(Resource):
         token = auth_header.split(" ")[1]
         try:
             decoded = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
-            token_user_id = decoded.get("user_id")
 
         #2. Check that the user is updating their own data
-            if token_user_id != user_id:
+            if decoded.get("user_id") != user_id:
                 return {"error": "You are not authorized to update this user"},
 
-        except jwt.ExpiredSignatureError:
-            return {"error": "Token has expried"}, 401
-        except jwt.InvalidTokenError:
+        except jwt.PyJWTError:
             return {"error": "Invalid token"}, 401
 
         #3. Update logic
-        updated_data = api.payload
+        updated_data = api.payload or {}
 
         # Prevent updating email or password
         if 'email' in updated_data or 'password' in updated_data:
@@ -138,9 +135,4 @@ class UserUpdate(Resource):
         user = facade.update_user(user_id, filtered_data)
         if not user:
             return {'error': 'User not found'}, 404
-        return {
-            'id': user.id,
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'email': user.email
-        }, 200
+        return {"message": "USer update successfully"}, 200
