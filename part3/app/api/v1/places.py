@@ -22,7 +22,7 @@ user_model = api.model('PlaceUser', {
 # Place model for input validation and documentation
 place_model = api.model('Place', {
     'title': fields.String(required=True, description='Title of the place'),
-    'description': fields.String(description='Description of the place'),
+    'description': fields.String(required=True, description='Description of the place'),
     'price': fields.Float(required=True, description='Price per night'),
     'latitude': fields.Float(required=True, description='Latitude of the place'),
     'longitude': fields.Float(required=True, description='Longitude of the place'),
@@ -41,7 +41,7 @@ class PlaceList(Resource):
         data = api.payload
         current_user_id = get_jwt_identity()
 
-        required_fields = ['title', 'description', 'price', 'latitude', 'longitude']
+        required_fields = ['title', 'description', 'price', 'latitude', 'longitude', 'amenities']
         for field in required_fields:
             if field not in data:
                 return {'message': f"Missing field: {field}"}, 400
@@ -57,7 +57,8 @@ class PlaceList(Resource):
                     price=data['price'],
                     latitude=data['latitude'],
                     longitude=data['longitude'],
-                    owner=owner
+                    owner=owner,
+                    amenities=data['amenities']
             )
             return new_place.to_dict(), 201
         except ValueError as e:
@@ -116,10 +117,12 @@ class PlaceResource(Resource):
             return {'message': 'Unauthorized'}, 403
 
         try:
-            updated = facade.update_place(place_id, data)
+            updated_place = facade.update_place(place_id, data)
             if not updated:
                 return {'message': 'Place not found'}, 404
-            return {'message': 'Place updated successfully'}, 200
+
+            return {'title': updated_place.title}, 200
+        
         except ValueError as e:
             return {'message': str(e)}, 400
 
