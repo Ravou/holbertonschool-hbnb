@@ -1,5 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 from app.services.facade import facade
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from werkzeug.exceptions import BadRequest, NotFound
 
 api = Namespace('reservations', description='Reservation operations')
 
@@ -17,18 +19,22 @@ class ReservationList(Resource):
     @api.expect(reservation_model)
     @api.response(201, 'Reservation successfully created')
     @api.response(400, 'Invalid input data')
+    @jwt_required()
     def post(self):
         """Create a new reservation"""
         data = api.payload
         if not data:
             raise BadRequest("Missing JSON data")
+
+        current_user_id = get_jwt_identity()
+
         try:
             reservation = facade.create_reservation(
-                    user_id=data['user_id'],
-                    place_id=data['place_id'],
-                    start_date=data['start_date'],
-                    end_date=data['end_date'],
-                    number_of_guests=data['number_of_guests']
+                user_id=current_user_id,
+                place_id=data['place_id'],
+                start_date=data['start_date'],
+                end_date=data['end_date'],
+                number_of_guests=data['number_of_guests']
             )
             return {
                 "id": reservation.id,
@@ -62,15 +68,27 @@ class ReservationResource(Resource):
     @api.response(200, 'Reservation updated successfully')
     @api.response(404, 'Reservation not found')
     @api.response(400, 'Invalid input data')
+    @api.response(403, 'Unauthorization access')
+    @jwt_required()
     def put(self, reservation_id):
         """Update a reservation"""
         data = api.payload
         if not data:
             raise BadRequest("Missing JSON data")
+        
+        reservation = facade.get_reservation(reservation_id)
+        if not reservation:
+            raise NotFound('Reservation not found')
+
+        current_user_id = get_jwt_identity()
+        if not reservation:
+            raise NotFound('Reservation not found')
+
+        if reservation.user_id != current_user_id:
+            return {"message": "Unauthorization access"},403
+
         try:
-            reservation = facade.update_reservation(reservation_id, data)
-            if not reservation:
-                raise NotFound('Reservation not found')
+            updated_reservation = facade.update_reservation(reservation_id, data)
             return {'message': 'Reservation updated successfully'}, 200
         except ValueError as e:
             raise BadRequest(str(e))
