@@ -43,7 +43,7 @@ class HBnBFacade:
         users = self.user_repo.get_by_attribute('email', email)
         return users[0] if users else None
 
-    def authenticate_user(email, password):
+    def authenticate_user(self, email, password):
         user = next((u for u in User._users.users if u.email == email), None)
         if not user:
             return None
@@ -108,8 +108,9 @@ class HBnBFacade:
 
         reservations = self.reservation_repo.get_all()
 
-        has_reservation = any(
-            r for r in reservations if r.user_id == user_id and r.place_id == place_id
+        has_reservation = next(
+           (r for r in reservations if r.user_id == user_id and r.place_id == place_id),
+           None
         )
         if not has_reservation:
             raise ValueError("User must have a reservation for this place to leave a review")
@@ -138,7 +139,7 @@ class HBnBFacade:
 
         review.updated_at = datetime.utcnow()
 
-        self.review_repo.update(review_id, review)
+        self.review_repo.update(review_id, review_data)
         return review
 
     def delete_review(self, review_id: str) -> bool:
