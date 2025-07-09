@@ -12,7 +12,7 @@ class Review(BaseModel):
     _reviews: List['Review'] = []
     allowed_update_fields = ['rating', 'text']
 
-    def __init__(self, user: Union["User", str], place: Union["Place", str], text: str, rating: int):
+    def __init__(self, user: Union["User", str], place: Union["Place", str], reservation: Union["Reservation", str], text: str, rating: int):
         from app.models.user import User
         from app.models.place import Place
 
@@ -21,11 +21,14 @@ class Review(BaseModel):
         self.place_id = place.id if isinstance(place, Place) else place
         self.text = text
         self.rating = rating
+        self.reservation_id = reservation.id if isinstance(reservation, Reservation) else reservation
         Review._reviews.append(self)
         if isinstance(user, User):
             user.add_review(self)
         if isinstance(place, Place):
             place.add_review(self)
+        if isinstance(reservation, Reservation):
+            reservation.add_review(self)
 
     def is_valid_rating(self) -> bool:
         return 1 <= self.rating <= 5
@@ -38,12 +41,16 @@ class Review(BaseModel):
         place_id = place.id if hasattr(place, 'id') else place
 
         # Check if the user has a reservation for this place
-        has_reservation = any(
-                r for r in Reservation._reservations if r.user_id == user_id and r.place_id == place_id and r.end_date < date.today()
-                )
+        has_reservation = next((
+            r for r in Reservation._reservations
+            if r.user_id == user_id
+            and r.place_id == place_id
+            and r.end_date < date.today()
+            and not any(rev for rev in cls._reviews if getattr(rev, "reservation_id", None) == r.id)
+        ), None)
+
         if not has_reservation:
-            raise ValueError("User must have a reservation for this place to leave a review")
-        return cls(user, place, text, rating)
+            raise ValueError("User must have a past reservation for this place and must not have reviewed it yet.")
     
     @classmethod
     def list_by_place(cls, place_id: str) -> List['Review']:
