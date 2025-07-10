@@ -94,7 +94,11 @@ class PlaceResource(Resource):
             'last_name': place.owner.last_name,
             'email': place.owner.email
         }
-        place_data['amenities'] = [{'id': a.id, 'name': a.name} for a in place.amenities]
+        place_data['amenities'] = []
+        for amenity_id in place.amenities:
+            amenity_obj = facade.get_amenity(amenity_id)
+            if amenity_obj:
+                place_data['amenities'].append({'id': amenity_obj.id, 'name': amenity_obj.name})
         return place_data, 200
 
 
@@ -118,7 +122,7 @@ class PlaceResource(Resource):
 
         try:
             updated_place = facade.update_place(place_id, data)
-            if not updated:
+            if not updated_place:
                 return {'message': 'Place not found'}, 404
 
             return {'title': updated_place.title}, 200

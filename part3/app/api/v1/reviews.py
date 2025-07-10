@@ -33,16 +33,16 @@ class ReviewList(Resource):
         except ValueError as e:
             raise BadRequest(str(e))
 
-            return {
-                "id": review.id,
-                "text": review.text,
-                "rating": review.rating,
-                "user_id": review.user_id,
-                "place_id": review.place_id
-                "reservation_id": review.reservation_id
-                "created_at": review.created_at.isoformat() if hasattr(review, 'created_at') else None,
-                "updated_at": review.updated_at.isoformat() if hasattr(review, 'updated_at') else None,
-            }, 201
+        return {
+            "id": review.id,
+            "text": review.text,
+            "rating": review.rating,
+            "user_id": review.user_id,
+            "place_id": review.place_id,
+            "reservation_id": review.reservation_id,
+            "created_at": review.created_at.isoformat() if hasattr(review, 'created_at') else None,
+            "updated_at": review.updated_at.isoformat() if hasattr(review, 'updated_at') else None,
+        }, 201
         
 
 @api.route('/<string:review_id>')

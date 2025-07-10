@@ -81,9 +81,6 @@ class ReservationResource(Resource):
             raise NotFound('Reservation not found')
 
         current_user_id = get_jwt_identity()
-        if not reservation:
-            raise NotFound('Reservation not found')
-
         if reservation.user_id != current_user_id:
             return {"message": "Unauthorization access"},403
 

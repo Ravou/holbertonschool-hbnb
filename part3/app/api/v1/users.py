@@ -2,6 +2,7 @@ from flask_restx import Namespace, Resource, fields
 from app.services.facade import facade
 from flask import request
 from config import Config
+from flask_jwt_extended import jwt_required, get_jwt_identity
 import jwt
 
 SECRET_KEY = Config.SECRET_KEY
@@ -98,6 +99,8 @@ class UserResource(Resource):
 
 @api.route('/<string:user_id>')
 class UserUpdate(Resource):
+    @jwt_required()
+    @api.doc(security='Bearer Auth')
     @api.expect(user_update_model, validate=True)
     @api.response(200, 'User updated successfully')
     @api.response(400, 'Email or password cannot be update here')
@@ -105,34 +108,24 @@ class UserUpdate(Resource):
     @api.response(401, 'Invalid or missing token')
     @api.response(404, 'User not found')
     def put(self, user_id):
-        """Update a user's information (only first name and last name allowed"""
-        #1. Token verification
-        auth_header = request.headers.get("Authorization")
-        if not auth_header or not auth_header.startswith("Bearer"):
-            return {"error": "Missing or invalid token"}, 401
+       """Update a user's information (only first name and last name allowed"""
+       current_user_id = get_jwt_identity()
 
-        token = auth_header.split(" ")[1]
-        try:
-            decoded = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+       if str(current_user_id) != str(user_id):
+           return {"error": "Unauthorized access"}, 403
 
-        #2. Check that the user is updating their own data
-            if decoded.get("user_id") != user_id:
-                return {"error": "You are not authorized to update this user"},
+       update_data = api.payload
 
-        except jwt.PyJWTError:
-            return {"error": "Invalid token"}, 401
+       if 'email' in update_data or 'password' in update_data:
+           return {"error": "Email or password cannot be updated here"}, 400
 
-        #3. Update logic
-        updated_data = api.payload or {}
+       allowed_fields = ['first_name', 'last_name']
+       filtered_data = {k: v for k, v in update_data.items() if k in allowed_fields}
 
-        # Prevent updating email or password
-        if 'email' in updated_data or 'password' in updated_data:
-            return {"error": "Email or password cannot be updated here"}, 400
-        # Only allow certain field to be updated
-        allowed_fields = ['first_name', 'last_name']
-        filtered_data = {k: v for k, v in updated_data.items() if k in allowed_fields}
+       if not filtered_data:
+           return {"error": "No valid field to update"}, 400
 
-        user = facade.update_user(user_id, filtered_data)
-        if not user:
-            return {'error': 'User not found'}, 404
-        return {"message": "USer update successfully"}, 200
+       user = facade.update_user(user_id, filtered_data)
+       if not user:
+           return {"error": "User not found"}, 404
+       return {"message": "User updated successfully"}, 200

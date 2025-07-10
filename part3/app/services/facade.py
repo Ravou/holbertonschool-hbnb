@@ -108,14 +108,14 @@ class HBnBFacade:
 
         reservations = self.reservation_repo.get_all()
 
-        has_reservation = next(
+        reservation = next(
            (r for r in reservations if r.user_id == user_id and r.place_id == place_id),
            None
         )
-        if not has_reservation:
+        if not reservation:
             raise ValueError("User must have a reservation for this place to leave a review")
 
-        review = Review(user, place, reservation,  text, rating)
+        review = Review(user, place, reservation, text, rating)
         self.review_repo.add(review)
         return review
 
