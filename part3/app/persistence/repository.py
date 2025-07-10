@@ -1,29 +1,35 @@
-from abc import ABC, abstractmethod
+from app import db
+from app.models import User, Place, Reservation, Review, Amenity
 
-class Repository(ABC):
-    @abstractmethod
+class SQLAlchemyRepository(Repository):
+    def __init__(self, model):
+        self.model = model
+
     def add(self, obj):
-        pass
+        db.session.add(obj)
+        db.session.commit()
 
-    @abstractmethod
     def get(self, obj_id):
-        pass
+        return self.model.query.get(obj_id)
 
-    @abstractmethod
     def get_all(self):
-        pass
+        return self.model.query.all()
 
-    @abstractmethod
     def update(self, obj_id, data):
-        pass
+        obj = self.get(obj_id)
+        if obj:
+            for key, value in data.item():
+                setattr(obj, key, value)
+            db.session.commit()
 
-    @abstractmethod
     def delete(self, obj_id):
-        pass
+        obj = self.get(obj_id)
+        if obj:
+            db.session.delete(obj)
+            db.session.commit()
 
-    @abstractmethod
     def get_by_attribute(self, attr_name, attr_value):
-        pass
+        return self.model.query.filter(getattr(self.model, attr_name) == attr_value).first()
 
 
 class InMemoryRepository(Repository):
