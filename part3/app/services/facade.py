@@ -9,11 +9,11 @@ from datetime import datetime
 
 class HBnBFacade:
     def __init__(self):
-        self.user_repo = InMemoryRepository()
-        self.place_repo = InMemoryRepository()
-        self.review_repo = InMemoryRepository()
-        self.amenity_repo = InMemoryRepository()
-        self.reservation_repo = InMemoryRepository()
+        self.user_repo = SQLAlchemyRepository(User)
+        self.place_repo = SQLAlchemyRepository(Place)
+        self.review_repo = SQLAlchemyRepository(Review)
+        self.amenity_repo = SQLAlchemyRepository(Amenity)
+        self.reservation_repo = SQLAlchemyRepository(Reservation)
 
 # --------- USER ----------
     def create_user(self, first_name: str, last_name: str, email: str, password, is_admin=False) -> User:
