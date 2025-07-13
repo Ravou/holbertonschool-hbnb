@@ -1,5 +1,6 @@
 from app import db
 from app.models import User, Place, Reservation, Review, Amenity
+from app.persistence.repository import Repository
 
 class SQLAlchemyRepository(Repository):
     def __init__(self, model):
@@ -18,7 +19,7 @@ class SQLAlchemyRepository(Repository):
     def update(self, obj_id, data):
         obj = self.get(obj_id)
         if obj:
-            for key, value in data.item():
+            for key, value in data.items():
                 setattr(obj, key, value)
             db.session.commit()
 
@@ -29,7 +30,9 @@ class SQLAlchemyRepository(Repository):
             db.session.commit()
 
     def get_by_attribute(self, attr_name, attr_value):
-        return self.model.query.filter(getattr(self.model, attr_name) == attr_value).first()
+        attr = getattr(self.model, attr_name)
+        results = self.session.query(self.model).filter(attr == value).all()
+        return results
 
 
 class InMemoryRepository(Repository):

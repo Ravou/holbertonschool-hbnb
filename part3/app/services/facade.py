@@ -1,4 +1,4 @@
-from app.persistence.repository import InMemoryRepository
+from app.persistence.repository import SQLAlchemyRepository
 from app.models.user import User
 from app.models.place import Place
 from app.models.review import Review
@@ -6,6 +6,7 @@ from app.models.reservation import Reservation
 from app.models.amenity import Amenity
 from typing import Optional, List
 from datetime import datetime
+from app import db
 
 class HBnBFacade:
     def __init__(self):
@@ -37,14 +38,14 @@ class HBnBFacade:
             return None
         for key, value in new_data.items():
             setattr(user, key, value)
+        db.session.commit()
         return user
 
-    def get_user_by_email(self, email):
-        users = self.user_repo.get_by_attribute('email', email)
-        return users[0] if users else None
+    def get_user_by_email(self, email) -> Optional[User]:
+        return self.user_repo.get_by_attribute('email', email)
 
     def authenticate_user(self, email, password):
-        user = next((u for u in User._users.users if u.email == email), None)
+        user = self.get_user_by_attribute(email)
         if not user:
             return None
         if user.verify_password(password):
@@ -55,7 +56,7 @@ class HBnBFacade:
 
     # --------- PLACE ----------
     def create_place(self, title: str, description: str, price: float, latitude: float, longitude: float, owner: User, amenities: Optional[List[Amenity]] = None) -> Place:
-        place = Place(title, description, price, latitude, longitude, owner)
+        place = Place(title=title, description=description, price=price, latitude=latitude, longitude=longitude, owner=owner)
 
         if amenities:
             for amenity in amenities:
@@ -63,6 +64,7 @@ class HBnBFacade:
 
         self.place_repo.add(place)
         owner.add_place(place)
+        db.session.commit()
 
         return place
 
@@ -79,7 +81,7 @@ class HBnBFacade:
         protected_fields = {
                 "id", "owner_id", "created_at", "updated_at",
                 "owner", "reviews", "reservations", "amenities"
-                }
+        }
         filtered_data = {k: v for k, v in data.items() if k not in protected_fields}
         self.place_repo.update(place_id, filtered_data)
 
@@ -95,8 +97,8 @@ class HBnBFacade:
         text = review_data.get('text', '')
         rating = review_data.get('rating')
 
-        if not user_id or not place_id or rating is None:
-            raise ValueError("Missing required fields: user_id, place_id, rating")
+        if not user_id or not place_id or rating is None or not text or not reservation_id:
+            raise ValueError
 
         user = self.get_user(user_id)
         if not user:
