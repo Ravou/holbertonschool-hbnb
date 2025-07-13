@@ -45,7 +45,7 @@ class HBnBFacade:
         return self.user_repo.get_by_attribute('email', email)
 
     def authenticate_user(self, email, password):
-        user = self.get_user_by_attribute(email)
+        user = self.get_user_by_email(email)
         if not user:
             return None
         if user.verify_password(password):
@@ -144,7 +144,7 @@ class HBnBFacade:
         self.review_repo.update(review_id, review_data)
         return review
 
-    def delete_review(self, review_id: str) -> bool:
+    def delete_review(self, review_id: str, current_user_id: str) -> bool:
         review = self.review_repo.get(review_id)
         if not review:
             return False
@@ -185,8 +185,7 @@ class HBnBFacade:
             if key in allowed_fields and hasattr(reservation, key):
                 setattr(reservation, key, value)
 
-        if hasattr(reservation, 'save'):
-            reservation.save()
+        db.session.commit()
         
         self.reservation_repo.update(reservation_id, data)
         return reservation
