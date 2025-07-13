@@ -25,6 +25,7 @@ erDiagram
         int rating
         string user_id
         string place_id
+        string reservation_id
     }
 
     AMENITY {
@@ -55,4 +56,7 @@ erDiagram
     PLACE ||--o{ PLACE_AMENITY : links
 
     AMENITY ||--o{ PLACE_AMENITY : is_linked
+
+    RESERVATION ||--|| REVIEW : generates
+
 ```
