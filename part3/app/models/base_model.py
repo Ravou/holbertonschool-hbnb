@@ -1,15 +1,16 @@
+from app import db
 import uuid
 from datetime import datetime
 
 class BaseModel:
+    __abstract__ = True
 
-    def __init__(self, id=None, created_at=None, updated_at=None):
-        self.id = id or str(uuid.uuid4())
-        self.created_at = created_at or datetime.now()
-        self.updated_at = updated_at or datetime.now()
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def save(self):
-        self.updated_at = datetime.now()
+        self.updated_at = datetime.utcnow()
 
     def to_dict(self, seen=None):
         if seen is None:
@@ -33,20 +34,20 @@ class BaseModel:
 
     @classmethod
     def from_dict(cls, data):
-        created_at = datetime.fromisoformat(data["created_at"]) if "created_at" in data else None
-        updated_at = datetime.fromisoformat(data["updated_at"]) if "updated_at" in data else None
+        obj = cls()  # création de l'objet vide
 
-        obj = cls(
-                id=data.get("id"),
-                created_at=created_at,
-                updated_at=updated_at
-        )
+    for key, value in data.items():
+        if hasattr(cls, key):
+            if key in ('created_at', 'updated_at') and isinstance(value, str):
+                value = datetime.fromisoformat(value)
+            setattr(obj, key, value)
+
         return obj
 
     def update(self, data):
         updated = False
         for key, value in data.items():
-            if key in self.allowed_update_fields and hasattr(self, key):
+            if hasattr(self, "allowed_update_fields") and key in self.allowed_update_fields:
                 setattr(self, key, value)
                 updated = True
         if updated:
@@ -54,7 +55,7 @@ class BaseModel:
 
 
     def __repr__(self):
-        return f"BaseModel(id='{self.id}', created_at='{self.created_at.isoformat()}', updated_at='{self.updated_at.isoformat()}')"
+        return f"{self.__class__.__name}(id='{self.if}', created_at='{self.created_at}', updated_at='{self.updated_at}')"
 
     def __str__(self):
         return self.__repr__()
