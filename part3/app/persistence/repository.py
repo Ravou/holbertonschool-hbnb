@@ -61,7 +61,7 @@ class SQLAlchemyRepository(Repository):
 
     def get_by_attribute(self, attr_name, attr_value):
         attr = getattr(self.model, attr_name)
-        results = db.session.query(self.model).filter(attr == value).all()
+        results = db.session.query(self.model).filter(attr == attr_value).all()
         return results
 
 
@@ -83,7 +83,10 @@ class InMemoryRepository(Repository):
     def update(self, obj_id, data):
         obj = self.get(obj_id)
         if obj:
-            obj.update(data)
+            for key, value in data.items():
+                setattr(obj, key, value)
+            db.session.commit()
+        return obj
 
     def delete(self, obj_id):
         if obj_id in self._storage:
@@ -94,7 +97,7 @@ class InMemoryRepository(Repository):
 
 
 class UserRepository(SQLAlchemyRepository):
-    def __init__(self, model):
+    def __init__(self, model=User):
         super().__init__(User)
 
     def get_by_email(self, email: str) -> User | None:
@@ -103,7 +106,7 @@ class UserRepository(SQLAlchemyRepository):
     def get_by_id(self, user_id: str) -> User | None:
         return User.query.get(user_id)
 
-    def list_all(self) -> list[User]:
+    def list_all(self) -> List[User]:
         return User.query.all()
 
     def create(self, user: User) -> User:
@@ -112,7 +115,7 @@ class UserRepository(SQLAlchemyRepository):
         return user
 
 class PlaceRepository(SQLAlchemyRepository):
-    def __init__(self, model):
+    def __init__(self, model=Place):
         super().__init__(Place)
         self.db = db
 
@@ -136,6 +139,7 @@ class PlaceRepository(SQLAlchemyRepository):
 
     def list_all(self) -> List[Place]:
         return super().get_all()
+
     def get_by_criteria(self, user_amenities: List[str]) -> List[Place]:
 
         subquery = (
@@ -151,11 +155,11 @@ class PlaceRepository(SQLAlchemyRepository):
         return subquery
 
 class AmenityRepository(SQLAlchemyRepository):
-    def __init__(self, model):
+    def __init__(self, model=Amenity):
         super().__init__(Amenity)
         self.db = db
 
-    def list_all(self) -> list[Amenity]:
+    def list_all(self) -> List[Amenity]:
         return super().get_all()
 
     def get_by_id(self, id: str) -> Amenity | None:
@@ -170,11 +174,11 @@ class AmenityRepository(SQLAlchemyRepository):
 
 
 class ReservationRepository(SQLAlchemyRepository):
-    def __init__(self, model):
+    def __init__(self, model=Reservation):
         super().__init__(Reservation)
         self.db = db
 
-    def list_all(self) -> list[Reservation]:
+    def list_all(self) -> List[Reservation]:
         return super().get_all()
 
     def reservations_by_user(self, user_id: str) -> list[Reservation]:
@@ -196,15 +200,15 @@ class ReservationRepository(SQLAlchemyRepository):
 
 
 class ReviewRepository(SQLAlchemyRepository):
-    def __init__(self, model):
+    def __init__(self, model=Review):
         super().__init__(Review)
         self.db = db
 
 
-    def list_by_place(self, place_id: str) -> list[Review]:
+    def list_by_place(self, place_id: str) -> List[Review]:
         return self.db.query(Review).filter_by(place_id=place_id).all()
 
-    def list_by_user(self, user_id: str) -> list[Review]:
+    def list_by_user(self, user_id: str) -> List[Review]:
         return self.db.query(Review).filter_by(user_id=user_id).all()
 
     def create_review(self, user_id: str, place_id: str, text: str, rating: int) -> Review:

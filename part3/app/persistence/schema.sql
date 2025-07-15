@@ -1,4 +1,4 @@
-CREATE TABLE "users" (
+CREATE TABLE "User" (
     id CHAR(36) PRIMARY KEY,
     first_name VARCHAR(255),
     last_name VARCHAR(255),
@@ -7,7 +7,7 @@ CREATE TABLE "users" (
     is_admin BOOLEAN DEFAULT FALSE
 );
 
-CREATE TABLE place (
+CREATE TABLE Place (
     id CHAR(36) PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description TEXT,
@@ -18,7 +18,7 @@ CREATE TABLE place (
     CONSTRAINT fk_owner FOREIGN KEY (owner_id) REFERENCES "User"(id) ON DELETE SET NULL
 );
 
-CREATE TABLE reviews (
+CREATE TABLE Review (
     id CHAR(36) PRIMARY KEY,
     text TEXT NOT NULL,
     rating INT CHECK (rating BETWEEN 1 AND 5) NOT NULL,
@@ -31,12 +31,12 @@ CREATE TABLE reviews (
     CONSTRAINT unique_user_place_reservation_review UNIQUE (user_id, place_id, reservation_id)
 );
 
-CREATE TABLE amenities (
+CREATE TABLE Amenity (
     id CHAR(36) PRIMARY KEY,
     name VARCHAR(255) UNIQUE NOT NULL
 );
 
-CREATE TABLE place_amenity (
+CREATE TABLE Place_amenity (
     place_id CHAR(36) NOT NULL,
     amenity_id CHAR(36) NOT NULL,
     PRIMARY KEY (place_id, amenity_id),
@@ -44,7 +44,7 @@ CREATE TABLE place_amenity (
     CONSTRAINT fk_pa_amenity FOREIGN KEY (amenity_id) REFERENCES Amenity(id) ON DELETE CASCADE
 );
 
-CREATE TABLE reservations (
+CREATE TABLE Reservation (
     id CHAR(36) PRIMARY KEY,
     user_id CHAR(36) NOT NULL,
     place_id CHAR(36) NOT NULL,
