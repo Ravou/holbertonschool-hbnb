@@ -1,8 +1,8 @@
 from app.models.base_model import BaseModel
 from sqlalchemy import Column, String, Text
 from sqlalchemy.orm import relationship
-from app.config.database import Base  # Le Base SQLAlchemy (déclarative_base)
-import uuid
+from sqlalchemy.orm import Mapped, mapped_column
+from uuid import uuid4
 
 class Amenity(BaseModel):
     __tablename__ = "amenities"

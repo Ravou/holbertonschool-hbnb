@@ -1,12 +1,38 @@
+from abc import ABC, abstractmethod
 from app.models import User, Place, Reservation, Review, Amenity
-from app.persistence.repository import Repository
 from typing import List
 from sqlalchemy.orm import Session
 from sqlalchemy import func
+from app import db
+
+class Repository(ABC):
+    @abstractmethod
+    def add(self, obj):
+        pass
+
+    @abstractmethod
+    def get(self, obj_id):
+        pass
+
+    @abstractmethod
+    def get_all(self):
+        pass
+
+    @abstractmethod
+    def update(self, obj_id, data):
+        pass
+
+    @abstractmethod
+    def delete(self, obj_id):
+        pass
+
+    @abstractmethod
+    def get_by_attribute(self, attr_name, attr_value):
+        pass
+
 
 class SQLAlchemyRepository(Repository):
     def __init__(self, model):
-        from app import db
         self.db = db
         self.model = model
 
@@ -35,7 +61,7 @@ class SQLAlchemyRepository(Repository):
 
     def get_by_attribute(self, attr_name, attr_value):
         attr = getattr(self.model, attr_name)
-        results = self.session.query(self.model).filter(attr == value).all()
+        results = db.session.query(self.model).filter(attr == value).all()
         return results
 
 
@@ -67,36 +93,27 @@ class InMemoryRepository(Repository):
         return [obj for obj in self._storage.values() if getattr(obj, attr_name) == attr_value]
 
 
-class UserRepository:
-    @staticmethod
-    def get_by_email(email: str) -> User | None:
+class UserRepository(SQLAlchemyRepository):
+    def __init__(self, model):
+        super().__init__(User)
+
+    def get_by_email(self, email: str) -> User | None:
         return User.query.filter_by(email=email).first()
 
-    @staticmethod
-    def get_by_id(user_id: str) -> User | None:
+    def get_by_id(self, user_id: str) -> User | None:
         return User.query.get(user_id)
 
-    @staticmethod
-    def list_all() -> list[User]:
+    def list_all(self) -> list[User]:
         return User.query.all()
 
-    @staticmethod
-    def create(user: User) -> User:
+    def create(self, user: User) -> User:
         db.session.add(user)
         db.session.commit()
         return user
 
-    @staticmethod
-    def delete(user: User) -> None:
-        db.session.delete(user)
-        db.session.commit()
-
-    @staticmethod
-    def update() -> None:
-        db.session.commit()
-
-class PlaceRepository:
-    def __init__(self, db: Session):
+class PlaceRepository(SQLAlchemyRepository):
+    def __init__(self, model):
+        super().__init__(Place)
         self.db = db
 
     def add_review(self, place: Place, review):
@@ -118,8 +135,7 @@ class PlaceRepository:
             self.db.refresh(place)
 
     def list_all(self) -> List[Place]:
-        return self.db.query(Place).all()
-
+        return super().get_all()
     def get_by_criteria(self, user_amenities: List[str]) -> List[Place]:
 
         subquery = (
@@ -134,12 +150,13 @@ class PlaceRepository:
         )
         return subquery
 
-class AmenityRepository:
-    def __init__(self, db: Session):
+class AmenityRepository(SQLAlchemyRepository):
+    def __init__(self, model):
+        super().__init__(Amenity)
         self.db = db
 
     def list_all(self) -> list[Amenity]:
-        return self.db.query(Amenity).all()
+        return super().get_all()
 
     def get_by_id(self, id: str) -> Amenity | None:
         return self.db.query(Amenity).filter_by(id=id).first()
@@ -150,17 +167,15 @@ class AmenityRepository:
         self.db.refresh(amenity)
         return amenity
 
-    def delete(self, amenity: Amenity) -> None:
-        self.db.delete(amenity)
-        self.db.commit()
 
 
-class ReservationRepository:
-    def __init__(self, db: Session):
+class ReservationRepository(SQLAlchemyRepository):
+    def __init__(self, model):
+        super().__init__(Reservation)
         self.db = db
 
     def list_all(self) -> list[Reservation]:
-        return self.db.query(Reservation).all()
+        return super().get_all()
 
     def reservations_by_user(self, user_id: str) -> list[Reservation]:
         return self.db.query(Reservation).filter_by(user_id=user_id).all()
@@ -179,13 +194,12 @@ class ReservationRepository:
         self.db.refresh(reservation)
         return reservation
 
-    def delete(self, reservation: Reservation):
-        self.db.delete(reservation)
-        self.db.commit()
 
-class ReviewRepository:
-    def __init__(self, db: Session):
+class ReviewRepository(SQLAlchemyRepository):
+    def __init__(self, model):
+        super().__init__(Review)
         self.db = db
+
 
     def list_by_place(self, place_id: str) -> list[Review]:
         return self.db.query(Review).filter_by(place_id=place_id).all()

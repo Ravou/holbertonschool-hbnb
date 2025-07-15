@@ -1,17 +1,28 @@
 from __future__ import annotations
 from typing import List
 from app.models.base_model import BaseModel
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import String, Boolean, Integer
 from flask_bcrypt import Bcrypt
+from app import db
+from uuid import uuid4
+from typing import TYPE_CHECKING
 bcrypt = Bcrypt()
+
+if TYPE_CHECKING:
+    from .place import Place
+    from .review import Review
+    from .reservation import Reservation
 
 class User(BaseModel):
     __tablename__ = 'users'
 
-    first_name = db.Column(db.String(50), nullable=False)
-    last_name = db.Column(db.String(50), nullable=False)
-    email = db.Column(db.String(120), nullable=False, unique=True)
-    password = db.Column(db.String(128), nullable=False)
-    is_admin = db.Column(db.Boolean, default=False)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    first_name: Mapped[str] = mapped_column(String(50), nullable=False)
+    last_name: Mapped[str] = mapped_column(String(50), nullable=False)
+    email: Mapped[str] = mapped_column(String(120), nullable=False, unique=True)
+    password: Mapped[str] = mapped_column(String(128), nullable=False)
+    is_admin: Mapped[bool] = mapped_column(Boolean, default=False)
 
 
     allowed_update_fields = ['first_name', 'last_name']

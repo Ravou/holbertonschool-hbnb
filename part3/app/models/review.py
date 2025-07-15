@@ -1,7 +1,6 @@
-from sqlalchemy import Column, String, Integer, ForeignKey, Text
-from sqlalchemy.orm import relationship
+from sqlalchemy import String, Integer, Boolean, Text
+from sqlalchemy.orm import Mapped, mapped_column
 from app.models.base_model import BaseModel
-
 
 class Review(BaseModel):
     __tablename__ = 'reviews'

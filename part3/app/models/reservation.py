@@ -1,6 +1,7 @@
 from app.models.base_model import BaseModel
 from sqlalchemy import Column, String, Integer, Date, ForeignKey
 from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Mapped, mapped_column
 
 class Reservation(BaseModel):
     __tablename__ = 'reservations'

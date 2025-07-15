@@ -1,58 +1,134 @@
-# User Model - Python OOP
+# HBnB Project - Part 3: Enhanced Backend with Authentication and Database Integration
 
-This module defines a `User` class for managing users in an object-oriented system.  
-It includes user attributes, relations to other models, and utility methods for management and retrieval.
+## Table of Contents
 
-## 🧩 Features
+- [Overview](#overview)
+- [Objectives](#objectives)
+- [Learning Outcomes](#learning-outcomes)
+- [Project Context](#project-context)
+- [Project Structure and Key Tasks](#project-structure-and-key-tasks)
+- [Technologies and Libraries Used](#technologies-and-libraries-used)
+- [How to Run](#how-to-run)
+- [Resources](#resources)
+- [Notes](#notes)
+- [Author](#author)
+- [License](#license)
 
-- Inherits from a base model (`BaseModel`)
-- Stores user information: first name, last name, email, admin status
-- Tracks associated places, reviews, and reservations
-- Supports searching users by email or ID
-- Includes an internal registry of all created users
+---
 
-## 🔧 Class: `User`
+## Overview
 
-### Attributes
+This part of the HBnB project extends the backend by adding user authentication, role-based authorization, and persistent database integration. The application transitions from in-memory data storage to a relational database using SQLAlchemy and SQLite for development, with preparation for MySQL in production environments. The backend is secured with JWT-based authentication and supports role-based access control.
 
-- `first_name` (str): User's first name
-- `last_name` (str): User's last name
-- `email` (str): User's email
-- `is_admin` (bool): Admin status (default `False`)
-- `reservations` (List[Reservation]): List of reservations made by the user
-- `places` (List[Place]): List of places owned by the user
-- `reviews` (List[Review]): Reviews written by the user
+---
 
-### Class Attributes
+## Objectives
 
-- `_users`: List of all instantiated users
-- `allowed_update_fields`: Fields that can be updated dynamically
+- **Authentication & Authorization**  
+  Implement JWT authentication with `Flask-JWT-Extended` and enforce role-based access control (admin vs regular users).
 
-### Methods
+- **Database Integration**  
+  Replace in-memory storage with a persistent SQLite database via SQLAlchemy ORM for development. Prepare the system for MySQL usage in production.
 
-- `add_place(place)`: Adds a place to the user's list and sets ownership
-- `add_review(review)`: Adds a review to the user's list
-- `add_reservation(reservation)`: Adds a reservation to the user's list
-- `get_by_email(email)`: Returns a user instance matching the email
-- `get_by_id(id)`: Returns a user instance matching the ID
-- `list_all()`: Returns all created users
-- `is_admin` (property): Getter and setter for admin status
-- `__repr__()`: Returns a readable string representation of the user
+- **CRUD Operations**  
+  Refactor all CRUD endpoints to interact with the database instead of in-memory storage.
 
-## 📦 Dependencies
+- **Database Design**  
+  Design and visualize the database schema using `mermaid.js` diagrams.
 
-- Python 3.10+
-- `BaseModel` class from `app.models.base_model`
+- **Data Validation**  
+  Ensure strong validation and data consistency through model constraints.
 
-## ✅ Example
+---
 
-```python
-from app.models.user import User
+## Learning Outcomes
 
-u1 = User("Alice", "Doe", "alice@example.com")
-u2 = User("Bob", "Smith", "bob@example.com", is_admin=True)
+By completing this part, you will be able to:
 
-print(User.get_by_email("bob@example.com"))  # → User(id='...', email='bob@example.com')
-print(u1.is_admin)  # → False
-u1.is_admin = True
+- Secure APIs with JWT authentication and manage user sessions.
+- Implement role-based authorization with user roles (admin vs regular).
+- Persist data using SQLAlchemy ORM with SQLite and prepare for MySQL.
+- Design a relational database schema and visualize it.
+- Build a scalable and secure backend suitable for production.
 
+---
+
+## Project Context
+
+Earlier project parts used in-memory repositories suited for prototyping but inadequate for production. This part introduces:
+
+- A lightweight relational database (SQLite) for development.
+- Secure user authentication with JWT tokens.
+- Role-based access restrictions.
+- Preparations for a production-grade database (MySQL).
+
+---
+
+## Project Structure and Key Tasks
+
+| Task No. | Description                                           | Notes                                  |
+|----------|-------------------------------------------------------|----------------------------------------|
+| 0        | Modify Application Factory for Configurations         | Add config support in `create_app()`   |
+| 1        | User Model Password Hashing                           | Hash passwords with bcrypt             |
+| 2        | Implement JWT Authentication                          | Login, token generation & verification |
+| 3        | Secure User Access Endpoints                          | Access control by ownership & auth     |
+| 4        | Administrator Access Endpoints                        | Admin-only endpoints & role bypass     |
+| 5        | SQLAlchemy Repository                                 | Replace in-memory repo with SQLAlchemy |
+| 6        | Map User Entity to SQLAlchemy Model                   | User DB mapping & repository           |
+| 7        | Map Place, Review, Amenity Entities                   | Basic models without relations         |
+| 8        | Map Relationships Between Entities                    | Add foreign keys and relationships     |
+| 9        | Database Initialization and Migration                 | Create tables & seed data              |
+| 10       | Configure Production Database (MySQL)                 | Prepare for MySQL deployment           |
+| 11       | Database Schema Visualization                         | ER diagrams using Mermaid.js           |
+
+---
+
+## Technologies and Libraries Used
+
+- Python 3.x
+- Flask (Flask-JWT-Extended, Flask-Bcrypt, Flask-SQLAlchemy)
+- SQLAlchemy ORM
+- SQLite (development) & MySQL (production)
+- JWT for stateless authentication
+- Mermaid.js for database schema visualization
+
+---
+
+## How to Run
+
+1. Clone the repository and checkout the `part3` branch.  
+2. Install dependencies:  
+   ```bash
+   pip install -r requirements.txt
+3. Configure environment variables for JWT secret, database URI, etc.
+4. Initialize the database (SQLite for development): flask db upgrade
+5. Run the Flask app: flask run
+6. Use the API endpoints with JWT authentication.
+
+## Resources
+
+- Flask-JWT-Extended Documentation
+
+- SQLAlchemy ORM Documentation
+
+- SQLite Documentation
+
+- Flask Documentation
+
+- Mermaid.js Documentation
+
+___
+
+## Author 
+
+GitHub: https://github.com/ravou
+
+___
+
+## Licence
+
+This project is licensed under the MIT License.  
+© 2025 [ravou](https://github.com/ravou)  
+You are free to use, modify, and distribute this software.  
+No warranty is provided.  
+See the LICENSE file for details.

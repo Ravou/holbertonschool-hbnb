@@ -1,10 +1,12 @@
 from app import db
 from app.models.base_model import BaseModel
-from sqlalchemy.orm import relationcship
-from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship, Mapped, mapped_column
+from sqlalchemy import String, DECIMAL, Float, ForeignKey
 from typing import TYPE_CHECKING
-import uuid
+from uuid import uuid4
 
+if TYPE_CHECKING:
+    from app.models.user import User
 
 class Place(BaseModel):
     __tablename__ = 'place'

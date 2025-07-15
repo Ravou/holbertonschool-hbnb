@@ -3,7 +3,7 @@ from flask_jwt_extended import jwt_required
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import get_jwt
 
-protected_ns = Namespace(
+api = Namespace(
     'protected',
     description='Zone protégée',
     authorizations={
@@ -17,10 +17,10 @@ protected_ns = Namespace(
     security='Bearer Auth'
 )
 
-@protected_ns.route('')
+@api.route('')
 class ProtectedResource(Resource):
     @jwt_required()
-    @protected_ns.doc(security='Bearer Auth')
+    @api.doc(security='Bearer Auth')
     def get(self):
         """A protected endpoint that requires a valid JWT token"""
         current_user = get_jwt_identity()
