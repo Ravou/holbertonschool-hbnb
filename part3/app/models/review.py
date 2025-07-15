@@ -3,7 +3,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from app.models.base_model import BaseModel
 
 class Review(BaseModel):
-    __tablename__ = 'reviews'
+    __tablename__ = 'Review'
 
     user_id: Mapped[str] = mapped_column(String(36), nullable=False)
     place_id: Mapped[str] = mapped_column(String(36), nullable=False)

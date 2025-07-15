@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.orm import Mapped, mapped_column
 
 class Reservation(BaseModel):
-    __tablename__ = 'reservations'
+    __tablename__ = 'Reservation'
 
     user_id: Mapped[str] = mapped_column(String(36), nullable=False)
     place_id: Mapped[str] = mapped_column(String(36), nullable=False)

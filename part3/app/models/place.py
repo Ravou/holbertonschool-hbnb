@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from app.models.user import User
 
 class Place(BaseModel):
-    __tablename__ = 'place'
+    __tablename__ = 'Place'
     
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
     title: Mapped[str] = mapped_column(String(255), nullable=False)
