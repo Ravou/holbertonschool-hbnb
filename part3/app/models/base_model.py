@@ -2,7 +2,7 @@ from app import db
 import uuid
 from datetime import datetime
 
-class BaseModel:
+class BaseModel(db.Model):
     __abstract__ = True
 
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
@@ -11,6 +11,8 @@ class BaseModel:
 
     def save(self):
         self.updated_at = datetime.utcnow()
+        db.session.add(self)
+        db.session.commit()
 
     def to_dict(self, seen=None):
         if seen is None:
@@ -34,14 +36,13 @@ class BaseModel:
 
     @classmethod
     def from_dict(cls, data):
-        obj = cls()  # création de l'objet vide
+        obj = cls()
 
-    for key, value in data.items():
-        if hasattr(cls, key):
-            if key in ('created_at', 'updated_at') and isinstance(value, str):
-                value = datetime.fromisoformat(value)
-            setattr(obj, key, value)
-
+        for key, value in data.items():
+            if hasattr(cls, key):
+                if key in ('created_at', 'updated_at') and isinstance(value, str):
+                    value = datetime.fromisoformat(value)
+                setattr(obj, key, value)
         return obj
 
     def update(self, data):
@@ -55,7 +56,7 @@ class BaseModel:
 
 
     def __repr__(self):
-        return f"{self.__class__.__name}(id='{self.if}', created_at='{self.created_at}', updated_at='{self.updated_at}')"
+        return f"{self.__class__.__name}(id='{self.id}', created_at='{self.created_at}', updated_at='{self.updated_at}')"
 
     def __str__(self):
         return self.__repr__()

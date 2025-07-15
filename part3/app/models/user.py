@@ -5,22 +5,16 @@ from flask_bcrypt import Bcrypt
 bcrypt = Bcrypt()
 
 class User(BaseModel):
-    _users: List['User'] = []
+    __tablename__ = 'users'
+
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(120), nullable=False, unique=True)
+    password = db.Column(db.String(128), nullable=False)
+    is_admin = db.Column(db.Boolean, default=False)
+
 
     allowed_update_fields = ['first_name', 'last_name']
-
-    def __init__(self, first_name, last_name, email, password, is_admin=False):
-        super().__init__()
-        self.first_name = first_name
-        self.last_name = last_name
-        self.email = email
-        self.password = password
-        self._is_admin = is_admin
-        self.reservations: List[Reservation] =[]
-        self.places: List[Place] = []
-        self.reviews: List[Review] = []
-
-        User._users.append(self)
 
     def hash_password(self, password):
         "Hashes the password before storing it."
@@ -46,26 +40,7 @@ class User(BaseModel):
         self.reservations.append(reservation)
         print("Reservation added to user.")
 
-    @classmethod
-    def get_by_email(cls, email: str) -> 'User' | None:
-        return next((user for user in cls._users if user.email == email), None)
-
-
-    @property
-    def is_admin(self):
-        return self._is_admin
     
-    @is_admin.setter
-    def is_admin(self, value: bool):
-        self._is_admin = value
-
-    @classmethod
-    def list_all(cls) -> List['User']:
-        return cls._users
-
-    @classmethod
-    def get_by_id(cls, id):
-        return next((user for user in cls._users if user.id == id), None)
 
     def __repr__(self):
         return f"User(id='{self.id}', email='{self.email}')"

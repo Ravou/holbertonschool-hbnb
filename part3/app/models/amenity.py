@@ -1,26 +1,18 @@
 from app.models.base_model import BaseModel
-from typing import List
+from sqlalchemy import Column, String, Text
+from sqlalchemy.orm import relationship
+from app.config.database import Base  # Le Base SQLAlchemy (déclarative_base)
+import uuid
 
 class Amenity(BaseModel):
-    _amenities: List['Amenity'] = []
+    __tablename__ = "amenities"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    name: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=True)
+
     allowed_update_fields = ['name', 'description']
 
-    def __init__(self, name: str, description: str):
-        super().__init__()
-        self.name = name
-        self.description = description
-        Amenity._amenities.append(self)
-
-    @classmethod
-    def list_all(cls) -> List['Amenity']:
-        return cls._amenities
-
-    @classmethod
-    def get_by_id(cls, id: str) -> 'Amenity' or None:
-        for amenity in cls._amenities:
-            if amenity.id == id:
-                return amenity
-        return None
 
     def __repr__(self):
         return f"Amenity(id='{self.id}', name='{self.name}', description='{self.description}')"
