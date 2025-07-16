@@ -33,11 +33,6 @@ erDiagram
         string name
     }
 
-    PLACE_AMENITY {
-        string place_id
-        string amenity_id
-    }
-
     RESERVATION {
         string id
         date start_date
