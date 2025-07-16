@@ -36,13 +36,6 @@ CREATE TABLE Amenity (
     name VARCHAR(255) UNIQUE NOT NULL
 );
 
-CREATE TABLE Place_amenity (
-    place_id CHAR(36) NOT NULL,
-    amenity_id CHAR(36) NOT NULL,
-    PRIMARY KEY (place_id, amenity_id),
-    CONSTRAINT fk_pa_place FOREIGN KEY (place_id) REFERENCES Place(id) ON DELETE CASCADE,
-    CONSTRAINT fk_pa_amenity FOREIGN KEY (amenity_id) REFERENCES Amenity(id) ON DELETE CASCADE
-);
 
 CREATE TABLE Reservation (
     id CHAR(36) PRIMARY KEY,
