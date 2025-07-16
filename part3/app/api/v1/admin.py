@@ -63,12 +63,14 @@ class AdminUserCreate(Resource):
         if facade.get_user_by_email(data['email']):
             return {'error': 'Email already registered'}, 400
 
+        hashed_password = generate_password_hash(user_data['password'])
+
         new_user = facade.create_user(
-            data['first_name'],
-            data['last_name'],
-            data['email'],
-            data['password'],
-            data.get('is_admin', False)
+            user_data['first_name'],
+            user_data['last_name'],
+            user_data['email'],
+            hashed_passord,
+            user_data.get('is_admin', False)
         )
         return {
             'id': new_user.id,

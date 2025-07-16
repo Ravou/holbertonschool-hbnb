@@ -93,7 +93,8 @@ class InMemoryRepository(Repository):
             del self._storage[obj_id]
 
     def get_by_attribute(self, attr_name, attr_value):
-        return [obj for obj in self._storage.values() if getattr(obj, attr_name) == attr_value]
+        results = [obj for obj in self._storage.values() if getattr(obj, attr_name) == attr_value]
+        return results[0] if results else None
 
 
 class UserRepository(SQLAlchemyRepository):

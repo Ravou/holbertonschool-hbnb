@@ -14,6 +14,12 @@ class Reservation(BaseModel):
 
     allowed_update_fields = ['start_date', 'end_date', 'number_of_guests']
 
+    def __init__(self, user_id: str, place_id: str, start_date, end_date, number_of_guests: int):
+        self.user_id = user_id
+        self.place_id = place_id
+        self.start_date = start_date
+        self.end_date = end_date
+        self.number_of_guests = number_of_guests
 
     def __repr__(self):
         return (f"Reservation(id='{self.id}', user_id='{self.user_id}', "

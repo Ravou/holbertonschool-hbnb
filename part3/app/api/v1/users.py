@@ -3,6 +3,7 @@ from app.services.facade import facade
 from flask import request
 from config import Config
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from werkzeug.security import generate_password_hash
 import jwt
 
 SECRET_KEY = Config.SECRET_KEY
@@ -20,11 +21,13 @@ authorizations = {
 api = Namespace('users', description='User operations', authorizations=authorizations, security='Bearer Auth')
 
 # Define the user model for input validation and documentation
-user_model = api.model('User', {
+user_input_model = api.model('UserInput', {
+    'id': fields.String(readonly=True, description='User identifier'),
     'first_name': fields.String(required=True, description='First name of the user'),
     'last_name': fields.String(required=True, description='Last name of the user'),
     'email': fields.String(required=True, description='Email of the user'),
-    'password': fields.String(required=True, description='Password of the user')
+    'password': fields.String(required=True, description='Password of the user'),
+    'is_admin': fields.Boolean(description='Admin flag')
 })
 
 # Define the user pour the update
@@ -35,7 +38,7 @@ user_update_model = api.model('UserUpdate', {
 
 @api.route('/')
 class UserList(Resource):
-    @api.expect(user_model, validate=True)
+    @api.expect(user_input_model, validate=True)
     @api.response(201, 'User successfully created')
     @api.response(400, 'Email already registered')
     @api.response(400, 'Invalid input data')
@@ -48,11 +51,14 @@ class UserList(Resource):
         if existing_user:
             return {'error': 'Email already registered'}, 400
 
+        hashed_password = generate_password_hash(user_data['password'])
+
         new_user = facade.create_user(
                 user_data['first_name'], 
                 user_data['last_name'], 
                 user_data['email'],
-                user_data['password']
+                hashed_password,
+                is_admin=user_data.get('is_admin', False)
         )
 
         return {

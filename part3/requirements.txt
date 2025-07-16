@@ -5,4 +5,4 @@ Flask-SQLAlchemy
 flask-bcrypt
 SQLAlchemy
 PyJWT
-pytesty
+pytest

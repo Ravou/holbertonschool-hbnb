@@ -14,6 +14,14 @@ class Review(BaseModel):
 
     allowed_update_fields = ['rating', 'text']
 
+    def __init__(self, user_id: str, place_id: str, reservation_id: str, text: str, rating: int):
+        self.user_id = user_id
+        self.place_id = place_id
+        self.reservation_id = reservation_id
+        self.text = text
+        self.rating = rating
+
+
     def is_valid_rating(self) -> bool:
         return 1 <= self.rating <= 5
 

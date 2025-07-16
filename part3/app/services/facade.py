@@ -26,7 +26,7 @@ class HBnBFacade:
     def create_user(self, first_name: str, last_name: str, email: str, password, is_admin=False) -> User:
         if self.get_user_by_email(email):
             raise ValueError("Email already registered.")
-        user = User(first_name, last_name, email, is_admin)
+        user = User(first_name, last_name, email, password, is_admin)
         user.hash_password(password)
         self.user_repo.add(user)
         return user

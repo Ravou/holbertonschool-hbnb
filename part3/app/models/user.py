@@ -27,6 +27,13 @@ class User(BaseModel):
 
     allowed_update_fields = ['first_name', 'last_name']
 
+    def __init__(self, first_name: str, last_name: str, email: str, password: str, is_admin: bool = False):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.email = email
+        self.hash_password(password)  # utilise directement le hash
+        self.is_admin = is_admin
+
     def hash_password(self, password):
         "Hashes the password before storing it."
         self.password = bcrypt.generate_password_hash(password).decode('utf-8')

@@ -22,6 +22,15 @@ class Place(BaseModel):
 
     allowed_update_fields = ['title', 'description', 'price_per_night', 'address']
 
+    def __init__(self, title: str, description: str, price: float, latitude: float = None, longitude: float = None, owner: "User" = None):
+        self.title = title
+        self.description = description
+        self.price = price
+        self.latitude = latitude
+        self.longitude = longitude
+        self.owner = owner
+
+
     def __repr__(self):
         amenity_names = [amenity.name for amenity in self.amenities]
         return f"Place(id='{self.id}', title='{self.title}', amenities={amenity_names})"
