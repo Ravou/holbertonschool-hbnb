@@ -32,6 +32,11 @@ erDiagram
         string id
         string name
     }
+    
+    PLACE_AMENITY {
+        string place_id
+        string amenity_id
+    }
 
     RESERVATION {
         string id
@@ -48,6 +53,9 @@ erDiagram
 
     PLACE ||--o{ REVIEW : receives
     PLACE ||--o{ RESERVATION : is_reserved
+    PLACE ||--o{ PLACE_AMENITY : links
+
+    AMENITY ||--o{ PLACE_AMENITY : is_linked
 
     RESERVATION ||--|| REVIEW : generates
 
