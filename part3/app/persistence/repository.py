@@ -61,7 +61,7 @@ class SQLAlchemyRepository(Repository):
 
     def get_by_attribute(self, attr_name, attr_value):
         attr = getattr(self.model, attr_name)
-        results = db.session.query(self.model).filter(attr == attr_value).all()
+        results = db.session.query(self.model).filter(attr == attr_value).first()
         return results
 
 

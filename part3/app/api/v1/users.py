@@ -1,9 +1,9 @@
 from flask_restx import Namespace, Resource, fields
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.services.facade import facade
 from flask import request
 from config import Config
-from flask_jwt_extended import jwt_required, get_jwt_identity
-from werkzeug.security import generate_password_hash
+from app import bcrypt
 import jwt
 
 SECRET_KEY = Config.SECRET_KEY
@@ -51,7 +51,7 @@ class UserList(Resource):
         if existing_user:
             return {'error': 'Email already registered'}, 400
 
-        hashed_password = generate_password_hash(user_data['password'])
+        hashed_password = bcrypt.generate_password_hash(user_data['password']).decode('utf-8')
 
         new_user = facade.create_user(
                 user_data['first_name'], 
