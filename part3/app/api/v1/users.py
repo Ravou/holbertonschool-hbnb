@@ -92,7 +92,7 @@ class UserList(Resource):
             return {'error': f'Internal server error: {str(e)}'}, 500
 
 
-@api.route('/<user_id>')
+@api.route('/<string:user_id>')
 class UserResource(Resource):
     @api.response(200, 'User details retrieved successfully')
     @api.response(404, 'User not found')
@@ -107,8 +107,7 @@ class UserResource(Resource):
             return {'error': 'User not found'}, 404
         return {'id': user.id, 'first_name': user.first_name, 'last_name': user.last_name, 'email': user.email}, 200
 
-@api.route('/<string:user_id>')
-class UserUpdate(Resource):
+
     @jwt_required()
     @api.doc(security='Bearer Auth')
     @api.expect(user_update_model, validate=True)
