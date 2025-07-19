@@ -1,3 +1,5 @@
+![HBNB logo](image/hbnb.png)
+
 # HBnB Project - Part 3: Enhanced Backend with Authentication and Database Integration
 
 ## Table of Contents
