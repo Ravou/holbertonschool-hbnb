@@ -13,6 +13,8 @@
 - [Project Structure and Key Tasks](#project-structure-and-key-tasks)
 - [Technologies and Libraries Used](#technologies-and-libraries-used)
 - [How to Run](#how-to-run)
+- [Example](#example)
+- [ER Diagram](#er-diagram)
 - [Resources](#resources)
 - [Notes](#notes)
 - [Author](#author)
@@ -108,6 +110,79 @@ Earlier project parts used in-memory repositories suited for prototyping but ina
 4. Initialize the database (SQLite for development): flask db upgrade
 5. Run the Flask app: flask run
 6. Use the API endpoints with JWT authentication.
+
+---
+
+## Example
+
+---
+
+## ER Diagram
+
+```mermaid
+erDiagram
+    USER {
+        string id
+        string first_name
+        string last_name
+        string email
+        string password
+        boolean is_admin
+    }
+
+    PLACE {
+        string id
+        string title
+        string description
+        float price
+        float latitude
+        float longitude
+        string owner_id
+    }
+
+    REVIEW {
+        string id
+        string text
+        int rating
+        string user_id
+        string place_id
+        string reservation_id
+    }
+
+    AMENITY {
+        string id
+        string name
+    }
+    
+    PLACE_AMENITY {
+        string place_id
+        string amenity_id
+    }
+
+    RESERVATION {
+        string id
+        date start_date
+        date end_date
+        string user_id
+        string place_id
+    }
+
+    %% Relations
+    USER ||--o{ PLACE : owns
+    USER ||--o{ REVIEW : writes
+    USER ||--o{ RESERVATION : books
+
+    PLACE ||--o{ REVIEW : receives
+    PLACE ||--o{ RESERVATION : is_reserved
+    PLACE ||--o{ PLACE_AMENITY : links
+
+    AMENITY ||--o{ PLACE_AMENITY : is_linked
+
+    RESERVATION ||--|| REVIEW : generates
+
+```
+
+---
 
 ## Resources
 
