@@ -1,4 +1,6 @@
+<p align="centre">
 <img src="image/hbnb.png" alt="HBNB Logo" width="400"/>
+</p>
 
 # HBnB Project - Part 3: Enhanced Backend with Authentication and Database Integration
 
