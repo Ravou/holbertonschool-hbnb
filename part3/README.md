@@ -1,6 +1,6 @@
-<div align="center">
-  <h1>HBnB Project - Part 3: Enhanced Backend with Authentication and Database Integration</h1>
-  <img src="image/hbnb.png" alt="HBNB Logo" width="400"/>
+<div style="display: flex; align-items: center; justify-content: center; gap: 20px;">
+  <h1>HBnB Project - Part 3:</h1>
+  <img src="image/hbnb.png" alt="HBNB Logo" width="150"/>
 </div>
 
 
