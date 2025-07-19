@@ -183,10 +183,10 @@ erDiagram
 ```
 ### Légende du Diagramme ER
 
-| Symbole Mermaid | Signification                        |
+| Symbole Mermaid | Signification                      |
 |-----------------|------------------------------------|
-| `||`            | Relation obligatoire (1)            |
-| `o{`            | Relation facultative ou multiple (*)|
+| `||`            | Relation obligatoire (1)           |
+| `o{`            | Relation facultative ou multiple(*)|
 | `||--o{`        | Relation un-à-plusieurs (1 à *)    |
 | `||--||`        | Relation un-à-un (1 à 1)           |
 
