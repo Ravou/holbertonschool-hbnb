@@ -181,6 +181,38 @@ erDiagram
     RESERVATION ||--|| REVIEW : generates
 
 ```
+### Légende du Diagramme ER
+
+| Symbole Mermaid | Signification                        |
+|-----------------|------------------------------------|
+| `||`            | Relation obligatoire (1)            |
+| `o{`            | Relation facultative ou multiple (*)|
+| `||--o{`        | Relation un-à-plusieurs (1 à *)    |
+| `||--||`        | Relation un-à-un (1 à 1)           |
+
+---
+
+### Entités principales
+
+- **USER** : représente les utilisateurs du système, avec leurs informations personnelles et droits (ex: admin ou non).
+- **PLACE** : un lieu à louer ou visiter, avec titre, description, localisation, prix et propriétaire.
+- **REVIEW** : avis et notes laissés par les utilisateurs sur un lieu, liés à une réservation.
+- **AMENITY** : équipements ou services proposés par un lieu (ex : Wi-Fi, parking).
+- **PLACE_AMENITY** : table d’association entre lieu et équipements.
+- **RESERVATION** : réservation faite par un utilisateur pour un lieu, avec dates de début et fin.
+
+---
+
+### Relations clés
+
+- Un **USER** possède plusieurs **PLACE** (`owns`).
+- Un **USER** écrit plusieurs **REVIEW** (`writes`).
+- Un **USER** peut effectuer plusieurs **RESERVATION** (`books`).
+- Un **PLACE** reçoit plusieurs **REVIEW** (`receives`) et plusieurs **RESERVATION** (`is_reserved`).
+- Un **PLACE** est lié à plusieurs **AMENITY** via **PLACE_AMENITY** (`links`).
+- Une **RESERVATION** génère une **REVIEW** (`generates`) — relation un-à-un.
+
+
 
 ---
 
