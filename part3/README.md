@@ -1,7 +1,7 @@
-<figure style="text-align: center;">
+<div align="center">
+  <h1>HBnB Project - Part 3: Enhanced Backend with Authentication and Database Integration</h1>
   <img src="image/hbnb.png" alt="HBNB Logo" width="400"/>
-  <figcaption><strong>HBnB Project - Part 3:</strong> Enhanced Backend with Authentication and Database Integration</figcaption>
-</figure>
+</div>
 
 
 ## Table of Contents
