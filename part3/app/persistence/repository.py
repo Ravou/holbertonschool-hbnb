@@ -4,6 +4,9 @@ from typing import List
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from app import db
+from datetime import date
+from typing import Optional
+from flask import request
 
 class Repository(ABC):
     @abstractmethod
@@ -41,7 +44,7 @@ class SQLAlchemyRepository(Repository):
         db.session.commit()
 
     def get(self, obj_id):
-        return self.model.query.get(obj_id)
+        return self.db.session.get(self.model, obj_id)
 
     def get_all(self):
         return self.model.query.all()
@@ -60,6 +63,8 @@ class SQLAlchemyRepository(Repository):
             db.session.commit()
 
     def get_by_attribute(self, attr_name, attr_value):
+        if not hasattr(self.model, attr_name):
+            raise ValueError(f"{attr_name} is not a valid attribut of {self.model.__name__}")
         attr = getattr(self.model, attr_name)
         results = db.session.query(self.model).filter(attr == attr_value).first()
         return results
@@ -85,7 +90,6 @@ class InMemoryRepository(Repository):
         if obj:
             for key, value in data.items():
                 setattr(obj, key, value)
-            db.session.commit()
         return obj
 
     def delete(self, obj_id):
@@ -101,8 +105,8 @@ class UserRepository(SQLAlchemyRepository):
     def __init__(self, model=User):
         super().__init__(User)
 
-    def get_by_email(self, email: str) -> User | None:
-        return User.query.filter_by(email=email).first()
+    def get_by_email(self, email: str) -> Optional[User]:
+        return User.db.query.filter_by(email=email).first()
 
     def get_by_id(self, user_id: str) -> User | None:
         return User.query.get(user_id)
@@ -154,6 +158,29 @@ class PlaceRepository(SQLAlchemyRepository):
             .all()
         )
         return subquery
+
+    def geocode_address(self, address: str):
+        url = "https://nominatim.openstreetmap.org/search"
+        params = {
+            "q": address,
+            "format": "json",
+            "limit": 1
+        }
+        headers = {
+            "User-Agent": "my-app-email@example.com"
+        }
+        try:
+            response = requests.get(url, params=params, headers=headers, timeout=5)
+            response.raise_for_status()
+            data = response.json()
+            if data:
+                return {
+                    "latitude": float(data[0]["lat"]),
+                    "longitude": float(data[0]["lon"])
+                }
+            return None
+        except (requests.RequestException, ValueError):
+            return None
 
 class AmenityRepository(SQLAlchemyRepository):
     def __init__(self, model=Amenity):

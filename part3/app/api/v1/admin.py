@@ -4,6 +4,7 @@ from flask import request
 from config import Config
 from app.services.facade import facade
 import jwt
+from app  import Bcrypt
 
 SECRET_KEY = Config.SECRET_KEY
 
@@ -60,16 +61,16 @@ class AdminUserCreate(Resource):
         user_data = request.get_json()
         email = user_data.get('email')
 
-        if facade.get_user_by_email(data['email']):
+        if facade.get_user_by_email(email):
             return {'error': 'Email already registered'}, 400
 
-        hashed_password = generate_password_hash(user_data['password'])
+        hashed_password = bcrypt.generate_password_hash(user_data['password']).decode('utf-8')
 
         new_user = facade.create_user(
             user_data['first_name'],
             user_data['last_name'],
             user_data['email'],
-            hashed_passord,
+            hashed_password,
             user_data.get('is_admin', False)
         )
         return {

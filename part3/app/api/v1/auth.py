@@ -19,14 +19,14 @@ class Login(Resource):
         
         # Step 1: Retrieve the user based on the provided email
         user = facade.get_user_by_email(credentials['email'])
-        
+
         # Step 2: Check if the user exists and the password is correct
         if not user or not user.verify_password(credentials['password']):
             return {'error': 'Invalid credentials'}, 401
 
         # Step 3: Create a JWT token with the user's id and is_admin flag
         additional_claims = {'is_admin': user.is_admin}
-        access_token = create_access_token(identity=user.id, additional_claims=additional_claims)
+        access_token = create_access_token(identity=str(user.id), additional_claims=additional_claims)
         
         # Step 4: Return the JWT token to the client
         return {'access_token': access_token}, 200

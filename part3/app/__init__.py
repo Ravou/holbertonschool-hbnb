@@ -27,13 +27,13 @@ def create_app(config_class=DevelopmentConfig):
     from app.api.v1.admin import api as admin_ns
 
     authorizations = {
-            'Bearer Auth': {
-                'type': 'apikey', 
-                'in': 'header', 
-                'name': 'Authorization', 
-                'description': "Type 'Bearer <JWT token>' to authorize."
-                } 
-            }
+        'Bearer Auth': {
+            'type': 'apiKey', 
+            'in': 'header', 
+            'name': 'Authorization', 
+            'description': "Type 'Bearer <JWT token>' to authorize."
+        } 
+    }
     api = Api(app, version='1.0', title='HBnB API', description='HBnB Application API', doc='/api/v1/', authorizations=authorizations, security='Bearer Auth')
 
     api.add_namespace(users_ns, path='/api/v1/users')

@@ -27,7 +27,6 @@ class HBnBFacade:
         if self.get_user_by_email(email):
             raise ValueError("Email already registered.")
         user = User(first_name, last_name, email, password, is_admin)
-        user.hash_password(password)
         self.user_repo.add(user)
         return user
 
@@ -42,8 +41,14 @@ class HBnBFacade:
         user = self.user_repo.get(user_id)
         if not user:
             return None
+
+        if 'password' in new_data:
+            user.hash_password(new_data['password'])
+            del new_data['password']
+
         for key, value in new_data.items():
             setattr(user, key, value)
+
         db.session.commit()
         return user
 
@@ -61,8 +66,25 @@ class HBnBFacade:
 
 
     # --------- PLACE ----------
-    def create_place(self, title: str, description: str, price: float, latitude: float, longitude: float, owner: User, amenities: Optional[List[Amenity]] = None) -> Place:
-        place = Place(title=title, description=description, price=price, latitude=latitude, longitude=longitude, owner=owner)
+    def create_place(self, title, description, price, address, city, state, owner,  amenities: Optional[List[Amenity]] = None) -> Place:
+
+        full_address = f"{address}, {city}, {state}"
+
+        coords = self.place_repo.geocode_address(full_adress)
+        if not coords:
+            raise ValueError("Could not geocode address")
+
+        place = Place(
+            title=title, 
+            description=description, 
+            price=price,
+            address=address,
+            city=city,
+            state=state,
+            latitude=coords["latitude"], 
+            longitude=coords["longitude"], 
+            owner=owner
+        )
 
         if amenities:
             for amenity in amenities:

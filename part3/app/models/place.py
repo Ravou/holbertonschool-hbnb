@@ -17,21 +17,35 @@ class Place(BaseModel):
     price: Mapped[float] = mapped_column(DECIMAL(10, 2), nullable=False)
     latitude: Mapped[float] = mapped_column(Float, nullable=True)
     longitude: Mapped[float] = mapped_column(Float, nullable=True)
+    address: Mapped[str] = mapped_column(String(255), nullable=False)
+    city: Mapped[str] = mapped_column(String(100), nullable=False)
+    state: Mapped[str] = mapped_column(String(100), nullable=False)
 
 
 
-    allowed_update_fields = ['title', 'description', 'price_per_night', 'address']
+    allowed_update_fields = ['title', 'description', 'price_per_night', 'address', 'city', 'state']
 
-    def __init__(self, title: str, description: str, price: float, latitude: float = None, longitude: float = None, owner: "User" = None):
+    def __init__(self, title: str, description: str, price: float, address: str, city: str, state: str, latitude: float = None, longitude: float = None, owner: "User" = None):
         self.title = title
         self.description = description
         self.price = price
         self.latitude = latitude
         self.longitude = longitude
+        self.adress = adress
+        self.city = city
+        self.state = state
         self.owner = owner
+    
+    def full_address(self):
+        return f"{self.address}, {self.city}, {self.state}"
 
 
     def __repr__(self):
         amenity_names = [amenity.name for amenity in self.amenities]
-        return f"Place(id='{self.id}', title='{self.title}', amenities={amenity_names})"
+        return (
+            f"Place(id={repr(self.id)}, title={repr(self.title)}, address={repr(self.address)}, "
+            f"city={repr(self.city)}, state={repr(self.state)}, price={self.price}, "
+            f"latitude={self.latitude}, longitude={self.longitude}, "
+            f"amenities={amenity_names})"
+        )
 

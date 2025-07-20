@@ -3,6 +3,7 @@ from flask import request
 from app.services.facade import facade
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import get_jwt_identity
+from app import bcrypt
 
 api = Namespace('places', description='Place operations')
 
@@ -20,19 +21,32 @@ user_model = api.model('PlaceUser', {
 })
 
 # Place model for input validation and documentation
-place_model = api.model('Place', {
+place_input_model = api.model('PlaceIn', {
     'title': fields.String(required=True, description='Title of the place'),
     'description': fields.String(required=True, description='Description of the place'),
     'price': fields.Float(required=True, description='Price per night'),
-    'latitude': fields.Float(required=True, description='Latitude of the place'),
-    'longitude': fields.Float(required=True, description='Longitude of the place'),
+    'address': fields.String(required=True, description='Street address of the place'),
+    'city': fields.String(required=True, description='City of the place'),
+    'state': fields.String(required=True, description='State of the place'),
     'amenities': fields.List(fields.String, required=True, description="List of amenities IDs")
+})
+
+place_output_model = api.clone('PlaceOut', place_model, {
+    'latitude': fields.Float(description='Auto-generated latitude'),
+    'longitude': fields.Float(description='Auto-generated longitude'),
+})
+
+geocode_model = api.model('GeocodeInput', {
+    'address': fields.String(required=True, description='Street address'),
+    'city': fields.String(required=False, description='City'),
+    'state': fields.String(required=False, description='State')
 })
 
 @api.route('/')
 class PlaceList(Resource):
     @api.doc(security='Bearer Auth')
     @api.expect(place_model)
+    @api.marshal_with(place_output_model, code=201)
     @api.response(201, 'Place successfully created')
     @api.response(400, 'Invalid input data')
     @jwt_required()
@@ -41,7 +55,7 @@ class PlaceList(Resource):
         data = api.payload
         current_user_id = get_jwt_identity()
 
-        required_fields = ['title', 'description', 'price', 'latitude', 'longitude', 'amenities']
+        required_fields = ['title', 'description', 'price', 'address', 'city', 'state', 'amenities']
         for field in required_fields:
             if field not in data:
                 return {'message': f"Missing field: {field}"}, 400
@@ -52,19 +66,18 @@ class PlaceList(Resource):
 
         try:
             new_place = facade.create_place(
-                    title=data['title'],
-                    description=data['description'],
-                    price=data['price'],
-                    latitude=data['latitude'],
-                    longitude=data['longitude'],
-                    owner=owner,
-                    amenities=data['amenities']
+                title=data['title'],
+                description=data['description'],
+                price=data['price'],
+                owner=owner,
+                amenities=data['amenities']
             )
-            return new_place.to_dict(), 201
+            return new_place, 201
         except ValueError as e:
             return {'message': str(e)}, 400
 
     @api.response(200, 'List of places retrieved successfully')
+    @api.marshal_with(place_list_model, as_list=True)
     def get(self):
         """Retrieve a list of all places"""
         places = facade.get_all_places()
@@ -72,6 +85,9 @@ class PlaceList(Resource):
         result = [{
             'id': place.id,
             'title': place.title,
+            'address': place.adress,
+            'city': place.city,
+            'state': place.city,
             'latitude': place.latitude,
             'longitude': place.longitude
         } for place in places]
@@ -120,6 +136,18 @@ class PlaceResource(Resource):
         if place.owner.id != current_user_id:
             return {'message': 'Unauthorized action'}, 403
 
+        allowed_fields = ['title', 'description', 'price', 'address', 'city', 'state', 'amenities']
+    filtered_data = {k: v for k, v in data.items() if k in allowed_fields}
+
+        # Recalculate coordinates if address info changed
+        if any(field in filtered_data for field in ['address', 'city', 'state']):
+            full_address = f"{filtered_data.get('address', place.address)}, {filtered_data.get('city', place.city)}, {filtered_data.get('state', place.state)}"
+            coords = facade.place_repo.geocode_address(full_address)
+            if not coords:
+                return {'message': 'Invalid address provided'}, 400
+            filtered_data['latitude'] = coords['latitude']
+            filtered_data['longitude'] = coords['longitude']
+
         try:
             updated_place = facade.update_place(place_id, data)
             if not updated_place:
@@ -129,4 +157,27 @@ class PlaceResource(Resource):
         
         except ValueError as e:
             return {'message': str(e)}, 400
+
+@api.route('/geocode')
+class GeocodeAddress(Resource):
+    @api.expect(geocode_model)
+    @api.response(200, 'Coordinates retrieved successfully')
+    @api.response(400, 'Invalid or missing address')
+    @jwt_required()
+    def post(self):
+        """Get latitude and longitude from an address"""
+        data = request.json
+        address = data.get('address')
+
+        if not address:
+            return {'message': 'Address is required'}, 400
+
+        place_repo = PlaceRepository()
+        coords = place_repo.geocode_address(address)
+
+        
+        if coords:
+            return coords, 200
+        else:
+            return {'message': 'Could not geocode address'}, 400
 
