@@ -133,7 +133,7 @@ Earlier project parts used in-memory repositories suited for prototyping but ina
 
 - Etape 3:
 
-<img src="image/Authentication3.png" alt="Authentication Diagram 3" width="400">
+<img src="image/Authentication3.png" alt="Authentication Diagram 3" width="200">
 
 - Etape 4: 
 
