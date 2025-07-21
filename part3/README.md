@@ -115,6 +115,43 @@ Earlier project parts used in-memory repositories suited for prototyping but ina
 
 ## Example
 
+### User 
+
+#### Before Authorization
+
+
+
+#### Authorization
+
+- Etape 1:
+
+<img src="image/Authentication1.png" alt="Authentication Diagram" width="400">
+
+- Etape 2:
+
+<img src="image/Authentication2.png" alt="Authentication Diagram 2" width="400">
+
+- Etape 3:
+
+<img src="image/Authentication3.png" alt="Authentication Diagram 3" width="400">
+
+- Etape 4: 
+
+<img src="image/Authentication4.png" alt="Authentication Diagram 4" width="400">
+
+- Etape 5:
+
+<img src="image/Authentication5.png" alt="Authentication Diagram 5" width="400">
+
+#### Protected
+
+- Etape 1: 
+
+<img src="image/Protected1.png" alt="Protected Diagram " width="400">
+
+- Etape 2:
+
+<img src="image/Protected2.png" alt="Protected Diagram 2" width="400">
 ---
 
 ## ER Diagram
