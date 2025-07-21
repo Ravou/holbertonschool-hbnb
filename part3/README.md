@@ -1,6 +1,6 @@
 <div align="center">
   <h1>HBnB Project - Part 3: Enhanced Backend with Authentication and Database Integration</h1>
-  <img src="image/swagger.png" alt="Swagger Logo" width="400"/>
+  <img src="image/swagger.png" alt="Swagger Logo" width="500"/>
 </div>
 
 
