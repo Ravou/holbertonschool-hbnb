@@ -31,7 +31,7 @@ place_input_model = api.model('PlaceIn', {
     'amenities': fields.List(fields.String, required=True, description="List of amenities IDs")
 })
 
-place_output_model = api.clone('PlaceOut', place_model, {
+place_output_model = api.model('PlaceOutModel', {
     'latitude': fields.Float(description='Auto-generated latitude'),
     'longitude': fields.Float(description='Auto-generated longitude'),
 })
@@ -67,6 +67,9 @@ class PlaceList(Resource):
         try:
             new_place = facade.create_place(
                 title=data['title'],
+                address=data['address'],
+                city=data['city'],
+                state=data['state'],
                 description=data['description'],
                 price=data['price'],
                 owner=owner,
@@ -137,16 +140,18 @@ class PlaceResource(Resource):
             return {'message': 'Unauthorized action'}, 403
 
         allowed_fields = ['title', 'description', 'price', 'address', 'city', 'state', 'amenities']
-    filtered_data = {k: v for k, v in data.items() if k in allowed_fields}
+        filtered_data = {k: v for k, v in data.items() if k in allowed_fields}
 
-        # Recalculate coordinates if address info changed
         if any(field in filtered_data for field in ['address', 'city', 'state']):
-            full_address = f"{filtered_data.get('address', place.address)}, {filtered_data.get('city', place.city)}, {filtered_data.get('state', place.state)}"
-            coords = facade.place_repo.geocode_address(full_address)
-            if not coords:
-                return {'message': 'Invalid address provided'}, 400
-            filtered_data['latitude'] = coords['latitude']
-            filtered_data['longitude'] = coords['longitude']
+            full_address = f"{filtered_data.get('address', place.address)}",\
+                           f"{filtered_data.get('city', place.city)}," \
+                           f"{filtered_data.get('state', place.state)}"
+
+        coords = facade.place_repo.geocode_address(full_address)
+        if not coords:
+            return {'message': 'Invalid address provided'}, 400
+        filtered_data['latitude'] = coords['latitude']
+        filtered_data['longitude'] = coords['longitude']
 
         try:
             updated_place = facade.update_place(place_id, data)
