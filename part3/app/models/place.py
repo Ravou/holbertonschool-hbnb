@@ -2,6 +2,7 @@ from app import db
 from app.models.base_model import BaseModel
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from sqlalchemy import String, DECIMAL, Float, ForeignKey
+from typing import List, Optional
 from typing import TYPE_CHECKING
 from uuid import uuid4
 
@@ -12,6 +13,7 @@ class Place(BaseModel):
     __tablename__ = 'Place'
     
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
+    user_id: Mapped[str] = mapped_column(String(36), ForeignKey('users.id'), nullable=False)
     title: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str] = mapped_column(String, nullable=True)
     price: Mapped[float] = mapped_column(DECIMAL(10, 2), nullable=False)
@@ -20,10 +22,14 @@ class Place(BaseModel):
     address: Mapped[str] = mapped_column(String(255), nullable=False)
     city: Mapped[str] = mapped_column(String(100), nullable=False)
     state: Mapped[str] = mapped_column(String(100), nullable=False)
+    owner_id: Mapped[str] = mapped_column(String(36), ForeignKey("users.id"), nullable=False)
 
+    # Relationships
+    reservations: Mapped[List["Reservation"]] = relationship("Reservation", back_populates="place")
+    reviews: Mapped[List["Review"]] = relationship("Review", back_populates="place")
+    owner: Mapped["User"] = relationship("User", back_populates="places")
 
-
-    allowed_update_fields = ['title', 'description', 'price_per_night', 'address', 'city', 'state']
+    allowed_update_fields = ['title', 'description', 'price', 'address', 'city', 'state']
 
     def __init__(self, title: str, description: str, price: float, address: str, city: str, state: str, latitude: float = None, longitude: float = None, owner: "User" = None):
         self.title = title
@@ -31,7 +37,7 @@ class Place(BaseModel):
         self.price = price
         self.latitude = latitude
         self.longitude = longitude
-        self.adress = adress
+        self.address = address
         self.city = city
         self.state = state
         self.owner = owner

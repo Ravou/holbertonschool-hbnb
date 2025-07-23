@@ -1,5 +1,7 @@
 from sqlalchemy import String, Integer, Boolean, Text
 from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import relationship
+
 from app.models.base_model import BaseModel
 
 class Review(BaseModel):
@@ -7,10 +9,14 @@ class Review(BaseModel):
 
     user_id: Mapped[str] = mapped_column(String(36), nullable=False)
     place_id: Mapped[str] = mapped_column(String(36), nullable=False)
-    reservation_id: Mapped[str] = mapped_column(String(36), nullable=False)
+    reservation_id: Mapped[str] = mapped_column(String(36), nullable=False, unique=True)
 
     text: Mapped[str] = mapped_column(Text, nullable=False)
     rating: Mapped[int] = mapped_column(Integer, nullable=False)
+
+    user: Mapped["User"] = relationship("User", back_populates="reviews")
+    place: Mapped["Place"] = relationship("Place", back_populates="reviews")
+    reservation: Mapped["Reservation"] = relationship("Reservation", back_populates="review")
 
     allowed_update_fields = ['rating', 'text']
 

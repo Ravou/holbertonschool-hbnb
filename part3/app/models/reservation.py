@@ -1,16 +1,22 @@
 from app.models.base_model import BaseModel
 from sqlalchemy import Column, String, Integer, Date, ForeignKey
 from sqlalchemy.orm import relationship
+from typing import List, Optional
 from sqlalchemy.orm import Mapped, mapped_column
 
 class Reservation(BaseModel):
     __tablename__ = 'Reservation'
 
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
     user_id: Mapped[str] = mapped_column(String(36), nullable=False)
     place_id: Mapped[str] = mapped_column(String(36), nullable=False)
     start_date: Mapped[Date] = mapped_column(Date, nullable=False)
     end_date: Mapped[Date] = mapped_column(Date, nullable=False)
     number_of_guests: Mapped[int] = mapped_column(Integer, nullable=False)
+
+    user: Mapped["User"] = relationship("User", back_populates="reservations")
+    place: Mapped["Place"] = relationship("Place", back_populates="reservations")
+    review: Mapped[Optional["Review"]] = relationship("Review", back_populates="reservation", uselist=False)
 
     allowed_update_fields = ['start_date', 'end_date', 'number_of_guests']
 

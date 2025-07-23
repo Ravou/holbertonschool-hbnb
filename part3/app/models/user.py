@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import List
 from app.models.base_model import BaseModel
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String, Boolean, Integer
 from flask_bcrypt import Bcrypt
 from app import db
@@ -24,6 +24,10 @@ class User(BaseModel):
     password: Mapped[str] = mapped_column(String(128), nullable=False)
     is_admin: Mapped[bool] = mapped_column(Boolean, default=False)
 
+    # Relationships
+    places: Mapped[List["Place"]] = relationship("Place", back_populates="owner", lazy="select")
+    reviews: Mapped[List["Review"]] = relationship("Review", back_populates="author", lazy="select")
+    reservations: Mapped[List["Reservation"]] = relationship("Reservation", back_populates="guest", lazy="select")
 
     allowed_update_fields = ['first_name', 'last_name']
 
