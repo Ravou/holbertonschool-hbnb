@@ -1,4 +1,4 @@
-from sqlalchemy import String, Integer, Boolean, Text
+from sqlalchemy import String, Integer, Boolean, Text, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.orm import relationship
 
@@ -7,9 +7,9 @@ from app.models.base_model import BaseModel
 class Review(BaseModel):
     __tablename__ = 'Review'
 
-    user_id: Mapped[str] = mapped_column(String(36), nullable=False)
-    place_id: Mapped[str] = mapped_column(String(36), nullable=False)
-    reservation_id: Mapped[str] = mapped_column(String(36), nullable=False, unique=True)
+    user_id: Mapped[str] = mapped_column(String(36), ForeignKey("User.id"), nullable=False)
+    place_id: Mapped[str] = mapped_column(String(36), ForeignKey("Place.id"), nullable=False)
+    reservation_id: Mapped[str] = mapped_column(String(36), ForeignKey("Reservation.id"), nullable=False, unique=True)
 
     text: Mapped[str] = mapped_column(Text, nullable=False)
     rating: Mapped[int] = mapped_column(Integer, nullable=False)

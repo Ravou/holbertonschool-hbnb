@@ -26,8 +26,8 @@ class User(BaseModel):
 
     # Relationships
     places: Mapped[List["Place"]] = relationship("Place", back_populates="owner", lazy="select")
-    reviews: Mapped[List["Review"]] = relationship("Review", back_populates="author", lazy="select")
-    reservations: Mapped[List["Reservation"]] = relationship("Reservation", back_populates="guest", lazy="select")
+    reviews: Mapped[List["Review"]] = relationship("Review", back_populates="user", lazy="select")
+    reservations: Mapped[List["Reservation"]] = relationship("Reservation", back_populates="user", lazy="select")
 
     allowed_update_fields = ['first_name', 'last_name']
 

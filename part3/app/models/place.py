@@ -1,7 +1,7 @@
 from app import db
 from app.models.base_model import BaseModel
 from sqlalchemy.orm import relationship, Mapped, mapped_column
-from sqlalchemy import String, DECIMAL, Float, ForeignKey
+from sqlalchemy import Table, String, DECIMAL, Float, ForeignKey
 from typing import List, Optional
 from typing import TYPE_CHECKING
 from uuid import uuid4
@@ -9,11 +9,18 @@ from uuid import uuid4
 if TYPE_CHECKING:
     from app.models.user import User
 
+place_amenities = db.Table(
+    "place_amenities",
+    db.metadata,
+    db.Column("place_id", ForeignKey("Place.id"), primary_key=True),
+    db.Column("amenity_id", ForeignKey("Amenity.id"), primary_key=True),
+)
+
 class Place(BaseModel):
     __tablename__ = 'Place'
     
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
-    user_id: Mapped[str] = mapped_column(String(36), ForeignKey('users.id'), nullable=False)
+    user_id: Mapped[str] = mapped_column(String(36), ForeignKey('User.id'), nullable=False)
     title: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str] = mapped_column(String, nullable=True)
     price: Mapped[float] = mapped_column(DECIMAL(10, 2), nullable=False)
@@ -22,12 +29,12 @@ class Place(BaseModel):
     address: Mapped[str] = mapped_column(String(255), nullable=False)
     city: Mapped[str] = mapped_column(String(100), nullable=False)
     state: Mapped[str] = mapped_column(String(100), nullable=False)
-    owner_id: Mapped[str] = mapped_column(String(36), ForeignKey("users.id"), nullable=False)
 
     # Relationships
     reservations: Mapped[List["Reservation"]] = relationship("Reservation", back_populates="place")
     reviews: Mapped[List["Review"]] = relationship("Review", back_populates="place")
     owner: Mapped["User"] = relationship("User", back_populates="places")
+    amenities: Mapped[List["Amenity"]] = relationship("Amenity", secondary="place_amenities", back_populates="places")
 
     allowed_update_fields = ['title', 'description', 'price', 'address', 'city', 'state']
 
