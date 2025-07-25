@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 class User(BaseModel):
     __tablename__ = 'User'
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    id: Mapped[int] = mapped_column(String(36), primary_key=True, default=lambda:str(uuid4()))
     first_name: Mapped[str] = mapped_column(String(50), nullable=False)
     last_name: Mapped[str] = mapped_column(String(50), nullable=False)
     email: Mapped[str] = mapped_column(String(120), nullable=False, unique=True)
@@ -36,7 +36,12 @@ class User(BaseModel):
         self.last_name = last_name
         self.email = email
         self.hash_password(password)  # utilise directement le hash
-        self.is_admin = is_admin
+        
+        if isinstance(is_admin, str):
+            self.is_admin = is_admin.lower() == "true"
+        else:
+            self.is_admin = bool(is_admin)
+
 
     def hash_password(self, password):
         "Hashes the password before storing it."
