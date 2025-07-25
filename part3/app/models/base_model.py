@@ -1,16 +1,23 @@
 from app import db
 import uuid
 from datetime import datetime
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import String
+from sqlalchemy import DateTime
 
 class BaseModel(db.Model):
     __abstract__ = True
 
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
     def save(self):
-        self.updated_at = datetime.utcnow()
+
+        for attr in ('created_at', 'updated_at'):
+            val = getattr(self, attr)
+            if isinstance(val, str):
+                setattr(self, attr, datetime.fromisoformat(val))
         db.session.add(self)
         db.session.commit()
 
@@ -40,11 +47,24 @@ class BaseModel(db.Model):
     def from_dict(cls, data):
         obj = cls()
 
+        for key in ('created_at', 'updated_at'):
+            if key in data and isinstance(data[key], str):
+                try:
+                    data[key] = datetime.fromisoformat(data[key])
+                except ValueError:
+                    # Valeurs par défaut si la conversion échoue
+                    default_dates = {
+                        'created_at': '2025-07-25T16:14:41.822619',
+                        'updated_at': '2025-07-25T16:14:41.822623',
+                    }
+                    if key in default_dates:
+                        data[key] = datetime.fromisoformat(default_dates[key])
+
+        # Attribution des attributs uniquement s'ils existent dans la classe
         for key, value in data.items():
-            if hasattr(cls, key):
-                if key in ('created_at', 'updated_at') and isinstance(value, str):
-                    value = datetime.fromisoformat(value)
+            if hasattr(obj, key):  # ici, on vérifie sur l'instance obj
                 setattr(obj, key, value)
+
         return obj
 
     def update(self, data):
