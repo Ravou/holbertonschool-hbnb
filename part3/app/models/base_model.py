@@ -47,23 +47,21 @@ class BaseModel(db.Model):
     def from_dict(cls, data):
         obj = cls()
 
-        for key in ('created_at', 'updated_at'):
-            if key in data and isinstance(data[key], str):
-                try:
-                    data[key] = datetime.fromisoformat(data[key])
-                except ValueError:
-                    # Valeurs par défaut si la conversion échoue
-                    default_dates = {
-                        'created_at': '2025-07-25T16:14:41.822619',
-                        'updated_at': '2025-07-25T16:14:41.822623',
-                    }
-                    if key in default_dates:
-                        data[key] = datetime.fromisoformat(default_dates[key])
-
-        # Attribution des attributs uniquement s'ils existent dans la classe
         for key, value in data.items():
-            if hasattr(obj, key):  # ici, on vérifie sur l'instance obj
-                setattr(obj, key, value)
+            if not hasattr(obj, key):
+                continue
+
+            expected_type = cls.__annotations__.get(key)
+
+        # Si le champ attendu est un datetime, et que la valeur est une chaîne
+            if expected_type  == datetime and isinstance(value, str):
+                try:
+                    value = datetime.fromisoformat(value)
+                except ValueError:
+                    print(f"[WARN] Mauvais format pour '{key}': {value}")
+                    continue  # ignore si la chaîne est mal formée
+
+            setattr(obj, key, value)
 
         return obj
 
