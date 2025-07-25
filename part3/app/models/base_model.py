@@ -51,19 +51,31 @@ class BaseModel(db.Model):
             if not hasattr(obj, key):
                 continue
 
-            expected_type = cls.__annotations__.get(key)
+            expected_type = cls.__annotations__.get(key, None)
 
         # Si le champ attendu est un datetime, et que la valeur est une chaîne
-            if expected_type  == datetime and isinstance(value, str):
+            if expected_type and isinstance(value, expected_type):
+                setattr(obj, key, value)
+                continue
+
+
+            # Cas spécial des datetime: convertir la chaîne en datetime si possible
+            if expected_type is datetime and isinstance(value, str):
                 try:
                     value = datetime.fromisoformat(value)
                 except ValueError:
                     print(f"[WARN] Mauvais format pour '{key}': {value}")
-                    continue  # ignore si la chaîne est mal formée
+                    continue  # on ignore la conversion ratée
 
-            setattr(obj, key, value)
+        # Cas des str: convertir les int, bool, etc., en str
+            elif expected_type is str and value is not None:
+                value = str(value)
+
+        # On injecte la valeur (convertie ou non)
+        setattr(obj, key, value)
 
         return obj
+        
 
     def update(self, data):
         updated = False
