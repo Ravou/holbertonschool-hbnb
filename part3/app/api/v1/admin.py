@@ -54,7 +54,9 @@ class AdminUserCreate(Resource):
     @api.response(400, 'Email already registered or missing required fields')
     @api.response(403, 'Admin privileges required')
     def post(self):
-        current_user = get_jwt_identity()
+        current_user_id = get_jwt_identity()
+        current_user = facade.get_user(current_user_id)
+
         if not current_user.get('is_admin'):
             return {'error': 'Admin privileges required'}, 403
 

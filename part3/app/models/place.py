@@ -17,8 +17,8 @@ place_amenities = db.Table(
 )
 
 class Place(BaseModel):
-    __tablename__ = 'Place'
-    
+    __tablename__ = "Place"
+
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
     user_id: Mapped[str] = mapped_column(String(36), ForeignKey('User.id'), nullable=False)
     title: Mapped[str] = mapped_column(String(255), nullable=False)
@@ -31,12 +31,14 @@ class Place(BaseModel):
     state: Mapped[str] = mapped_column(String(100), nullable=False)
 
     # Relationships
+
     reservations: Mapped[List["Reservation"]] = relationship("Reservation", back_populates="place")
     reviews: Mapped[List["Review"]] = relationship("Review", back_populates="place")
     owner: Mapped["User"] = relationship("User", back_populates="places")
     amenities: Mapped[List["Amenity"]] = relationship("Amenity", secondary="place_amenities", back_populates="places")
 
     allowed_update_fields = ['title', 'description', 'price', 'address', 'city', 'state']
+
 
     def __init__(self, title: str, description: str, price: float, address: str, city: str, state: str, latitude: float = None, longitude: float = None, owner: "User" = None):
         self.title = title

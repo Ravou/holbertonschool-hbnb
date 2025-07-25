@@ -14,8 +14,8 @@ CREATE TABLE Place (
     price DECIMAL(10, 2) NOT NULL,
     latitude FLOAT,
     longitude FLOAT,
-    owner_id CHAR(36),
-    CONSTRAINT fk_owner FOREIGN KEY (owner_id) REFERENCES "User"(id) ON DELETE SET NULL
+    user_id CHAR(36),
+    CONSTRAINT fk_owner FOREIGN KEY (user_id) REFERENCES "User"(id) ON DELETE SET NULL
 );
 
 CREATE TABLE Review (
@@ -36,7 +36,7 @@ CREATE TABLE Amenity (
     name VARCHAR(255) UNIQUE NOT NULL
 );
 
-CREATE TABLE Place_Amenity (
+CREATE TABLE place_amenities (
     place_id CHAR(36) NOT NULL,
     amenity_id CHAR(36) NOT NULL,
     PRIMARY KEY (place_id, amenity_id),

@@ -1,5 +1,5 @@
 from flask_restx import Namespace, Resource, fields
-from flask import request
+import requests
 from app.services.facade import facade
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import get_jwt_identity
@@ -21,7 +21,7 @@ user_model = api.model('PlaceUser', {
 })
 
 # Place model for input validation and documentation
-place_input_model = api.model('PlaceIn', {
+place_input_model = api.clone('PlaceIn', {
     'title': fields.String(required=True, description='Title of the place'),
     'description': fields.String(required=True, description='Description of the place'),
     'price': fields.Float(required=True, description='Price per night'),
@@ -31,10 +31,21 @@ place_input_model = api.model('PlaceIn', {
     'amenities': fields.List(fields.String, required=True, description="List of amenities IDs")
 })
 
-place_output_model = api.model('PlaceOutModel', {
+place_output_model = api.model('PlaceOutModel', place_input_model, {
     'latitude': fields.Float(description='Auto-generated latitude'),
     'longitude': fields.Float(description='Auto-generated longitude'),
 })
+
+place_list_model = api.model('PlaceListOut', {
+    'id': fields.String(description='Place ID'),
+    'title': fields.String(description='Title'),
+    'address': fields.String(description='Address'),
+    'city': fields.String(description='City'),
+    'state': fields.String(description='State'),
+    'latitude': fields.Float(description='Latitude'),
+    'longitude': fields.Float(description='Longitude')
+})
+
 
 geocode_model = api.model('GeocodeInput', {
     'address': fields.String(required=True, description='Street address'),
@@ -45,7 +56,7 @@ geocode_model = api.model('GeocodeInput', {
 @api.route('/')
 class PlaceList(Resource):
     @api.doc(security='Bearer Auth')
-    @api.expect(place_model)
+    @api.expect(place_input_model)
     @api.marshal_with(place_output_model, code=201)
     @api.response(201, 'Place successfully created')
     @api.response(400, 'Invalid input data')
@@ -88,9 +99,9 @@ class PlaceList(Resource):
         result = [{
             'id': place.id,
             'title': place.title,
-            'address': place.adress,
+            'address': place.address,
             'city': place.city,
-            'state': place.city,
+            'state': place.state,
             'latitude': place.latitude,
             'longitude': place.longitude
         } for place in places]
@@ -122,7 +133,8 @@ class PlaceResource(Resource):
 
 
     @api.doc(security='Bearer Auth')
-    @api.expect(place_model)
+    @api.expect(place_input_model)
+    @api.marshal_with(place_output_model)
     @api.response(200, 'Place updated successfully')
     @api.response(404, 'Place not found')
     @api.response(400, 'Invalid input data')
@@ -143,7 +155,7 @@ class PlaceResource(Resource):
         filtered_data = {k: v for k, v in data.items() if k in allowed_fields}
 
         if any(field in filtered_data for field in ['address', 'city', 'state']):
-            full_address = f"{filtered_data.get('address', place.address)}",\
+            full_address = f"{filtered_data.get('address', place.address)}," \
                            f"{filtered_data.get('city', place.city)}," \
                            f"{filtered_data.get('state', place.state)}"
 
@@ -154,7 +166,7 @@ class PlaceResource(Resource):
         filtered_data['longitude'] = coords['longitude']
 
         try:
-            updated_place = facade.update_place(place_id, data)
+            updated_place = facade.update_place(place_id, filtered_data)
             if not updated_place:
                 return {'message': 'Place not found'}, 404
 

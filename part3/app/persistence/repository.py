@@ -6,7 +6,7 @@ from sqlalchemy import func
 from app import db
 from datetime import date
 from typing import Optional
-from flask import request
+import requests
 
 class Repository(ABC):
     @abstractmethod

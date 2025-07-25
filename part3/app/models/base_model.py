@@ -24,6 +24,8 @@ class BaseModel(db.Model):
 
         result = {}
         for key, value in self.__dict__.items():
+            if key.startswith('_'):
+                continue
             if isinstance(value, BaseModel):
                 result[key] = value.to_dict(seen)
             elif isinstance(value, list):

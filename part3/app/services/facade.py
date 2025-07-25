@@ -69,10 +69,10 @@ class HBnBFacade:
     def create_place(self, title, description, price, address, city, state, owner,  amenities: Optional[List[Amenity]] = None) -> Place:
 
         full_address = f"{address}, {city}, {state}"
-
-        coords = self.place_repo.geocode_address(full_adress)
+        coords = self.place_repo.geocode_address(full_address)
         if not coords:
             raise ValueError("Could not geocode address")
+
 
         place = Place(
             title=title, 
@@ -87,11 +87,15 @@ class HBnBFacade:
         )
 
         if amenities:
-            for amenity in amenities:
-                place.add_amenity(amenity)
+            for item in amenities:
+                if isinstance(item, str):
+                    item = {"name": item}
+                amenity = self.create_amenity(item)
+                place.amenities.append(amenity)
 
         self.place_repo.add(place)
         owner.add_place(place)
+        db.session.add(place)
         db.session.commit()
 
         return place
@@ -220,6 +224,14 @@ class HBnBFacade:
 
     # --------- AMENITY ----------
     def create_amenity(self, amenity_data):
+        name  = amenity_data.get("name")
+        if not name:
+            raise ValueError("Amenity name is required.")
+        
+        existing = self.get_amenity_by_name(name)
+        if existing:
+            return existing
+
         amenity = Amenity(**amenity_data)
         self.amenity_repo.add(amenity)
         return amenity
