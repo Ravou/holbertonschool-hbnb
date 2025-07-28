@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Place Reservation</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <img src="images/logo.png" alt="HBNB Logo" id="logo" />
+    <a href="login.html" class="btn-login" id="login-btn">Login</a>
+    <a href="logout.html" class="btn-logout" id="logout-btn" style="display:none;">Logout</a>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="place.html">Place Details</a></li>
+      <li><a href="reservation.html">Reservation</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section class="reservation-form-section">
+      <h1>Reserve Your Stay</h1>
+      <form id="reservation-form">
+        <label for="checkin-date">Check-in Date:</label>
+        <input type="date" id="checkin-date" name="checkin-date" required />
+
+        <label for="checkout-date">Check-out Date:</label>
+        <input type="date" id="checkout-date" name="checkout-date" required />
+
+        <button type="submit" class="btn-reserve">Confirm Reservation</button>
+      </form>
+    </section>
+  </main>
+
+  <div id="footer-container"></div>
+
+  <script src="scripts.js"></script>
+</body>
+</html>
+
