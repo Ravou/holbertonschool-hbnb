@@ -18,10 +18,32 @@ body {
 }
 
 header {
+    display: flex;
+    justify-content: space-between;
+    align_items: center;
     background-color: #333;
+    border-bottom: 1px solid #ccc;
     color: #fff;
-    padding: 1rem;
+    padding: 10px 20px;
     font-family: 'Roboto', Arial, sans-serif;
+}
+
+#Logo {
+  height: 40px;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 10px; /* espace entre login et logout */
+}
+
+.auth-buttons a {
+  text-decoration: none;
+  padding: 8px 16px;
+  background-color: #c0392b; /* rouge */
+  color: white;
+  border-radius: 5px;
+  font-weight: bold;
 }
 
 nav a {
@@ -44,6 +66,16 @@ main {
     border-radius: 10px;
     background-color: #fff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    display: inline-block;
+    vertical-align: top;
+    background-color: #fff;
+    transition: box-shadow 0.3s ease;
+}
+
+.place-card:hover {
+    box-shadow: 4px 4px 15px rgba(0,0,0,0.2);
+}
 
 .details-button {
   background-color: var(--button-bg-color);
