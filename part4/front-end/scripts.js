@@ -1,3 +1,15 @@
+const places = [
+  { name: "Maison de charme", price: 100 },
+  { name: "Appartement moderne", price: 80 },
+];
+
+const placesList = document.getElementById('places-list');
+
+places.forEach(place => {
+  const card = createPlaceCard(place);
+  placesList.appendChild(card);
+});
+
 function createPlaceCard(place) {
   const card = document.createElement('div');
   card.className = 'place-card';
@@ -13,8 +25,12 @@ function createPlaceCard(place) {
   // Bouton "Voir les détails"
   const button = document.createElement('button');
   button.className = 'details-button';
-  button.textContent = 'Voir les détails';
+  button.textContent = 'View Details';
 
+  // Ajoute l'écouteur pour rediriger vers place.html avec le nom du lieu en paramètre
+  button.addEventListener('click', () => {
+    window.location.href = `place.html?place=${encodeURIComponent(place.name)}`;
+  });
 
   // Ajout des éléments dans la carte
   card.appendChild(title);
@@ -24,99 +40,108 @@ function createPlaceCard(place) {
   return card;
 }
 
+// Insertion des cartes dans la section #places-list
+document.addEventListener('DOMContentLoaded', () => {
+  const placesList = document.getElementById('places-list');
 
-// Fonction pour afficher les détails du lieu
-function renderPlaceDetails(place) {
-  const detailsSection = document.getElementById('place-details');
-  detailsSection.innerHTML = `
-    <h1>${place.name}</h1>
-    <p><strong>Hôte :</strong> ${place.host}</p>
-    <p><strong>Prix par nuit :</strong> ${place.price} €</p>
-    <p>${place.description}</p>
-    <h3>Équipements :</h3>
-    <ul>
-      ${place.amenities.map(item => `<li>${item}</li>`).join('')}
-    </ul>
-  `;
+  places.forEach(place => {
+    const card = createPlaceCard(place);
+    placesList.appendChild(card);
+  });
+});
+
+// Example data to simulate fetching from a database
+const places = [
+  {
+    name: "Appartement moderne",
+    host: "John Doe",
+    price: 80,
+    description: "A cozy apartment in the city center.",
+    amenities: ["Wi-Fi", "Air Conditioning", "Fully Equipped Kitchen"],
+    reviews: [
+      { userName: "Alice", comment: "Great stay!", rating: 5 },
+      { userName: "Bob", comment: "A bit noisy at night.", rating: 3 }
+    ]
+  },
+  // other places ...
+];
+
+// Function to extract URL parameter
+function getQueryParam(param) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(param);
 }
 
-// Fonction pour créer une carte d'avis
+// Get the place name from URL
+const placeName = getQueryParam('place');
+
+// Find the matching place
+const place = places.find(p => p.name === placeName);
+
+// Create a review card element from a review object
 function createReviewCard(review) {
+  // Basic escaping to avoid HTML injection
+  const safeComment = review.comment.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const safeUser = review.userName.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
   const card = document.createElement('div');
   card.className = 'review-card';
 
-  const comment = document.createElement('p');
-  comment.textContent = review.comment;
-  comment.style.fontStyle = "italic";
-
-  const user = document.createElement('p');
-  user.textContent = `Par : ${review.userName}`;
-  user.style.fontWeight = "bold";
-
-  const rating = document.createElement('p');
-  rating.textContent = 'Note : ' + '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
-  rating.style.color = '#f39c12';
-
-  card.appendChild(comment);
-  card.appendChild(user);
-  card.appendChild(rating);
+  card.innerHTML = `
+    <p><em>"${safeComment}"</em></p>
+    <p><strong>By:</strong> ${safeUser}</p>
+    <p>Rating: ${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</p>
+  `;
 
   return card;
 }
 
-function renderReviewAction(isLoggedIn) {
-  const actionSection = document.querySelector('.review-action');
-  actionSection.innerHTML = '';
-
-  if (!isLoggedIn) {
-    return; // Pas d'action si non connecté
+// Render place details
+function renderPlaceDetails(place) {
+  const placeInfo = document.getElementById('place-info');
+  if (!place) {
+    placeInfo.innerHTML = "<p>Place not found.</p>";
+    return;
   }
 
-  // Bouton pour aller à add_review.html
-  const button = document.createElement('button');
-  button.textContent = "Ajouter un avis";
-  button.className = 'details-button'; 
-  button.addEventListener('click', () => {
-    window.location.href = 'add_review.html';
-  });
-  actionSection.appendChild(button);
+  placeInfo.innerHTML = `
+    <h1>${place.name}</h1>
+    <p><strong>Host:</strong> ${place.host}</p>
+    <p><strong>Price per night:</strong> €${place.price}</p>
+    <p>${place.description}</p>
+    <h3>Amenities:</h3>
+    <ul>${place.amenities.map(a => `<li>${a}</li>`).join('')}</ul>
+  `;
 }
 
+// Render reviews list
+function renderReviews(reviews) {
+  const reviewsList = document.getElementById('reviews-list');
+  reviewsList.innerHTML = '';
 
-// Gestion de la soumission du formulaire d’ajout d’avis
-function handleReviewForm() {
-  const form = document.getElementById('review-form');
+  if (!reviews || reviews.length === 0) {
+    reviewsList.innerHTML = "<p>No reviews for this place yet.</p>";
+    return;
+  }
 
-  form.addEventListener('submit', function(event) {
-    event.preventDefault();
-
-    const reviewText = form['review-text'].value.trim();
-    // Ici, tu peux récupérer aussi le nom d'utilisateur s'il est disponible (ex: via login)
-    // Pour l'exemple, on met un nom générique ou tu peux ajouter un champ dans le form
-    const userName = "User";
-
-    if (reviewText === "") {
-      alert("Can you write a review.");
-      return;
-    }
-
-    const newReview = {
-      userName,
-      comment: reviewText,
-      rating: 5, // Si tu veux un champ note, il faudra l'ajouter dans le formulaire
-    };
-
-    reviews.push(newReview);
-
-    renderReviewsList(); // mettre à jour la liste affichée
-
-    form.reset();
+  reviews.forEach(review => {
+    const card = createReviewCard(review);
+    reviewsList.appendChild(card);
   });
 }
 
-// Initialisation au chargement de la page
-document.addEventListener('DOMContentLoaded', () => {
-  renderPlaceDetails(place);
-  renderReviewsList();
-  handleReviewForm();
-});
+// Simple logged-in check (adjust according to your auth logic)
+const isLoggedIn = true;
+
+function renderReviewAction() {
+  const reviewAction = document.getElementById('review-action');
+  reviewAction.innerHTML = '';
+
+  if (!isLoggedIn) return; // not logged in, show nothing
+
+  reviewAction.innerHTML = `
+    <form class="add-review form" id="review-form">
+      <h3>Add a Review</h3>
+      <textarea id="review-text" name="review-text" rows="4" required placeholder="Write your review here..."></textarea>
+      <br/>
+
