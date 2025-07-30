@@ -1,0 +1,87 @@
+/* 
+  This is a SAMPLE File to get you started. Follow the instructions on the project to complete the tasks. 
+  You'll probably need to override some of theese styles.
+*/
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f4f4f4;
+    color: #333;
+    font-family: 'Roboto', Arial, sans-serif;
+
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align_items: center;
+    background-color: #333;
+    border-bottom: 1px solid #ccc;
+    color: #fff;
+    padding: 10px 20px;
+    font-family: 'Roboto', Arial, sans-serif;
+}
+
+#Logo {
+  height: 40px;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 10px; /* espace entre login et logout */
+}
+
+.auth-buttons a {
+  text-decoration: none;
+  padding: 8px 16px;
+  background-color: #c0392b; /* rouge */
+  color: white;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 1rem;
+}
+
+main {
+    padding: 2rem;
+}
+
+/* Styles fixes pour les cartes de place et review */
+
+.place-card,
+.review-card {
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    display: inline-block;
+    vertical-align: top;
+    background-color: #fff;
+    transition: box-shadow 0.3s ease;
+}
+
+.place-card:hover {
+    box-shadow: 4px 4px 15px rgba(0,0,0,0.2);
+}
+
+.details-button {
+  background-color: var(--button-bg-color);
+  color: var(--button-text-color);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}

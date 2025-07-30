@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Review</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="../static/images/icon.png">
+</head>
+<body>
+    <header>
+      <img src="../static/image/logo.pgn" alt="HBNB Logo" id="logo" />
+      <a href="login.html" class="btn-login" id="login-btn">Login</a>
+      <a href="logout.html" class="btn-logout" id="logout-btn" style="display:none;">Logout</a>
+     </header>
+     	 <nav>
+           <ul>
+             <li><a href="index.html">Home</a></li>
+             <li><a href="place.html">Place Details</a></li>
+             <li><a href="reservation.html">Reservation</a></li>
+	     <li><a href="add_review.html">Add_Review<a><li>
+           </ul>
+         </nav>
+
+    <main>
+        <!-- Add something to idfentify the place you're reviewing -->
+        <form id="review-form">
+            <h2>Add a Review</h2>
+            <label for="review">Your Review:</label>
+            <textarea id="review" name="review" required></textarea>
+            <label for="rating">Rating:</label>
+            <select id="rating" name="rating" required>
+                <!-- Options for rating -->
+            </select>
+            <button type="submit">Submit Review</button>
+        </form>
+	<p id="no-reservation-msg" style="color:red; display:none;">
+        You must have a reservation before posting a review.
+    	</p>
+    </main>
+
+    <div id="footer-container"></div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
