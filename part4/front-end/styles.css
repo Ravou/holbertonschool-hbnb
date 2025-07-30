@@ -58,30 +58,56 @@ main {
 
 /* Styles fixes pour les cartes de place et review */
 
+
 .place-card,
 .review-card {
     margin: 20px;
-    padding: 10px;
-    border: 1px solid #ddd;
+    padding: 20px;
+    border: 1px solid #ccc;
     border-radius: 10px;
     background-color: #fff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    width: 300px;
-    display: inline-block;
+    width: 400px;
+    height: 250px;
     vertical-align: top;
-    background-color: #fff;
     transition: box-shadow 0.3s ease;
+    font-size: 16px;
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
 }
+
+#places-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
 
 .place-card:hover {
     box-shadow: 4px 4px 15px rgba(0,0,0,0.2);
 }
 
 .details-button {
-  background-color: var(--button-bg-color);
-  color: var(--button-text-color);
+  background-color: #c0392b;
+  color: white;
   border: none;
-  padding: 8px 12px;
+  padding: 10px 16px;
   border-radius: 5px;
   cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  font-weight: bold;
+  transition: background-color 0.3 ease;
+
+  margin-top: 20px;
+}
+
+.details-button:hover {
+  background-color: darkred;    /* effet au survol */
 }
