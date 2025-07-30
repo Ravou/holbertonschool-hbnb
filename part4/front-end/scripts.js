@@ -1,147 +1,78 @@
-const places = [
-  { name: "Maison de charme", price: 100 },
-  { name: "Appartement moderne", price: 80 },
-];
-
-const placesList = document.getElementById('places-list');
-
-places.forEach(place => {
-  const card = createPlaceCard(place);
-  placesList.appendChild(card);
-});
-
-function createPlaceCard(place) {
-  const card = document.createElement('div');
-  card.className = 'place-card';
-
-  // Nom du lieu
-  const title = document.createElement('h2');
-  title.textContent = place.name;
-
-  // Prix par nuit
-  const price = document.createElement('p');
-  price.textContent = `Prix par nuit : ${place.price} €`;
-
-  // Bouton "Voir les détails"
-  const button = document.createElement('button');
-  button.className = 'details-button';
-  button.textContent = 'View Details';
-
-  // Ajoute l'écouteur pour rediriger vers place.html avec le nom du lieu en paramètre
-  button.addEventListener('click', () => {
-    window.location.href = `place.html?place=${encodeURIComponent(place.name)}`;
-  });
-
-  // Ajout des éléments dans la carte
-  card.appendChild(title);
-  card.appendChild(price);
-  card.appendChild(button);
-
-  return card;
-}
-
-// Insertion des cartes dans la section #places-list
 document.addEventListener('DOMContentLoaded', () => {
-  const placesList = document.getElementById('places-list');
+  const loginForm = document.getElementById('login-form');
 
-  places.forEach(place => {
-    const card = createPlaceCard(place);
-    placesList.appendChild(card);
-  });
+  if (loginForm) {
+    loginForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+
+      const email = loginForm.elements['email'].value;
+      const password = loginForm.elements['password'].value;
+
+      try {
+        const response = await loginUser(email, password);
+
+        if (response.ok) {
+          const data = await response.json();
+          document.cookie = `token=${data.access_token}; path=/;`;
+	  window.location.href = 'index.html';
+		
+        } else {
+          const error = await response.json();
+          showError(error.message || 'Erreur de connexion');
+        }
+      } catch (err) {
+        showError('Erreur inattendue. Veuillez réessayer.');
+      }
+    });
+  }
 });
 
-// Example data to simulate fetching from a database
-const places = [
-  {
-    name: "Appartement moderne",
-    host: "John Doe",
-    price: 80,
-    description: "A cozy apartment in the city center.",
-    amenities: ["Wi-Fi", "Air Conditioning", "Fully Equipped Kitchen"],
-    reviews: [
-      { userName: "Alice", comment: "Great stay!", rating: 5 },
-      { userName: "Bob", comment: "A bit noisy at night.", rating: 3 }
-    ]
-  },
-  // other places ...
-];
-
-// Function to extract URL parameter
-function getQueryParam(param) {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(param);
-}
-
-// Get the place name from URL
-const placeName = getQueryParam('place');
-
-// Find the matching place
-const place = places.find(p => p.name === placeName);
-
-// Create a review card element from a review object
-function createReviewCard(review) {
-  // Basic escaping to avoid HTML injection
-  const safeComment = review.comment.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  const safeUser = review.userName.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-
-  const card = document.createElement('div');
-  card.className = 'review-card';
-
-  card.innerHTML = `
-    <p><em>"${safeComment}"</em></p>
-    <p><strong>By:</strong> ${safeUser}</p>
-    <p>Rating: ${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</p>
-  `;
-
-  return card;
-}
-
-// Render place details
-function renderPlaceDetails(place) {
-  const placeInfo = document.getElementById('place-info');
-  if (!place) {
-    placeInfo.innerHTML = "<p>Place not found.</p>";
-    return;
-  }
-
-  placeInfo.innerHTML = `
-    <h1>${place.name}</h1>
-    <p><strong>Host:</strong> ${place.host}</p>
-    <p><strong>Price per night:</strong> €${place.price}</p>
-    <p>${place.description}</p>
-    <h3>Amenities:</h3>
-    <ul>${place.amenities.map(a => `<li>${a}</li>`).join('')}</ul>
-  `;
-}
-
-// Render reviews list
-function renderReviews(reviews) {
-  const reviewsList = document.getElementById('reviews-list');
-  reviewsList.innerHTML = '';
-
-  if (!reviews || reviews.length === 0) {
-    reviewsList.innerHTML = "<p>No reviews for this place yet.</p>";
-    return;
-  }
-
-  reviews.forEach(review => {
-    const card = createReviewCard(review);
-    reviewsList.appendChild(card);
+// Fonction simulant une requête à l'API
+async function loginUser(email, password) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      // Credentials valides simulés
+      if (email === 'test@example.com' && password === '123456') {
+        resolve({
+          ok: true,
+          json: async () => ({ access_token: 'fake-jwt-token-123456789' })
+        });
+      } else {
+        resolve({
+          ok: false,
+          statusText: 'Invalid credentials',
+          json: async () => ({ message: 'Email ou mot de passe incorrect' })
+        });
+      }
+    }, 700);
   });
 }
 
-// Simple logged-in check (adjust according to your auth logic)
-const isLoggedIn = true;
+function showError(message) {
+  let errorDiv = document.getElementById('login-error');
+  if (!errorDiv) {
+    errorDiv = document.createElement('div');
+    errorDiv.id = 'login-error';
+    errorDiv.style.color = 'red';
+    errorDiv.style.marginBottom = '1em';
+    document.getElementById('login-form').prepend(errorDiv);
+  }
+  errorDiv.textContent = message;
+}
 
-function renderReviewAction() {
-  const reviewAction = document.getElementById('review-action');
-  reviewAction.innerHTML = '';
+====== index.html ====
 
-  if (!isLoggedIn) return; // not logged in, show nothing
-
-  reviewAction.innerHTML = `
-    <form class="add-review form" id="review-form">
-      <h3>Add a Review</h3>
-      <textarea id="review-text" name="review-text" rows="4" required placeholder="Write your review here..."></textarea>
-      <br/>
+async function fetchPlaces(token) {
+  // Simulation d'une requête réseau avec un délai
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve([
+        { id: 1, name: "Charming Apartment", description: "Near the park", city: "Paris", state: "Ile-de-France", price: 45 },
+        { id: 2, name: "Cozy Loft", description: "Downtown", city: "Lyon", state: "Auvergne-Rhône-Alpes", price: 75 },
+        { id: 3, name: "Luxury Villa", description: "Seaside view", city: "Nice", state: "Provence-Alpes-Côte d’Azur", price: 150 },
+      ]);
+    }, 500); // délai simulé 500ms
+  }).then(displayPlaces);
+}
 
