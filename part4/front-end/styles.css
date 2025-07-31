@@ -111,16 +111,15 @@ main {
 
 .details-button {
   background-color: #c0392b;
-  color: white !important;
+  color: white;
   border: none;
   padding: 10px 16px;
   border-radius: 5px;
   cursor: pointer;
-  text-decoration: none !important;
+  text-decoration: none;
   display: inline-block;
   font-weight: bold;
-  transition: background-color 0.3s ease;
-  width: fit-content;
+  transition: background-color 0.3 ease;
 
   margin-top: 20px;
 }
