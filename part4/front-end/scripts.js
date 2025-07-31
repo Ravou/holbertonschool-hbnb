@@ -63,8 +63,8 @@ function showError(message) {
     document.getElementById('login-form').prepend(errorDiv);
   }
   errorDiv.textContent = message;
-}
 
+}	
 // --- MOCK DATA FOR PLACES ---
 const MOCK_PLACES = [
   { id: 1, name: "Studio Paris", description: "Cozy small studio", location: "Paris", price: 50 },
@@ -119,7 +119,10 @@ function displayPlaces(places) {
       <h3>${place.name}</h3>
       <p>${place.description}</p>
       <p><strong>City:</strong> ${place.location}</p>
-      <p><strong>Price:</strong> ${place.price} €</p>
+      <p><strong>Price:</strong> ${place.price} $</p>
+      <div class="details-card">
+   	 <a href="place.html?id=${place.id}" class="details-button">View Details</a>
+      </div>
     `;
     placesList.appendChild(div);
   });
@@ -154,3 +157,12 @@ document.addEventListener('DOMContentLoaded', () => {
   checkAuthentication();
   setupPriceFilter();
 });
+
+
+// ---------- Place details ----------
+
+function getPlaceIdFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('id'); // ça retourne '1', '2', etc. ou null si absent
+}
+

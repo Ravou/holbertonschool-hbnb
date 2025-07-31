@@ -111,15 +111,16 @@ main {
 
 .details-button {
   background-color: #c0392b;
-  color: white;
+  color: white !important;
   border: none;
   padding: 10px 16px;
   border-radius: 5px;
   cursor: pointer;
-  text-decoration: none;
+  text-decoration: none !important;
   display: inline-block;
   font-weight: bold;
-  transition: background-color 0.3 ease;
+  transition: background-color 0.3s ease;
+  width: fit-content;
 
   margin-top: 20px;
 }
@@ -235,3 +236,6 @@ main {
 .login-card button:hover {
     background-color: #e6e6e6;
 }
+
+
+
