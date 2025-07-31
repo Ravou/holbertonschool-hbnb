@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.getElementById('login-form');
+  const loginBtn = document.getElementById('login-btn');
+  const logoutBtn = document.getElementById('logout-btn');
 
   if (loginForm) {
     loginForm.addEventListener('submit', async (event) => {
@@ -72,6 +74,7 @@ function showError(message) {
   errorDiv.textContent = message;
 }
 
+
 // ----------- Gestion page login -----------
 
 function initLoginPage() {
@@ -114,24 +117,6 @@ async function fetchPlaces(token) {
   }).then(displayPlaces);
 }
 
-function displayPlaces(places) {
-  const placesList = document.getElementById('places-list');
-  if (!placesList) return;
-
-  placesList.innerHTML = '';
-  places.forEach(place => {
-    const div = document.createElement('div');
-    div.className = 'place-item';
-    div.dataset.price = place.price;
-    div.innerHTML = `
-      <h3>${place.name}</h3>
-      <p>${place.description}</p>
-      <p><strong>Location:</strong> ${place.city}, ${place.state}</p>
-      <p><strong>Price:</strong> $${place.price}</p>
-    `;
-    placesList.appendChild(div);
-  });
-}
 
 function checkAuthentication() {
   const token = getCookie('token');
@@ -201,4 +186,40 @@ function displayPlaces(places) {
     placesList.appendChild(card);
   });
 }
+
+// ----------- Logout ------------------------------
+ 
+function isLoggedIn() {
+	return !!localStorage.getItem('authToken');
+  }
+
+function updateUI() {
+	if (isLoggedIn()) {
+	   document.getElementById('login-btn').style.display = 'none';
+           document.getElementById('logout-btn').style.display = 'inline-block';
+        } else {
+          document.getElementById('login-btn').style.display = 'inline-block';
+          document.getElementById('logout-btn').style.display = 'none';
+        }
+      } 
+
+      document.getElementById('login-btn').addEventListener('click', function (e) {
+        e.preventDefault();
+        localStorage.setItem('authToken', 'token123'); // simule un token valide
+        updateUI();
+        alert('Connecté !');
+  });
+
+   document.getElementById('logout-btn').addEventListener('click', function () {
+     localStorage.removeItem('authToken'); // supprime le token => déconnexion
+     updateUI();
+    alert('Déconnecté !');
+  });
+
+ }
+ 
+ updateUI();
+
+});
+
 

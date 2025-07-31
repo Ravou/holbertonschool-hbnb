@@ -46,6 +46,22 @@ header {
   font-weight: bold;
 }
 
+.auth-buttons button {
+  padding: 8px 16px;
+  background-color: #c0392b; /* même rouge que login */
+  color: white;
+  border: none;             /* enlève la bordure par défaut du bouton */
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;          /* curseur main au survol */
+  font-family: inherit;     /* même police que le reste */
+  transition: background-color 0.3s ease; /* effet doux au survol */
+}
+
+.auth-buttons button:hover {
+  background-color: #e74c3c; /* rouge un peu plus clair au survol */
+}
+
 nav a {
     color: #fff;
     text-decoration: none;
