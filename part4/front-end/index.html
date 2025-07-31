@@ -25,30 +25,27 @@
         </nav>
 
     <main>
-      <div class="places-header">	    
-	<h1 class="section-title">Available Places</h1>
-
         <section id="filter">
             <label for="price-filter">Max Price:</label>
             <select id="price-filter">
-		<option value="">All</option>
-      	 	<option value="50">50 $</option>
-      		<option value="100">100 $</option>
-      		<option value="150">150 $</option>
-      		<option value="200">200 $</option>
                 <!-- Options will be populated dynamically -->
             </select>
         </section>
-      </div>
-
         <section id="places-list">
+	   <article class="place-card">
+		   <h2>Maison de charme</h2>
+		   <p>Prix : 100$ / night</p>
+		   <a href="place.html" class="details-button">View Details</a>
+	   </article>
+	   <article class="place-card">
+		   <h2>Appartement moderne</h2>
+		   <p>Prix : 80$ / night</p>
+		   <a href="place.html" class="details-button">View Details</a>
             <!-- List of places will be populated dynamically -->
-	</section>    
+        </section>
     </main>
 
-    <footer id="footer-container">
-	 © 2025 HBNB. All rights reserved
-    </footer>
+    <div id="footer-container"></div>
 
     <script src="scripts.js"></script>
 </body>

@@ -30,18 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// ----------- Utilitaires -----------
-function getCookie(name) {
-  const cookies = document.cookie.split(';').map(c => c.trim());
-  for (const c of cookies) {
-    if (c.startsWith(name + '=')) {
-      return c.substring(name.length + 1);
-    }
-  }
-  return null;
-}
-
-// ----------- Login simulation -----------
+// Fonction simulant une requête à l'API
 async function loginUser(email, password) {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -74,36 +63,9 @@ function showError(message) {
   errorDiv.textContent = message;
 }
 
+====== index.html ====
 
-// ----------- Gestion page login -----------
 
-function initLoginPage() {
-  const loginForm = document.getElementById('login-form');
-  if (!loginForm) return;
-
-  loginForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
-
-    const email = loginForm.elements['email'].value;
-    const password = loginForm.elements['password'].value;
-
-    try {
-      const response = await loginUser(email, password);
-      if (response.ok) {
-        const data = await response.json();
-        document.cookie = `token=${data.access_token}; path=/;`;
-        window.location.href = 'index.html';
-      } else {
-        const error = await response.json();
-        showError(error.message || 'Erreur de connexion');
-      }
-    } catch {
-      showError('Erreur inattendue. Veuillez réessayer.');
-    }
-  });
-}
-
-// ----------- Gestion page index -----------
 async function fetchPlaces(token) {
   // Simulation d'une requête réseau avec un délai
   return new Promise((resolve) => {
@@ -117,6 +79,7 @@ async function fetchPlaces(token) {
   }).then(displayPlaces);
 }
 
+<<<<<<< HEAD
 
 function checkAuthentication() {
   const token = getCookie('token');
@@ -186,40 +149,4 @@ function displayPlaces(places) {
     placesList.appendChild(card);
   });
 }
-
-// ----------- Logout ------------------------------
- 
-function isLoggedIn() {
-	return !!localStorage.getItem('authToken');
-  }
-
-function updateUI() {
-	if (isLoggedIn()) {
-	   document.getElementById('login-btn').style.display = 'none';
-           document.getElementById('logout-btn').style.display = 'inline-block';
-        } else {
-          document.getElementById('login-btn').style.display = 'inline-block';
-          document.getElementById('logout-btn').style.display = 'none';
-        }
-      } 
-
-      document.getElementById('login-btn').addEventListener('click', function (e) {
-        e.preventDefault();
-        localStorage.setItem('authToken', 'token123'); // simule un token valide
-        updateUI();
-        alert('Connecté !');
-  });
-
-   document.getElementById('logout-btn').addEventListener('click', function () {
-     localStorage.removeItem('authToken'); // supprime le token => déconnexion
-     updateUI();
-    alert('Déconnecté !');
-  });
-
- }
- 
- updateUI();
-
-});
-
 
