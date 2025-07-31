@@ -28,7 +28,18 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// Fonction simulant une requête à l'API
+// ----------- Utilitaires -----------
+function getCookie(name) {
+  const cookies = document.cookie.split(';').map(c => c.trim());
+  for (const c of cookies) {
+    if (c.startsWith(name + '=')) {
+      return c.substring(name.length + 1);
+    }
+  }
+  return null;
+}
+
+// ----------- Login simulation -----------
 async function loginUser(email, password) {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -61,8 +72,35 @@ function showError(message) {
   errorDiv.textContent = message;
 }
 
-====== index.html ====
+// ----------- Gestion page login -----------
 
+function initLoginPage() {
+  const loginForm = document.getElementById('login-form');
+  if (!loginForm) return;
+
+  loginForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const email = loginForm.elements['email'].value;
+    const password = loginForm.elements['password'].value;
+
+    try {
+      const response = await loginUser(email, password);
+      if (response.ok) {
+        const data = await response.json();
+        document.cookie = `token=${data.access_token}; path=/;`;
+        window.location.href = 'index.html';
+      } else {
+        const error = await response.json();
+        showError(error.message || 'Erreur de connexion');
+      }
+    } catch {
+      showError('Erreur inattendue. Veuillez réessayer.');
+    }
+  });
+}
+
+// ----------- Gestion page index -----------
 async function fetchPlaces(token) {
   // Simulation d'une requête réseau avec un délai
   return new Promise((resolve) => {
@@ -74,5 +112,93 @@ async function fetchPlaces(token) {
       ]);
     }, 500); // délai simulé 500ms
   }).then(displayPlaces);
+}
+
+function displayPlaces(places) {
+  const placesList = document.getElementById('places-list');
+  if (!placesList) return;
+
+  placesList.innerHTML = '';
+  places.forEach(place => {
+    const div = document.createElement('div');
+    div.className = 'place-item';
+    div.dataset.price = place.price;
+    div.innerHTML = `
+      <h3>${place.name}</h3>
+      <p>${place.description}</p>
+      <p><strong>Location:</strong> ${place.city}, ${place.state}</p>
+      <p><strong>Price:</strong> $${place.price}</p>
+    `;
+    placesList.appendChild(div);
+  });
+}
+
+function checkAuthentication() {
+  const token = getCookie('token');
+  const loginBtn = document.getElementById('login-btn');
+  const logoutBtn = document.getElementById('logout-btn');
+
+  if (!loginBtn || !loginBtn) return;
+
+  if (!token) {
+    loginBtn.style.display = 'inline-block';
+  } else {
+    loginBtn.style.display = 'none';
+    logoutBtn.style.display = 'inline-block';
+    fetchPlaces(token);
+  }
+}
+
+function initFilter() {
+  const filter = document.getElementById('price-filter');
+  const placesList = document.getElementById('places-list');
+  if (!filter || !placesList) return;
+
+  filter.addEventListener('change', () => {
+    const maxPrice = filter.value === 'All' ? Infinity : Number(filter.value);
+    const places = placesList.querySelectorAll('.place-item');
+    places.forEach(place => {
+      const price = parseFloat(place.dataset.price);
+      place.style.display = (price <= maxPrice) ? 'block' : 'none';
+    });
+  });
+}
+
+function initIndexPage() {
+  checkAuthentication();
+  initFilter();
+}
+
+// ----------- Initialisation globale -----------
+document.addEventListener('DOMContentLoaded', () => {
+  if (document.getElementById('login-form')) {
+    initLoginPage();
+  }
+  if (document.getElementById('places-list')) {
+    initIndexPage();
+  }
+});
+
+
+// ----------- Index Place card-------------------
+
+function displayPlaces(places) {
+  const placesList = document.getElementById('places-list');
+  placesList.innerHTML = '';
+
+  places.forEach(place => {
+    const card = document.createElement('article');
+    card.className = 'place-card'; // <- cette classe active le style CSS
+
+    card.innerHTML = `
+      <h2>${place.name}</h2>
+      <p>${place.description}</p>
+      <p><strong>Location:</strong> ${place.city}, ${place.state}</p>
+      <p><strong>Price:</strong> $${place.price} / night</p>
+      <a href="place.html?id=${place.id}" class="details-button">View Details</a>
+    `;
+
+    placesList.appendChild(card);
+  });
 }
 

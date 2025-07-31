@@ -170,7 +170,8 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 80vh;
+    height: 100vh;
+    margin: 0;
 }
 
 /* Carte rouge comme le bouton login */
@@ -182,7 +183,6 @@ main {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     max-width: 400px;
     width: 100%;
-    margin: 5rem auto;
 }
 
 .login-card h2 {
