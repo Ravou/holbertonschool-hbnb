@@ -36,14 +36,31 @@
     
      <div class="page-container">
         <div id="place-details"></div>
-        <div id="reviews-container"></div>
-    </div>
+     </div>
+
+     <div class="page-container">
+  	<div id="reviews-container"></div>
+     </div>
 
         <section id="add-review">
             <h2>Add a Review</h2>
             <form id="review-form">
-                <label for="review-text">Review:</label>
+	       <div class="form-group review-text-group">	    
+                <label for="review-text">Your review:</label>
                 <textarea id="review-text" name="review-text" required></textarea>
+	       </div>
+
+               <div class="form-group rating-group">
+     		 <label for="rating">Rating:</label>
+      		 <select id="rating" name="rating" required>
+        	    <option value="">-- Select rating --</option>
+        	    <option value="5">⭐️⭐️⭐️⭐️⭐️ (5)</option>
+        	    <option value="4">⭐️⭐️⭐️⭐️ (4)</option>
+        	    <option value="3">⭐️⭐️⭐️ (3)</option>
+        	    <option value="2">⭐️⭐️ (2)</option>
+        	    <option value="1">⭐️ (1)</option>
+      		 </select>
+    	        </div>
                 
                 <button type="submit">Submit</button>
             </form>

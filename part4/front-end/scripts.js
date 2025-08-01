@@ -240,10 +240,9 @@ async function fetchPlaceDetailsMock(placeId) {
 
 function renderPlaceCard(place, amenities) {
   const card = document.createElement('div');
-  card.className = 'place-card';
+  card.className = 'place-details';
 
   card.innerHTML = `
-    <h2>${place.name}</h2>
     <p><strong>Description:</strong> ${place.description}</p>
     <p><strong>Location:</strong> ${place.location}</p>
     <p><strong>Price:</strong> ${place.price} $ / night</p>
@@ -266,7 +265,7 @@ function renderReviews(placeId) {
 
   reviews.forEach(review => {
     const card = document.createElement('div');
-    card.className = 'review-card';
+    card.className = 'place-details';
     card.innerHTML = `
       <h4>${review.first_name} ${review.last_name}</h4>
       <p>${review.comment}</p>
@@ -291,9 +290,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
   
+  // Ajoute ici le nom de la place hors de la card
+  const title = document.createElement('h2');
+  title.className = 'place-title';
+  title.textContent = details.place.name;
+
   const card = renderPlaceCard(details.place, details.amenities);
+
   container.innerHTML = '';
-  container.appendChild(card);
+  container.appendChild(title); // d'abord le nom
+  container.appendChild(card);  // ensuite la card
 
   renderReviews(placeId);
 

@@ -248,16 +248,25 @@ main {
   box-sizing: border-box;
 }
 
+.place-title {
+  font-size: 36px;         /* Gros texte */
+  font-weight: bold;
+  text-align: center;      /* Centré horizontalement */
+  margin: 30px 0 20px 0;   /* Espace autour */
+  color: #333;             /* Couleur foncée (optionnel) */
+}
 
-.place-card {
-  max-width: 400px;
-  margin: 20px auto; /* centre horizontalement avec marge en haut/bas */
+.place-details {
+  max-width: 1000px;
+  margin: 0px auto 20px; /* centre horizontalement avec marge en haut/bas */
   padding: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   font-family: Arial, sans-serif;
+  box-sizing: border-box;
   color: #333;
+  width: 100%
 }
 
 .place-card h2 {
@@ -276,6 +285,83 @@ main {
 .place-card p strong {
   color: #555;
 }
+
+===== Review fomulair =====
+/* Section globale du formulaire */
+#add-review {
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #f8f8f8;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 700px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Titre */
+#add-review h2 {
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+  color: #333;
+}
+
+/* Le formulaire lui-même */
+#review-form {
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+  margin-width: 500px;
+  margin: 0 auto;
+}
+
+/* Groupes de champs */
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Labels */
+.form-group label {
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Textarea */
+textarea {
+  resize: vertical;
+  min-height: 100px;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Select pour les étoiles */
+select {
+  padding: 8px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Bouton */
+#review-form button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #c0392b;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  align-self: flex-start;
+}
+
+#review-form button:hover {
+  background-color: #e14e52;
+}
+
 
 ===== footer ======
 body {
