@@ -266,7 +266,7 @@ function renderReviews(placeId) {
 
   reviews.forEach(review => {
     const card = document.createElement('div');
-    Card.className = 'review-card';
+    card.className = 'review-card';
     card.innerHTML = `
       <h4>${review.first_name} ${review.last_name}</h4>
       <p>${review.comment}</p>
