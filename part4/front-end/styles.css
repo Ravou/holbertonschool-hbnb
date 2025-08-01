@@ -277,4 +277,24 @@ main {
   color: #555;
 }
 
+===== footer ======
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* hauteur minimale de la page = hauteur de la fenêtre */
+  margin: 0; /* éviter marges par défaut */
+}
 
+/* Contenu principal qui prend tout l’espace entre header et footer */
+main {
+  flex: 1;
+}
+
+footer {
+  background-color: #333;      /* même couleur que le header */
+  color: white;
+  padding: 15px 20px;
+  text-align: center;
+  font-family: 'Roboto', Arial, sans-serif;
+  flex-shrink: 0;
+}
