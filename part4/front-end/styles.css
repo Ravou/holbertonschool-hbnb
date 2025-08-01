@@ -236,5 +236,45 @@ main {
     background-color: #e6e6e6;
 }
 
+===== Place detail card =======
+
+.page-container {
+  display: flex;
+  justify-content: center;  /* centre horizontalement */
+  align-items: center;      /* centre verticalement */
+  min-height: 100vh;        /* hauteur de la fenêtre */
+  background-color: #f0f0f0; /* optionnel, fond clair */
+  padding: 20px;            /* espace autour */
+  box-sizing: border-box;
+}
+
+
+.place-card {
+  max-width: 400px;
+  margin: 20px auto; /* centre horizontalement avec marge en haut/bas */
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  font-family: Arial, sans-serif;
+  color: #333;
+}
+
+.place-card h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.8em;
+  color: #2c3e50;
+}
+
+.place-card p {
+  margin: 8px 0;
+  line-height: 1.4;
+  font-size: 1em;
+}
+
+.place-card p strong {
+  color: #555;
+}
 
 

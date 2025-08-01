@@ -73,6 +73,60 @@ const MOCK_PLACES = [
   { id: 4, name: "Apartment Bordeaux", description: "Downtown apartment", location: "Bordeaux", price: 50 }
 ];
 
+// ---- MOCK DATA FOR REVIEWS ----
+const MOCK_REVIEWS = {
+  1: [
+    {
+      first_name: "Alice",
+      last_name: "Dupont",
+      comment: "Super studio, très propre et bien situé !",
+      rating: 5
+    },
+    {
+      first_name: "Lucas",
+      last_name: "Martin",
+      comment: "Petit mais fonctionnel. Bon rapport qualité-prix.",
+      rating: 4
+    }
+  ],
+  2: [
+    {
+      first_name: "Sophie",
+      last_name: "Durand",
+      comment: "La villa est incroyable, surtout la piscine !",
+      rating: 5
+    },
+    {
+      first_name: "Thomas",
+      last_name: "Petit",
+      comment: "Très spacieux, parfait pour des vacances en famille.",
+      rating: 4
+    }
+  ],
+  3: [
+    {
+      first_name: "Emma",
+      last_name: "Bernard",
+      comment: "Hôte très sympa, chambre propre, je recommande.",
+      rating: 4
+    }
+  ],
+  4: [
+    {
+      first_name: "Noah",
+      last_name: "Lemoine",
+      comment: "Très bien situé mais un peu bruyant la nuit.",
+      rating: 3
+    },
+    {
+      first_name: "Chloé",
+      last_name: "Robert",
+      comment: "Appartement moderne et confortable.",
+      rating: 5
+    }
+  ]
+};
+
 // --- UTILS ---
 function getCookie(name) {
   const value = `; ${document.cookie}`;
@@ -158,11 +212,89 @@ document.addEventListener('DOMContentLoaded', () => {
   setupPriceFilter();
 });
 
-
-// ---------- Place details ----------
-
+// Fonction pour récupérer l'id place depuis l'URL
 function getPlaceIdFromURL() {
   const params = new URLSearchParams(window.location.search);
-  return params.get('id'); // ça retourne '1', '2', etc. ou null si absent
+  return parseInt(params.get('id'), 10);
 }
 
+// Mock function to simulate fetching place details with extra info (amenities, reviews)
+async function fetchPlaceDetailsMock(placeId) {
+  // Recherche la place dans MOCK_PLACES
+  const place = MOCK_PLACES.find(p => p.id === placeId);
+  if (!place) return null;
+
+  // Ajout mock d'amenities et reviews
+  const amenitiesMock = {
+    1: ["WiFi", "Heating", "Kitchen"],
+    2: ["Pool", "WiFi", "Air Conditioning"],
+    3: ["WiFi", "Parking"],
+    4: ["Elevator", "Heating"]
+  };
+  
+  return {
+    place, 
+    amenities: amenitiesMock[placeId] 	  
+  };
+}
+
+function renderPlaceCard(place, amenities) {
+  const card = document.createElement('div');
+  card.className = 'place-card';
+
+  card.innerHTML = `
+    <h2>${place.name}</h2>
+    <p><strong>Description:</strong> ${place.description}</p>
+    <p><strong>Location:</strong> ${place.location}</p>
+    <p><strong>Price:</strong> ${place.price} $ / night</p>
+    <p><strong>Amenities:</strong> ${amenities.join(', ') || 'None'}</p>
+
+  `;
+
+  return card;
+}
+
+function renderReviews(placeId) {
+  const reviewsContainer = document.getElementById('reviews-container');
+  reviewsContainer.innerHTML = '<h3>Reviews</h3>'; // Titre
+  const reviews = MOCK_REVIEWS[placeId] ;
+
+  if (!reviews || reviews.length === 0) {	  
+    reviewsContainer.innerHTML += '<p>No reviews yet.</p>';
+    return;
+  }
+
+  reviews.forEach(review => {
+    const card = document.createElement('div');
+    Card.className = 'review-card';
+    card.innerHTML = `
+      <h4>${review.first_name} ${review.last_name}</h4>
+      <p>${review.comment}</p>
+      <p><strong>Rating:</strong> ${'⭐'.repeat(review.rating)}</p>
+    `;
+    reviewsContainer.appendChild(card);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const placeId = getPlaceIdFromURL();
+  const container = document.getElementById('place-details');
+
+  if (!placeId) {
+    container.textContent = "No place ID provided in URL.";
+    return;
+  }
+
+  const details = await fetchPlaceDetailsMock(placeId);
+  if (!details) {
+    container.textContent = "Place not found.";
+    return;
+  }
+  
+  const card = renderPlaceCard(details.place, details.amenities);
+  container.innerHTML = '';
+  container.appendChild(card);
+
+  renderReviews(placeId);
+
+});
