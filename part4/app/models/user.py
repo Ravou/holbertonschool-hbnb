@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import List
 from app.models.base_model import BaseModel
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, Boolean, Integer
+from sqlalchemy import String, Boolean, Integer, CheckConstraint
 from flask_bcrypt import Bcrypt
 from app import db
 from uuid import uuid4
@@ -22,7 +22,11 @@ class User(BaseModel):
     last_name: Mapped[str] = mapped_column(String(50), nullable=False)
     email: Mapped[str] = mapped_column(String(120), nullable=False, unique=True)
     password: Mapped[str] = mapped_column(String(128), nullable=False)
-    is_admin: Mapped[bool] = mapped_column(Boolean, default=False)
+    is_admin: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+
+    __table_args__ = (
+             CheckConstraint('is_admin IN (0, 1)', name='check_is_admin_valid'),
+    )
 
     # Relationships
     places: Mapped[List["Place"]] = relationship("Place", back_populates="owner", lazy="select")
@@ -31,7 +35,7 @@ class User(BaseModel):
 
     allowed_update_fields = ['first_name', 'last_name']
 
-    def __init__(self, first_name: str, last_name: str, email: str, password: str, is_admin: bool = False):
+    def __init__(self, first_name: str, last_name: str, email: str, password: str, is_admin=0):
         super().__init__()
         self.first_name = first_name
         self.last_name = last_name

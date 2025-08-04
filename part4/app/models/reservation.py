@@ -8,8 +8,8 @@ class Reservation(BaseModel):
     __tablename__ = 'reservation'
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
-    user_id: Mapped[str] = mapped_column(String(36), ForeignKey("User.id"), nullable=False)
-    place_id: Mapped[str] = mapped_column(String(36), ForeignKey("Place.id"), nullable=False)
+    user_id: Mapped[str] = mapped_column(String(36), ForeignKey("user.id"), nullable=False)
+    place_id: Mapped[str] = mapped_column(String(36), ForeignKey("place.id"), nullable=False)
     start_date: Mapped[Date] = mapped_column(Date, nullable=False)
     end_date: Mapped[Date] = mapped_column(Date, nullable=False)
     number_of_guests: Mapped[int] = mapped_column(Integer, nullable=False)

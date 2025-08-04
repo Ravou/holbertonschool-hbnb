@@ -9,10 +9,10 @@ CREATE TABLE user (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     first_name VARCHAR(255),
-    last_name VARCHAR(255),c
+    last_name VARCHAR(255),
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    is_admin BOOLEAN  DEFAULT FALSE
+    is_admin INTEGER NOT NULL DEFAULT 0 CHECK (is_admin IN (0, 1))
 );
 
 CREATE TABLE place (

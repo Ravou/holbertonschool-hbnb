@@ -12,8 +12,8 @@ if TYPE_CHECKING:
 place_amenities = db.Table(
     "place_amenities",
     db.metadata,
-    db.Column("place_id", ForeignKey("Place.id"), primary_key=True),
-    db.Column("amenity_id", ForeignKey("Amenity.id"), primary_key=True),
+    db.Column("place_id", ForeignKey("place.id"), primary_key=True),
+    db.Column("amenity_id", ForeignKey("amenity.id"), primary_key=True),
 )
 
 class Place(BaseModel):
