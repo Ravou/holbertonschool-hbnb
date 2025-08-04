@@ -242,9 +242,11 @@ main {
   display: flex;
   justify-content: center;  /* centre horizontalement */
   align-items: center;      /* centre verticalement */
-  min-height: 100vh;        /* hauteur de la fenêtre */
+  max-width: 900px;
+  margin: 0 auto;  /* hauteur de la fenêtre */
   background-color: #f0f0f0; /* optionnel, fond clair */
-  padding: 20px;            /* espace autour */
+  padding: 20px;
+  height: 100vh;  /* espace autour */
   box-sizing: border-box;
 }
 
@@ -259,14 +261,16 @@ main {
 .place-details {
   max-width: 1000px;
   margin: 0px auto 20px; /* centre horizontalement avec marge en haut/bas */
-  padding: 20px;
+  padding: 30px;
   background-color: #f9f9f9;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   font-family: Arial, sans-serif;
   box-sizing: border-box;
+  width: 100%
   color: #333;
   width: 100%
+  text-align: center;
 }
 
 .place-card h2 {

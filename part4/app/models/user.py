@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from .reservation import Reservation
 
 class User(BaseModel):
-    __tablename__ = "user'
+    __tablename__ = "user"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda:str(uuid4()))
     first_name: Mapped[str] = mapped_column(String(50), nullable=False)

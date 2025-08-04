@@ -9,7 +9,7 @@ CREATE TABLE user (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     first_name VARCHAR(255),
-    last_name VARCHAR(255),
+    last_name VARCHAR(255),c
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     is_admin BOOLEAN  DEFAULT FALSE
@@ -25,7 +25,7 @@ CREATE TABLE place (
     latitude FLOAT,
     longitude FLOAT,
     user_id CHAR(36),
-    CONSTRAINT fk_owner FOREIGN KEY (user_id) REFERENCES "User"(id) ON DELETE SET NULL
+    CONSTRAINT fk_owner FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE SET NULL
 );
 
 CREATE TABLE review (
@@ -37,7 +37,7 @@ CREATE TABLE review (
     user_id CHAR(36) NOT NULL,
     place_id CHAR(36) NOT NULL,
     reservation_id CHAR(36) NOT NULL,
-    CONSTRAINT fk_review_user FOREIGN KEY (user_id) REFERENCES "User"(id) ON DELETE CASCADE,
+    CONSTRAINT fk_review_user FOREIGN KEY (user_id) REFERENCES User(id) ON DELETE CASCADE,
     CONSTRAINT fk_review_place FOREIGN KEY (place_id) REFERENCES Place(id) ON DELETE CASCADE,
     CONSTRAINT fk_review_reservation FOREIGN KEY (reservation_id) REFERENCES Reservation(id) ON DELETE CASCADE,
     CONSTRAINT unique_user_place_reservation_review UNIQUE (user_id, place_id, reservation_id)
@@ -67,14 +67,14 @@ CREATE TABLE reservation (
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
     status VARCHAR(50) DEFAULT 'pending',
-    CONSTRAINT fk_reservation_user FOREIGN KEY (user_id) REFERENCES "User"(id) ON DELETE CASCADE,
+    CONSTRAINT fk_reservation_user FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
     CONSTRAINT fk_reservation_place FOREIGN KEY (place_id) REFERENCES Place(id) ON DELETE CASCADE,
     CONSTRAINT chk_dates CHECK (start_date <= end_date)
 );
 
 
 -- Insert admin user
-INSERT INTO "User" (id, email, first_name, last_name, password, is_admin) VALUES
+INSERT INTO user (id, email, first_name, last_name, password, is_admin) VALUES
 ('36c9050e-ddd3-4c3b-9731-9f487208bbc1',
  'admin@hbnb.io',
  'Admin',
