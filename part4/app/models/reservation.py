@@ -5,7 +5,7 @@ from typing import List, Optional
 from sqlalchemy.orm import Mapped, mapped_column
 
 class Reservation(BaseModel):
-    __tablename__ = 'Reservation'
+    __tablename__ = 'reservation'
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
     user_id: Mapped[str] = mapped_column(String(36), ForeignKey("User.id"), nullable=False)

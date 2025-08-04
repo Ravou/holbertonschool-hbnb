@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship
 from app.models.base_model import BaseModel
 
 class Review(BaseModel):
-    __tablename__ = 'Review'
+    __tablename__ = 'review'
 
     user_id: Mapped[str] = mapped_column(String(36), ForeignKey("User.id"), nullable=False)
     place_id: Mapped[str] = mapped_column(String(36), ForeignKey("Place.id"), nullable=False)
